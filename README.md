@@ -1,5 +1,5 @@
 # iasa-ip
-<center><img src="./IPLogo.png" width="300" height="300"></center>
+<center><img src="./IPLogo.png" width="100" height="100"></center>
 IP is Tool for change IP easily in IASA.
 
 # Download

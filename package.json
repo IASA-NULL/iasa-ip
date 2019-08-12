@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/IASA-Null/iasa-ip#readme",
   "dependencies": {
-    "electron": "^6.0.1"
+    "electron": "^6.0.1",
+    "request": "^2.88.0",
+    "wifi-name": "^3.1.1"
   }
 }
