@@ -58,13 +58,14 @@ function createAlertWindow() {
     awin.setIgnoreMouseEvents(true);
     // 창이 닫히면 호출됩니다.
     awin.on('close', function(e){
-        win=null;
+        awin=null;
     });
 }
 
+let orgName, orgNetStat, orgDnsStat;
 o=1;
 
-orgName=webControl.getWifiName();
+fir=true;
 
 app.on('ready', createAlertWindow)
 
@@ -72,12 +73,25 @@ app.on('window-all-closed', function(e){
     e.preventDefault();
 });
 
-setInterval(function() {
-    if(orgName!=webControl.getWifiName()) {
-        orgName=webControl.getWifiName();
-        if(win==null) {
-            createAlertWindow();
+async function makeAlert()
+{
+    var tName=await webControl.getWifiName();
+    var tDnsStat=await webControl.checkDns();
+    var tNetStat=await webControl.checkInternet();
+    if(tName!=orgName || tNetStat!=orgNetStat || tDnsStat!=orgDnsStat) {
+        if(!fir && !tNetStat) {
+            if(win==null && awin==null) {
+                createAlertWindow();
+            }
         }
+        fir=false;
     }
+    orgName=tName;
+    orgNetStat=tNetStat;
+    orgDnsStat=tDnsStat;
+}
+
+setInterval(function() {
+    makeAlert();
 }, 1000);
 
