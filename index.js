@@ -50,7 +50,7 @@ function createAlertWindow() {
         protocol: 'file:',
         slashes: true
     }))
-    awin.setOpacity(0.8);
+    awin.setOpacity(0.95);
 
     // 개발자 도구를 엽니다.
     //awin.webContents.openDevTools()
