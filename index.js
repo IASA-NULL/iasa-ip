@@ -40,7 +40,7 @@ function createAlertWindow() {
         width: 600, height: 200, webPreferences: {
             nodeIntegration: true,
             webSecurity: false,
-        }, frame:false,transparent:true,icon: path.join(__dirname, 'ipLogo.ico')
+        }, frame:false,transparent:true,icon: path.join(__dirname, 'res/ipLogo.ico')
     })
     awin.setMenu(null);
 
@@ -93,5 +93,6 @@ async function makeAlert()
 
 setInterval(function() {
     makeAlert();
+    //localStorage.setItem('chgStat', 10);
 }, 1000);
 
