@@ -88,16 +88,6 @@
             transition: cont 3s ease;
         }
 
-        .input-field input[type=text]:focus+label {
-            color: #66bb6a !important;
-        }
-
-        /* label underline focus color */
-        .input-field input[type=text]:focus {
-            border-bottom: 1px solid #66bb6a !important;
-            box-shadow: 0 1px 0 0 #66bb6a !important;
-        }
-
         .novisible {
             display: none;
         }
@@ -177,24 +167,6 @@
                 margin-top: 0;
             }
         }
-
-        input[type=range]::-webkit-slider-thumb {
-            background-color: #66bb6a;
-        }
-        input[type=range]::-moz-range-thumb {
-            background-color: #66bb6a;
-        }
-        input[type=range]::-ms-thumb {
-            background-color: #66bb6a;
-        }
-
-        /***** These are to edit the thumb and the text inside the thumb *****/
-        input[type=range] + .thumb {
-            background-color: #66bb6a;
-        }
-        input[type=range] + .thumb.active .value {
-            color: white;
-        }
     </style>
 </head>
 
@@ -205,7 +177,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            
+
         });
     </script>
     <div class="frame">
@@ -215,7 +187,7 @@
                     <div class="hide-first">
                         <h2>IP</h2>
                         <div class="row">
-                            
+
                         </div>
                     </div>
                 </div>

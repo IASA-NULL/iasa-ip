@@ -13,7 +13,7 @@ function createMainWindow() {
         width: 800, height: 600, webPreferences: {
             nodeIntegration: true,
             webSecurity: false
-        }, icon: path.join(__dirname, 'ipLogo.ico')
+        }, show:false, icon: path.join(__dirname, 'res/ipLogo.ico')
     })
     win.setMenu(null);
     win.loadURL(url.format({
@@ -25,6 +25,9 @@ function createMainWindow() {
     win.on('close', function(e){
         win=null;
     });
+    win.once('ready-to-show', () => {
+        win.show();
+    });
 }
 
 function createAlertWindow() {
@@ -32,7 +35,7 @@ function createAlertWindow() {
         width: 600, height: 200, webPreferences: {
             nodeIntegration: true,
             webSecurity: false,
-        }, frame:false,transparent:true,icon: path.join(__dirname, 'res/ipLogo.ico')
+        }, frame:false, transparent:true, show:false,icon: path.join(__dirname, 'res/ipLogo.ico')
     })
     awin.setMenu(null);
     awin.loadURL(url.format({
@@ -46,6 +49,9 @@ function createAlertWindow() {
     awin.setIgnoreMouseEvents(true);
     awin.on('close', function(e){
         awin=null;
+    });
+    awin.once('ready-to-show', () => {
+        awin.show();
     });
 }
 

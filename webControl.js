@@ -28,6 +28,17 @@ function getWifiName() {
     }
 }
 
+function checkLanCable() {
+    var network = require('network');
+    return new Promise((resolve, reject) => {
+        network.get_active_interface(function(err, obj) {
+            if(String(obj.type)=='Wired') resolve(true);
+            else resolve(false);
+        })
+    });
+}
+
 exports.checkInternet = checkInternet;
 exports.getWifiName = getWifiName;
 exports.checkDns = checkDns;
+exports.checkLanCable = checkLanCable;

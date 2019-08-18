@@ -26,11 +26,18 @@
             self.opener = self;
             window.close();
         }
+        async function test() {
+            var t=await web.checkLanCable();
+            $('#text').html(String(t));
+        }
         function getMsg() {
             setInterval(function() {
                 //if()
             }, 200);
         }
+        $(document).ready(function() {
+            test();
+        });
     </script>
     <div style="float:left;width:30%;">
         <img src="res/school.png" style="margin-left:40px;margin-top:40px;height:120px;">
