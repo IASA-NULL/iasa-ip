@@ -1,0 +1,15 @@
+directories:
+  output: dist
+  buildResources: build
+productName: IP v4
+appId: iasa.null.ip
+win:
+  target:
+    - target: portable
+      arch:
+        - x64
+        - ia32
+  icon: res/IPLogo.ico
+portable:
+  artifactName: IPv4.exe
+electronVersion: 6.0.1

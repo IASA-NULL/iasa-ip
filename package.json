@@ -1,26 +1,47 @@
 {
   "name": "iasa-ip",
   "version": "4.0.0",
-  "description": "IP is a tool for change IP easily in IASA.",
+  "description": "IP Core Application",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/IASA-Null/iasa-ip.git"
   },
-  "author": "NULL",
+  "author": "NULL <04seohyun@gmail.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/IASA-Null/iasa-ip/issues"
   },
+  "build": {
+    "productName": "IP Core Application",
+    "appId": "iasa.null.ip",
+    "win": {
+      "target": [
+        {"target":"portable",
+        "arch": [
+          "x64",
+          "ia32"
+        ]}],
+      "icon": "res/IPLogo.ico"
+    },
+    "portable": {
+      "artifactName": "IPv4.exe"
+    }
+  },
   "homepage": "https://github.com/IASA-Null/iasa-ip#readme",
   "dependencies": {
-    "electron": "^6.0.1",
     "network": "^0.4.1",
     "network-config": "^2.0.0",
     "request": "^2.88.0",
     "wifi-name": "^3.1.1"
+  },
+  "devDependencies": {
+    "electron": "latest",
+    "electron-builder": "^21.2.0"
   }
 }
