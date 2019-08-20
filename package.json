@@ -1,7 +1,7 @@
 {
   "name": "iasa-ip",
   "version": "4.0.0",
-  "description": "IP Core Application",
+  "description": "IP 4.0 beta 1",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -22,15 +22,19 @@
     "appId": "iasa.null.ip",
     "win": {
       "target": [
-        {"target":"portable",
-        "arch": [
-          "x64",
-          "ia32"
-        ]}],
+        {
+          "target": "portable",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ],
       "icon": "res/IPLogo.ico"
     },
     "portable": {
-      "artifactName": "IPv4.exe"
+      "artifactName": "IPv4.exe",
+      "requestExecutionLevel":"admin"
     }
   },
   "homepage": "https://github.com/IASA-Null/iasa-ip#readme",

@@ -8,6 +8,7 @@ let win, awin;
 m=1;
 f=0;
 
+
 function createMainWindow() {
     win = new BrowserWindow({
         width: 800, height: 600, webPreferences: {
@@ -71,12 +72,15 @@ app.on('second-instance', (event, commandLine, workingDirectory) => {
     }
 });
 
+
+
+
 let orgName, orgNetStat, orgDnsStat;
 o=1;
 
 fir=true;
 
-app.on('ready', createAlertWindow)
+app.on('ready', createAlertWindow);
 
 app.on('window-all-closed', function(e){
     e.preventDefault();

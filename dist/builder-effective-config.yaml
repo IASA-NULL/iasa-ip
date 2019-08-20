@@ -1,7 +1,7 @@
 directories:
   output: dist
   buildResources: build
-productName: IP v4
+productName: IP Core Application
 appId: iasa.null.ip
 win:
   target:
@@ -12,4 +12,5 @@ win:
   icon: res/IPLogo.ico
 portable:
   artifactName: IPv4.exe
-electronVersion: 6.0.1
+  requestExecutionLevel: admin
+electronVersion: 6.0.3
