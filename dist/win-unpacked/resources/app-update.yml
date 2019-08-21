@@ -1,0 +1,4 @@
+owner: IASA-Null
+repo: iasa-ip
+provider: github
+updaterCacheDirName: iasa-ip-updater

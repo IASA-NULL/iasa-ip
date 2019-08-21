@@ -80,7 +80,7 @@ o=1;
 
 fir=true;
 
-app.on('ready', createAlertWindow);
+app.on('ready', createMainWindow);
 
 app.on('window-all-closed', function(e){
     e.preventDefault();

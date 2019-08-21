@@ -18,23 +18,19 @@
     "url": "https://github.com/IASA-Null/iasa-ip/issues"
   },
   "build": {
-    "productName": "IP Core Application",
+    "productName": "IP",
     "appId": "iasa.null.ip",
     "win": {
+      "requestedExecutionLevel": "requireAdministrator",
       "target": [
         {
-          "target": "portable",
-          "arch": [
-            "x64",
-            "ia32"
-          ]
+          "target": "NSIS"
         }
       ],
       "icon": "res/IPLogo.ico"
     },
-    "portable": {
-      "artifactName": "IPv4.exe",
-      "requestExecutionLevel":"admin"
+    "nsis": {
+      "createStartMenuShortcut": true
     }
   },
   "homepage": "https://github.com/IASA-Null/iasa-ip#readme",
