@@ -11,7 +11,7 @@ f=0;
 
 function createMainWindow() {
     win = new BrowserWindow({
-        width: 800, height: 600, webPreferences: {
+        width: 900, height: 500, webPreferences: {
             nodeIntegration: true,
             webSecurity: false
         }, show:false, icon: path.join(__dirname, 'res/ipLogo.ico')
@@ -22,7 +22,7 @@ function createMainWindow() {
         protocol: 'file:',
         slashes: true
     }));
-    //win.webContents.openDevTools();
+    win.webContents.openDevTools();
     win.on('close', function(e){
         win=null;
     });

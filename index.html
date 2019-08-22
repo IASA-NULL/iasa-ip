@@ -19,7 +19,32 @@
             width: 100%;
             height: 100%;
             padding: 3%;
-            overflow: hidden;
+            overflow-x: hidden;
+            float: left;
+            overflow-y: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 14px;
+            height: 18px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            height: 6px;
+            border: 4px solid rgba(0, 0, 0, 0);
+            background-clip: padding-box;
+            -webkit-border-radius: 7px;
+            background-color: rgba(50, 50, 50, 0.801);
+        }
+
+        ::-webkit-scrollbar-button {
+            width: 0;
+            height: 0;
+            display: none;
+        }
+
+        ::-webkit-scrollbar-corner {
+            background-color: transparent;
         }
 
         .splash {
@@ -49,7 +74,7 @@
         }
 
         *::selection {
-            background-color: dimgrey;
+            background-color: blueviolet;
             color: white;
         }
 
@@ -167,30 +192,118 @@
                 margin-top: 0;
             }
         }
+
+        p {
+            overflow-x: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 100%;
+        }
+
+        .obj {
+            padding: 10px !important;
+        }
+
+        .force-overflow {
+            min-height: 450px;
+        }
     </style>
 </head>
 
 <body>
     <div class="splash">
-        <video width="640" height="360" autoplay >
+        <video width="360" height="360" autoplay>
             <source src="res/IPSplash.mp4" type="video/mp4" />
         </video>
     </div>
 
     <script type="text/javascript">
         $(document).ready(function () {
-
+            setTimeout(function () {
+                $('body').css('overflow-y', 'scroll');
+            }, 3000);
         });
+        function showMain() {
+            $('#sec2').removeClass('showSection').removeClass('initShowSection').addClass('hideSection')
+            $('#sec1').removeClass('hideSection').removeClass('initShowSection').addClass('showSection')
+            setTimeout(function () {
+                $('#sec2').addClass('novisible');
+                $('#sec1').removeClass('novisible');
+            }, 600);
+        }
+        function showInfo() {
+            $('#sec1').removeClass('showSection').removeClass('initShowSection').addClass('hideSection')
+            $('#sec2').removeClass('hideSection').removeClass('initShowSection').addClass('showSection')
+            setTimeout(function () {
+                $('#sec1').addClass('novisible');
+                $('#sec2').removeClass('novisible');
+            }, 600);
+            setTimeout(showMain, 1500);
+        }
     </script>
     <div class="frame">
         <div class="container">
             <div class="fixCon">
                 <div id="sec1" class="initShowSection">
+                    <div class="row">
+                        <div class="col s12 obj" onclick="showInfo();">
+                            <div class="waves-effect z-depth-2 hoverable" style="width:100%;">
+                                <div style="display:inline-block;">
+                                    <div style="float:left;width:140px;">
+                                        <img src="res/school.png"
+                                            style="margin-left:20px;margin-top:20px;margin-bottom:20px;height:90px;">
+                                    </div>
+                                    <div style="float:left;margin-left:0;">
+                                        <p style="font-size:3em;margin-top:20px;margin-bottom:3px" class="text">IP 변경하기
+                                        </p>
+                                        <p style="font-size:1.2em;margin-top:5px;margin-bottom:20px" class="info">IP를 교내
+                                            IP로
+                                            변경합니다.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col s12 m6 obj">
+                            <div class="waves-effect z-depth-2 hoverable" style="width:100%;">
+                                <div style="display:inline-block;">
+                                    <div style="float:left;width:140px;">
+                                        <img src="res/op.png"
+                                            style="margin-left:20px;margin-top:20px;margin-bottom:20px;height:90px;">
+                                    </div>
+                                    <div style="float:left;margin-left:0;">
+                                        <p style="font-size:3em;margin-top:20px;margin-bottom:3px" class="text">설정</p>
+                                        <p style="font-size:1.2em;margin-top:5px;margin-bottom:20px" class="info">옵션을
+                                            변경합니다.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col s12 m6 obj">
+                            <div class="waves-effect z-depth-2 hoverable" style="width:100%;">
+                                <div style="display:inline-block;">
+                                    <div style="float:left;width:140px;">
+                                        <img src="res/info.png"
+                                            style="margin-left:20px;margin-top:20px;margin-bottom:20px;height:90px;">
+                                    </div>
+                                    <div style="float:left;margin-left:0;">
+                                        <p style="font-size:3em;margin-top:20px;margin-bottom:3px" class="text">정보
+                                        </p>
+                                        <p style="font-size:1.2em;margin-top:5px;margin-bottom:20px" class="info">프로그램의
+                                            정보를
+                                            표시합니다.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="sec2" class="hideSection novisible">
                     <h1>IP</h1>
                 </div>
             </div>
         </div>
-    </div>
 </body>
 
 </html>
