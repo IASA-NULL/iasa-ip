@@ -11,7 +11,7 @@ f=0;
 
 function createMainWindow() {
     win = new BrowserWindow({
-        width: 900, height: 500, webPreferences: {
+        width: 850, height: 600, webPreferences: {
             nodeIntegration: true,
             webSecurity: false
         }, show:false, icon: path.join(__dirname, 'res/ipLogo.ico')
@@ -22,7 +22,7 @@ function createMainWindow() {
         protocol: 'file:',
         slashes: true
     }));
-    win.webContents.openDevTools();
+    //win.webContents.openDevTools();
     win.on('close', function(e){
         win=null;
     });
@@ -44,7 +44,7 @@ function createAlertWindow() {
         protocol: 'file:',
         slashes: true
     }))
-    awin.setOpacity(0.95);
+    awin.setOpacity(0.9);
     //awin.webContents.openDevTools()
     awin.setAlwaysOnTop(true, "floating", 1);
     awin.setIgnoreMouseEvents(true);

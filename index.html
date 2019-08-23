@@ -193,19 +193,20 @@
             }
         }
 
-        p {
-            overflow-x: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            max-width: 100%;
-        }
-
         .obj {
             padding: 10px !important;
         }
 
         .force-overflow {
             min-height: 450px;
+        }
+
+        .switch label input[type=checkbox]:checked+.lever:after {
+            background-color: #7e57c2 !important;
+        }
+
+        .switch label input[type=checkbox]:checked+.lever {
+            background-color: #7e57c2 !important;
         }
     </style>
 </head>
@@ -223,28 +224,32 @@
                 $('body').css('overflow-y', 'scroll');
             }, 3000);
         });
-        function showMain() {
-            $('#sec2').removeClass('showSection').removeClass('initShowSection').addClass('hideSection')
-            $('#sec1').removeClass('hideSection').removeClass('initShowSection').addClass('showSection')
+        function showSec(v) {
+            $('.section').removeClass('showSection').removeClass('initShowSection').addClass('hideSection')
+            $('#sec' + String(v)).removeClass('hideSection').removeClass('initShowSection').addClass('showSection')
             setTimeout(function () {
-                $('#sec2').addClass('novisible');
-                $('#sec1').removeClass('novisible');
+                $('.section').addClass('novisible');
+                $('#sec' + String(v)).removeClass('novisible');
             }, 600);
         }
+        function showMain() {
+            showSec(1)
+        }
         function showInfo() {
-            $('#sec1').removeClass('showSection').removeClass('initShowSection').addClass('hideSection')
-            $('#sec2').removeClass('hideSection').removeClass('initShowSection').addClass('showSection')
-            setTimeout(function () {
-                $('#sec1').addClass('novisible');
-                $('#sec2').removeClass('novisible');
-            }, 600);
+            showSec(2)
             setTimeout(showMain, 1500);
+        }
+        function showSet() {
+            showSec(3)
+        }
+        function showCred() {
+            showSec(4)
         }
     </script>
     <div class="frame">
         <div class="container">
             <div class="fixCon">
-                <div id="sec1" class="initShowSection">
+                <div id="sec1" class="initShowSection section">
                     <div class="row">
                         <div class="col s12 obj" onclick="showInfo();">
                             <div class="waves-effect z-depth-2 hoverable" style="width:100%;">
@@ -264,7 +269,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col s12 m6 obj">
+                        <div class="col s12 m6 obj" onclick="showSet();">
                             <div class="waves-effect z-depth-2 hoverable" style="width:100%;">
                                 <div style="display:inline-block;">
                                     <div style="float:left;width:140px;">
@@ -280,7 +285,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col s12 m6 obj">
+                        <div class="col s12 m6 obj" onclick="showCred();">
                             <div class="waves-effect z-depth-2 hoverable" style="width:100%;">
                                 <div style="display:inline-block;">
                                     <div style="float:left;width:140px;">
@@ -290,20 +295,89 @@
                                     <div style="float:left;margin-left:0;">
                                         <p style="font-size:3em;margin-top:20px;margin-bottom:3px" class="text">정보
                                         </p>
-                                        <p style="font-size:1.2em;margin-top:5px;margin-bottom:20px" class="info">프로그램의
+                                        <p style="font-size:1.2em;margin-top:5px;margin-bottom:20px" class="info">프로그램
                                             정보를
-                                            표시합니다.</p>
+                                            엽니다.</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div id="sec2" class="hideSection novisible">
-                    <h1>IP</h1>
+                <div id="sec2" class="hideSection novisible section" style="width:100%;height:80vh;min-height:100%;">
+                    <div class="waves-effect z-depth-2 hoverable" style="width:100%;height:100%;">
+                        <div class="valign-wrapper center-align" style="width:100%;height:100%;">
+                            <div style="width:100%;">
+                                <h1>IP 변경중...</h1>
+                                <div class="preloader-wrapper big active">
+                                    <div class="spinner-layer spinner-blue-only">
+                                        <div class="circle-clipper left">
+                                            <div class="circle"></div>
+                                        </div>
+                                        <div class="gap-patch">
+                                            <div class="circle"></div>
+                                        </div>
+                                        <div class="circle-clipper right">
+                                            <div class="circle"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p>잠시만 기다려 주세요.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="sec3" class="hideSection novisible section" style="width:100%;height:80vh;min-height:444px;margin-bottom:20px;">
+                    <div class="z-depth-2 hoverable" style="width:100%;height:100%;">
+                        <div class="valign-wrapper center-align" style="width:100%;height:100%;">
+                            <div style="width:100%;">
+                                <h1>설정</h1>
+                                <h4>IP 자동변경</h3>
+                                    <div class="switch">
+                                        <label>
+                                            끄기
+                                            <input type="checkbox">
+                                            <span class="lever"></span>
+                                            켜기
+                                        </label>
+                                    </div>
+                                    <br>
+                                    <h4>업데이트 자동 확인</h3>
+                                        <div class="switch">
+                                            <label>
+                                                끄기
+                                                <input type="checkbox">
+                                                <span class="lever"></span>
+                                                켜기
+                                            </label>
+                                        </div>
+                                        <br>
+                                        <a class="waves-effect waves-light btn deep-purple lighten-1"
+                                            onclick="showMain()">확인</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="sec4" class="hideSection novisible section" style="width:100%;height:80vh;min-height:450px;margin-bottom:20px;">
+                    <div class="z-depth-2 hoverable" style="width:100%;height:100%;">
+                        <div class="valign-wrapper center-align" style="width:100%;height:100%;">
+                            <div style="width:100%;">
+                                <img src="res/IPLogo.png" style="width:120px;">
+                                <p>4.0.0 beta 1</p>
+                                <p>최신 버전입니다.</p>
+                                <p>개발 : 4기 이서현</p>
+                                <p>검수 : 3기 김태우</p>
+                                <img src="res/credit.png" style="width:300px;">
+                                <br>
+                                <a class="waves-effect waves-light btn deep-purple lighten-1"
+                                    onclick="showMain()">확인</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
 </body>
 
 </html>
