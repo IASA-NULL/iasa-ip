@@ -219,6 +219,10 @@
     </div>
 
     <script type="text/javascript">
+        const { ipcRenderer } = require('electron')
+        ipcRenderer.on('test', (event, ...args) => {
+    showSec(5);
+  })
         $(document).ready(function () {
             setTimeout(function () {
                 $('body').css('overflow-y', 'scroll');

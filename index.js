@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, Tray, dialog } = require('electron');
+const { app, BrowserWindow, Menu, Tray, dialog, ipcMain  } = require('electron');
 const path = require('path');
 const url = require('url');
 const webControl = require('./webControl.js');
@@ -127,5 +127,5 @@ async function makeAlert() {
 setInterval(function () {
     makeAlert();
     //localStorage.setItem('chgStat', 10);
-}, 1000);
+}, 10000);
 
