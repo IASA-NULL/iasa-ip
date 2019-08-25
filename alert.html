@@ -21,22 +21,31 @@
 
 <body style="background:white;width:100%;height:100%;border-color:#673ab7;border-style: solid;">
     <script>
-        const web=require('./webControl.js');
+        const web = require('./webControl.js');
         function closeWindow() {
             self.opener = self;
             window.close();
         }
-        async function test() {
-            var t=await web.checkLanCable();
-            $('#text').html(String(t));
-        }
-        function getMsg() {
-            setInterval(function() {
-                //if()
-            }, 200);
-        }
-        $(document).ready(function() {
-            test();
+        const { ipcRenderer } = require('electron')
+        ipcRenderer.on('finishChange', (event, ...args) => {
+            $('.indeterminate').fadeOut(500);
+            $('#text').html('완료!')
+            setTimeout(function () {
+                $('.determinate').fadeIn(500);
+            }, 300)
+            setTimeout(function () {
+                $('.determinate').css('width', '100%');
+            }, 500)
+            setTimeout(function () {
+                $('html').fadeOut(500)
+            }, 1000)
+            setTimeout(function () {
+                self.opener = self;
+                window.close();
+            }, 1700)
+        })
+        $(document).ready(function () {
+            $('.determinate').hide()
         });
     </script>
     <div style="float:left;width:30%;">
@@ -46,6 +55,7 @@
         <p style="font-size:4.4em;margin-top:8%;margin-left:0;" id="text">IP 변경중...</p>
         <div class="progress deep-purple lighten-4" style="top:-43px;width:90%;">
             <div class="indeterminate deep-purple lighten-1"></div>
+            <div class="determinate deep-purple lighten-1" style="width: 0%"></div>
         </div>
     </div>
 </body>

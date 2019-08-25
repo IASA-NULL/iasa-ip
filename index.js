@@ -9,6 +9,23 @@ let win, awin;
 m = 1;
 f = 0;
 
+
+
+function resetApplication() {
+    const settings = require('electron-settings');
+    settings.set('svc', true)
+    win.close()
+    win=null
+    settings.set('ip', null)
+    settings.set('svc', null)
+    createMainWindow();
+}
+
+ipcMain.on('resetApplication', (event, arg) => {
+    resetApplication();
+  })
+
+
 function openMainWindow() {
     if (win != null) {
         if (!win.isVisible()) {
@@ -83,6 +100,12 @@ function createAlertWindow() {
     });
 }
 
+function onBackgroundService() {
+    const settings = require('electron-settings');
+    if(settings.get('svc')==null) settings.set('svc', true)
+    return settings.get('svc')
+}
+
 function onFirstRun() {
     createMainWindow();
     createTray();
@@ -103,8 +126,14 @@ fir = true;
 
 app.on('ready', onFirstRun);
 
+async function allCloseHandler() {
+    var res=await onBackgroundService();
+    if(!res) app.exit();
+}
+
 app.on('window-all-closed', function (e) {
     e.preventDefault();
+    allCloseHandler();
 });
 
 async function makeAlert() {
@@ -114,7 +143,19 @@ async function makeAlert() {
     if (tName != orgName || tNetStat != orgNetStat || tDnsStat != orgDnsStat) {
         if (!fir && !tNetStat) {
             if (win == null && awin == null) {
-                createAlertWindow();
+                const ipModule=require('./changeIp.js')
+                if(tName=="Iasa_hs" && ipModule.getCurrentState()==0) {
+                    createAlertWindow(0);
+                    ipModule.changeToSchool(function() {
+                        awin.webControl.send('finishChange')
+                    });
+                }
+                if(tName!="Iasa_hs" && ipModule.getCurrentState()==1) {
+                    createAlertWindow(1);
+                    ipModule.changeToSchool(function() {
+                        awin.webControl.send('finishChange')
+                    });
+                }
             }
         }
         fir = false;
@@ -127,5 +168,6 @@ async function makeAlert() {
 setInterval(function () {
     makeAlert();
     //localStorage.setItem('chgStat', 10);
+    if(awin) awin.webContents.send('finishChange')
 }, 10000);
 

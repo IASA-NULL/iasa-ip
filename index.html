@@ -219,11 +219,30 @@
     </div>
 
     <script type="text/javascript">
-        const { ipcRenderer } = require('electron')
-        ipcRenderer.on('test', (event, ...args) => {
-    showSec(5);
-  })
+        const settings = require('electron-settings');
         $(document).ready(function () {
+            $.fn.pressEnter = function (fn) {
+                return this.each(function () {
+                    $(this).bind('enterPress', fn);
+                    $(this).keyup(function (e) {
+                        if (e.keyCode == 13) {
+                            $(this).trigger("enterPress");
+                        }
+                    })
+                });
+            };
+
+            //use it:
+            $('#stuId').pressEnter(submitWelcome)
+            if(settings.get('ip')==null) showWelcome()
+            $("#svc").on("click", function () {
+                var status = $(this).find("input[type=checkbox]").prop('checked');
+                if (status == true) settings.set('svc', true);
+                else settings.set('svc', false);
+            });
+            if (settings.get('svc') == 1) {
+                $('#svc').children('label').click()
+            }
             setTimeout(function () {
                 $('body').css('overflow-y', 'scroll');
             }, 3000);
@@ -249,7 +268,63 @@
         function showCred() {
             showSec(4)
         }
+        function showWelcome() {
+            showSec(5)
+        }
+        function submitError() {
+            $('#stuId').removeClass('validate').addClass('invalid')
+        }
+        function submitWelcome() {
+            stuId = $('#stuId').val()
+            if (stuId == null) submitError();
+            else if (stuId.length != String(parseInt(stuId)).length) submitError();
+            else if (stuId.length < 4) submitError();
+            else if (stuId.length > 5) submitError();
+            else {
+                if(stuId.length==4) {
+                    a=Math.floor(parseInt(stuId)/1000)
+                    b=Math.floor(parseInt(stuId)/100%10)
+                    c=parseInt(stuId)%100
+                }
+                if(stuId.length==5) {
+                    a=Math.floor(parseInt(stuId)/10000)
+                    b=Math.floor(parseInt(stuId)/100%10)
+                    c=parseInt(stuId)%100
+                }
+                if(a>3 || a<1) submitError();
+                else if(b>5 || b<1) submitError();
+                else if(c>16 || c<1) submitError();
+                else {
+                    su=9+c+(b-1)*16
+                    if(a==1) ip='10.140.82.'+String(su)
+                    if(a==2) ip='10.140.83.'+String(su)
+                    if(a==3) ip='10.140.84.'+String(su)
+                    settings.set('ip', ip);
+                    showSec(1)
+                }
+            }
+        }
+        function agreeResetIP() {
+            const { ipcRenderer } = require('electron')
+            ipcRenderer.send('resetApplication', 'IP')
+        }
+        function resetIp() {
+            $('.modal').modal();
+            $('#modal1').modal('open');
+        }
     </script>
+
+    <div id="modal1" class="modal">
+    <div class="modal-content">
+      <h4>IP를 초기화하면 모든 설정이 지워집니다.</h4>
+      <p>정말로 IP를 초기화 하시겠어요?</p>
+    </div>
+    <div class="modal-footer">
+      <a class="modal-close waves-effect waves-green btn-flat" onclick="agreeResetIP();">예</a>
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat">아니요</a>
+    </div>
+  </div>
+
     <div class="frame">
         <div class="container">
             <div class="fixCon">
@@ -338,7 +413,7 @@
                             <div style="width:100%;">
                                 <h1>설정</h1>
                                 <h4>IP 자동변경</h4>
-                                <div class="switch">
+                                <div class="switch" id="svc">
                                     <label>
                                         끄기
                                         <input type="checkbox">
@@ -358,6 +433,8 @@
                                 </div>
                                 <br>
                                 <a class="waves-effect waves-light btn deep-purple lighten-1"
+                                    onclick="resetIp()">IP 초기화</a>
+                                <a class="waves-effect waves-light btn deep-purple lighten-1"
                                     onclick="showMain()">확인</a>
                             </div>
                         </div>
@@ -376,6 +453,25 @@
                                 <br>
                                 <a class="waves-effect waves-light btn deep-purple lighten-1"
                                     onclick="showMain()">확인</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="sec5" class="hideSection novisible section" style="width:100%;height:80vh;min-height:100%;">
+                    <div class="waves-effect z-depth-2 hoverable" style="width:100%;height:100%;">
+                        <div class="valign-wrapper center-align" style="width:100%;height:100%;">
+                            <div style="width:100%;">
+                                <h1>환영합니다!</h1>
+                                <p>계속하려면 학번을 입력해 주세요.</p>
+                                <div class="row">
+                                    <div class="input-field col offset-s4 s4">
+                                        <input id="stuId" type="text" class="validate">
+                                        <label for="stuId" data-error="올바른 학번을 입력해 주세요.">학번</label>
+                                    </div>
+                                </div>
+                                <a class="waves-effect waves-light btn deep-purple lighten-1"
+                                    onclick="submitWelcome()">확인</a>
                             </div>
                         </div>
                     </div>

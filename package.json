@@ -35,6 +35,7 @@
   },
   "homepage": "https://github.com/IASA-Null/iasa-ip#readme",
   "dependencies": {
+    "electron-settings": "^3.2.0",
     "network": "^0.4.1",
     "network-config": "^2.0.0",
     "request": "^2.88.0",
