@@ -19,6 +19,7 @@ function resetApplication() {
     settings.set('ip', null)
     settings.set('svc', false)
     settings.set('adp', null)
+    settings.set('gate', null)
     createMainWindow();
 }
 
@@ -67,7 +68,7 @@ function createMainWindow() {
         protocol: 'file:',
         slashes: true
     }));
-    //win.webContents.openDevTools();
+    win.webContents.openDevTools();
     win.on('close', function (e) {
         win = null;
     });

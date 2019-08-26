@@ -232,8 +232,7 @@
                     })
                 });
             };
-
-            //use it:
+            $('#chg2').hide();
             $('#stuId').pressEnter(submitWelcome)
             if (settings.get('ip') == null) showWelcome()
             else if (settings.get('adp') == null) getAdapter()
@@ -260,9 +259,13 @@
         function showMain() {
             showSec(1)
         }
-        function showInfo() {
+        async function chgIp() {
+            ipModule=require('./changeIp.js')
             showSec(2)
-            setTimeout(showMain, 1500);
+            await ipModule.changeToSchool();
+            setTimeout(function() {$('#chg1').fadeOut(500)}, 1200)
+            setTimeout(function() {$('#chg2').fadeIn(500)}, 1700)
+            setTimeout(function() {showMain()}, 2200)
         }
         function showSet() {
             showSec(3)
@@ -299,10 +302,20 @@
                 else if (c > 16 || c < 1) submitError();
                 else {
                     su = 9 + c + (b - 1) * 16
-                    if (a == 1) ip = '10.140.82.' + String(su)
-                    if (a == 2) ip = '10.140.83.' + String(su)
-                    if (a == 3) ip = '10.140.84.' + String(su)
+                    if (a == 1) {
+                        ip = '10.140.82.' + String(su)
+                        gate='10.140.82.254'
+                    }
+                    if (a == 2) {
+                        ip = '10.140.83.' + String(su)
+                        gate='10.140.83.254'
+                    }
+                    if (a == 3) {
+                        ip = '10.140.84.' + String(su)
+                        gate='10.140.84.254'
+                    }
                     settings.set('ip', ip);
+                    settings.set('gate', gate);
                     getAdapter()
                 }
             }
@@ -318,7 +331,7 @@
         function getAdapter() {
             const os = require('os')
             dat = os.networkInterfaces();
-            if (dat['i'] != null) showSec(1)
+            if (dat['Wi-Fi'] != null) showSec(1)
             else {
                 i=1
                 for(var n in dat){
@@ -354,7 +367,7 @@
             <div class="fixCon">
                 <div id="sec1" class="initShowSection section">
                     <div class="row">
-                        <div class="col s12 obj" onclick="showInfo();">
+                        <div class="col s12 obj" onclick="chgIp();">
                             <div class="waves-effect z-depth-2 hoverable" style="width:100%;">
                                 <div style="display:inline-block;">
                                     <div style="float:left;width:140px;">
@@ -410,7 +423,7 @@
                 <div id="sec2" class="hideSection novisible section" style="width:100%;height:80vh;min-height:100%;">
                     <div class="waves-effect z-depth-2 hoverable" style="width:100%;height:100%;">
                         <div class="valign-wrapper center-align" style="width:100%;height:100%;">
-                            <div style="width:100%;">
+                            <div style="width:100%;" id="chg1">
                                 <h1>IP 변경중...</h1>
                                 <div class="preloader-wrapper big active">
                                     <div class="spinner-layer spinner-blue-only">
@@ -426,6 +439,10 @@
                                     </div>
                                 </div>
                                 <p>잠시만 기다려 주세요.</p>
+                            </div>
+                            <div style="width:100%;" id="chg2">
+                                <h1>모두 완료되었습니다!</h1>
+                                <img src="./res/done.png" style="width:200px;">
                             </div>
                         </div>
                     </div>
