@@ -17,7 +17,8 @@ function resetApplication() {
     win.close()
     win=null
     settings.set('ip', null)
-    settings.set('svc', null)
+    settings.set('svc', false)
+    settings.set('adp', null)
     createMainWindow();
 }
 

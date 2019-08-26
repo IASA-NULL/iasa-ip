@@ -17,10 +17,6 @@ function getCurrentState() {
     }).catch((error) => {})
 }
 
-function getIpAddress(stuId) {
-    if(stuId)
-}
-
 exports.changeToSchool=changeToSchool;
 exports.changeToOUt=changeToOUt;
 exports.getCurrentState=getCurrentState;
