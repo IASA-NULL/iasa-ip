@@ -1,0 +1,1 @@
+REG ADD "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /V "IP" /t REG_SZ /F /D "%LocalAppData%\Programs\iasa-ip\IP.exe -s"

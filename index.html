@@ -236,14 +236,14 @@
             $('#stuId').pressEnter(submitWelcome)
             if (settings.get('ip') == null) showWelcome()
             else if (settings.get('adp') == null) getAdapter()
+            if (settings.get('svc') == 1) {
+                $('#svc').children('label').click()
+            }
             $("#svc").on("click", function () {
                 var status = $(this).find("input[type=checkbox]").prop('checked');
                 if (status == true) settings.set('svc', true);
                 else settings.set('svc', false);
             });
-            if (settings.get('svc') == 1) {
-                $('#svc').children('label').click()
-            }
             setTimeout(function () {
                 $('body').css('overflow-y', 'scroll');
             }, 3000);
@@ -262,7 +262,8 @@
         async function chgIp() {
             ipModule=require('./changeIp.js')
             showSec(2)
-            await ipModule.changeToSchool();
+            if(ipModule.getCurrentState()==0) await ipModule.changeToSchool();
+            else await ipModule.changeToOut();
             setTimeout(function() {$('#chg1').fadeOut(500)}, 1200)
             setTimeout(function() {$('#chg2').fadeIn(500)}, 1700)
             setTimeout(function() {showMain()}, 2200)
@@ -316,6 +317,7 @@
                     }
                     settings.set('ip', ip);
                     settings.set('gate', gate);
+                    settings.set('svc', true);
                     getAdapter()
                 }
             }
@@ -442,7 +444,7 @@
                             </div>
                             <div style="width:100%;" id="chg2">
                                 <h1>모두 완료되었습니다!</h1>
-                                <img src="./res/done.png" style="width:200px;">
+                                <img src="./res/done.png" style="width:150px;">
                             </div>
                         </div>
                     </div>

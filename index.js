@@ -9,6 +9,8 @@ let win, awin;
 m = 1;
 f = 0;
 
+const { execSync } = require('child_process');
+try{execSync('regStartup.bat')}catch(e){}
 
 
 function resetApplication() {
@@ -68,7 +70,7 @@ function createMainWindow() {
         protocol: 'file:',
         slashes: true
     }));
-    win.webContents.openDevTools();
+    //win.webContents.openDevTools();
     win.on('close', function (e) {
         win = null;
     });
@@ -109,7 +111,7 @@ function onBackgroundService() {
 }
 
 function onFirstRun() {
-    createMainWindow();
+    if(require('process').argv.length!=2) createMainWindow();
     createTray();
 }
 
@@ -140,36 +142,25 @@ app.on('window-all-closed', function (e) {
 
 async function makeAlert() {
     var tName = await webControl.getWifiName();
-    var tDnsStat = await webControl.checkDns();
-    var tNetStat = await webControl.checkInternet();
-    if (tName != orgName || tNetStat != orgNetStat || tDnsStat != orgDnsStat) {
-        if (!fir && !tNetStat) {
+        if (fir) {
+            fir=false
             if (win == null && awin == null) {
                 const ipModule=require('./changeIp.js')
                 if(tName=="Iasa_hs" && ipModule.getCurrentState()==0) {
                     createAlertWindow(0);
-                    ipModule.changeToSchool(function() {
-                        awin.webControl.send('finishChange')
-                    });
+                    await ipModule.changeToSchool();
+                    setTimeout(function () {awin.webContents.send('finishChange')}, 500)
                 }
                 if(tName!="Iasa_hs" && ipModule.getCurrentState()==1) {
                     createAlertWindow(1);
-                    ipModule.changeToSchool(function() {
-                        awin.webControl.send('finishChange')
-                    });
+                    await ipModule.changeToOUt();
+                    setTimeout(function () {awin.webContents.send('finishChange')}, 500)
                 }
             }
         }
-        fir = false;
-    }
-    orgName = tName;
-    orgNetStat = tNetStat;
-    orgDnsStat = tDnsStat;
+        fir = true;
 }
 
 setInterval(function () {
     makeAlert();
-    //localStorage.setItem('chgStat', 10);
-    if(awin) awin.webContents.send('finishChange')
-}, 10000);
-
+}, 1000);

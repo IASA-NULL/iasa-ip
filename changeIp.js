@@ -13,6 +13,7 @@ function changeToSchool() {
             execSync('cmd /k title IP & netsh interface ip add dns name="' + adp + '" addr=' + dns2 + ' validate=no index=2 & exit')
         }
         catch (e) { }
+        settings.set('stat', 1)
         resolve();
     });
 }
@@ -20,25 +21,23 @@ function changeToSchool() {
 function changeToOUt() {
     return new Promise((resolve, reject) => {
         const { execSync } = require('child_process');
+        const settings = require('electron-settings');
         adp = settings.get('adp')
         try {
             execSync('cmd /k title IP & netsh -c int ip set address name="' + adp + '" source=dhcp & exit')
             execSync('cmd /k title IP & netsh -c int ip set dnsservers name="' + adp + '" source=dhcp & exit')
         }
         catch (e) { }
+        settings.set('stat', 0)
         resolve();
     });
 }
 
 function getCurrentState() {
-    const { session } = require('electron')
-    session.defaultSession.cookies.get({})
-        .then((cookies) => {
-            cookies.forEach(c => {
-                if (String(c.name) == 'op') return parseInt(c.value);
-            });
-            return 0;
-        }).catch((error) => { })
+    const settings = require('electron-settings');
+    t=settings.get('stat')
+    if(t==null) return 0;
+    else return t;
 }
 
 exports.changeToSchool = changeToSchool;

@@ -5,9 +5,12 @@ productName: IP
 appId: iasa.null.ip
 win:
   requestedExecutionLevel: requireAdministrator
+  extraFiles:
+    - ./regStartup.bat
+    - ./res/IPLogo.ico
   target:
     - target: NSIS
-  icon: res/IPLogo.ico
+  icon: ./res/IPLogo.ico
 nsis:
   createStartMenuShortcut: true
 electronVersion: 6.0.3
