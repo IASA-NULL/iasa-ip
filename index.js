@@ -21,6 +21,7 @@ function resetApplication() {
     settings.set('svc', false)
     settings.set('adp', null)
     settings.set('gate', null)
+    settings.set('aupd', false)
     createMainWindow();
 }
 
