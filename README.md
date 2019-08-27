@@ -3,4 +3,4 @@
 IP is Tool for change IP easily in IASA.
 
 # Download
-[IP 3.2.2](https://github.com/IASA-Null/iasa-ip/releases/tag/3.2.2)
+[IP 4.0.0](https://github.com/IASA-Null/iasa-ip/releases/tag/4.0.0)
