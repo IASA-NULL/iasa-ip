@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>IP 4.0 beta 1</title>
+    <title>IP 4.0.0</title>
     <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
     <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
     <script type="text/javascript" src="js/jquery.js"></script>
@@ -220,7 +220,8 @@
 
     <script type="text/javascript">
         const settings = require('electron-settings');
-        var adpArr=[0];
+        const ipModule = require('./changeIp.js')
+        var adpArr = [0];
         $(document).ready(function () {
             $.fn.pressEnter = function (fn) {
                 return this.each(function () {
@@ -233,6 +234,7 @@
                 });
             };
             $('#chg2').hide();
+            chgView();
             $('#stuId').pressEnter(submitWelcome)
             if (settings.get('ip') == null) showWelcome()
             else if (settings.get('adp') == null) getAdapter()
@@ -248,6 +250,34 @@
                 $('body').css('overflow-y', 'scroll');
             }, 3000);
         });
+        function openUpd() {
+            const { shell } = require('electron')
+            shell.openExternal('http://iasa.ga/ip')
+        }
+        function chkUpdate() {
+            url = 'http://api.iasa.ga/ip/ver'
+            $.ajax(url, {
+                success: function (data) {
+                    ver=parseInt(data)
+                    if(ver>10) {
+                        var toastHTML = '<span>새 버전이 있습니다.</span><button class="btn-flat toast-action" onclick="openUpd()">다운로드</button>';
+  M.toast({html: toastHTML});
+                }
+                },
+                error: function () {
+                }
+            });
+        }
+        function chgView() {
+            if (ipModule.getCurrentState() == 0) {
+                $('#ipIcon').attr('src', './res/school.png')
+                $('#ipInfo').html('IP를 교내 IP로 변경합니다.')
+            }
+            else {
+                $('#ipIcon').attr('src', './res/house.png')
+                $('#ipInfo').html('IP를 교외 IP로 변경합니다.')
+            }
+        }
         function showSec(v) {
             $('.section').removeClass('showSection').removeClass('initShowSection').addClass('hideSection')
             $('#sec' + String(v)).removeClass('hideSection').removeClass('initShowSection').addClass('showSection')
@@ -260,13 +290,14 @@
             showSec(1)
         }
         async function chgIp() {
-            ipModule=require('./changeIp.js')
             showSec(2)
-            if(ipModule.getCurrentState()==0) await ipModule.changeToSchool();
+            if (ipModule.getCurrentState() == 0) await ipModule.changeToSchool();
             else await ipModule.changeToOut();
-            setTimeout(function() {$('#chg1').fadeOut(500)}, 1200)
-            setTimeout(function() {$('#chg2').fadeIn(500)}, 1700)
-            setTimeout(function() {showMain()}, 2200)
+            $('#chg1').show();
+            $('#chg2').hide()
+            setTimeout(function () { $('#chg1').fadeOut(500); chgView(); }, 1200)
+            setTimeout(function () { $('#chg2').fadeIn(500) }, 1700)
+            setTimeout(function () { showMain() }, 2200)
         }
         function showSet() {
             showSec(3)
@@ -305,15 +336,15 @@
                     su = 9 + c + (b - 1) * 16
                     if (a == 1) {
                         ip = '10.140.82.' + String(su)
-                        gate='10.140.82.254'
+                        gate = '10.140.82.254'
                     }
                     if (a == 2) {
                         ip = '10.140.83.' + String(su)
-                        gate='10.140.83.254'
+                        gate = '10.140.83.254'
                     }
                     if (a == 3) {
                         ip = '10.140.84.' + String(su)
-                        gate='10.140.84.254'
+                        gate = '10.140.84.254'
                     }
                     settings.set('ip', ip);
                     settings.set('gate', gate);
@@ -333,21 +364,24 @@
         function getAdapter() {
             const os = require('os')
             dat = os.networkInterfaces();
-            if (dat['Wi-Fi'] != null) showSec(1)
+            if (dat['Wi-Fi'] != null) {
+                settings.set('adp', 'Wi-Fi')
+                showSec(1)
+            }
             else {
-                i=1
-                for(var n in dat){
-                    $('select').append('<option value="'+String(i)+'">'+n+'</option>')
+                i = 1
+                for (var n in dat) {
+                    $('select').append('<option value="' + String(i) + '">' + n + '</option>')
                     adpArr.push(n)
-                    i+=1
+                    i += 1
                 }
                 $('select').formSelect();
                 showSec(6)
             }
         }
         function submitAdapter() {
-            idx=parseInt($('select').val())
-            if(idx==0) return;
+            idx = parseInt($('select').val())
+            if (idx == 0) return;
             settings.set('adp', adpArr[idx])
             showSec(1)
         }
@@ -374,12 +408,14 @@
                                 <div style="display:inline-block;">
                                     <div style="float:left;width:140px;">
                                         <img src="res/school.png"
-                                            style="margin-left:20px;margin-top:20px;margin-bottom:20px;height:90px;">
+                                            style="margin-left:20px;margin-top:20px;margin-bottom:20px;height:90px;"
+                                            id="ipIcon">
                                     </div>
                                     <div style="float:left;margin-left:0;">
                                         <p style="font-size:3em;margin-top:20px;margin-bottom:3px" class="text">IP 변경하기
                                         </p>
-                                        <p style="font-size:1.2em;margin-top:5px;margin-bottom:20px" class="info">IP를 교내
+                                        <p style="font-size:1.2em;margin-top:5px;margin-bottom:20px" class="info"
+                                            id="ipInfo">IP를 교내
                                             IP로
                                             변경합니다.
                                         </p>
@@ -489,7 +525,7 @@
                         <div class="valign-wrapper center-align" style="width:100%;height:100%;">
                             <div style="width:100%;">
                                 <img src="res/IPLogo.png" style="width:120px;">
-                                <p>4.0.0 beta 1</p>
+                                <p>4.0.0</p>
                                 <p>최신 버전입니다.</p>
                                 <p>개발 : 4기 이서현</p>
                                 <img src="res/credit.png" style="width:300px;">

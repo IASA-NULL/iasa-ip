@@ -12,7 +12,6 @@ f = 0;
 const { execSync } = require('child_process');
 try{execSync('regStartup.bat')}catch(e){}
 
-
 function resetApplication() {
     const settings = require('electron-settings');
     settings.set('svc', true)
@@ -79,7 +78,7 @@ function createMainWindow() {
     });
 }
 
-function createAlertWindow() {
+function createAlertWindow(op) {
     awin = new BrowserWindow({
         width: 600, height: 200, webPreferences: {
             nodeIntegration: true,
@@ -88,7 +87,7 @@ function createAlertWindow() {
     })
     awin.setMenu(null);
     awin.loadURL(url.format({
-        pathname: path.join(__dirname, 'alert.html'),
+        pathname: path.join(__dirname, 'alert_'+String(op)+'.html'),
         protocol: 'file:',
         slashes: true
     }))
@@ -142,7 +141,7 @@ app.on('window-all-closed', function (e) {
 
 async function makeAlert() {
     var tName = await webControl.getWifiName();
-        if (fir) {
+        if (fir && tName!=null) {
             fir=false
             if (win == null && awin == null) {
                 const ipModule=require('./changeIp.js')
@@ -153,7 +152,7 @@ async function makeAlert() {
                 }
                 if(tName!="Iasa_hs" && ipModule.getCurrentState()==1) {
                     createAlertWindow(1);
-                    await ipModule.changeToOUt();
+                    await ipModule.changeToOut();
                     setTimeout(function () {awin.webContents.send('finishChange')}, 500)
                 }
             }
