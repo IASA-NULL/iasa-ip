@@ -16,4 +16,5 @@ win:
   icon: ./res/IPLogo.ico
 nsis:
   createStartMenuShortcut: true
+  perMachine: true
 electronVersion: 6.0.3

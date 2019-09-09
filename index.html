@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>IP 4.0.0</title>
+    <title>IP 4.0.2</title>
     <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
     <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
     <script type="text/javascript" src="js/jquery.js"></script>
@@ -270,7 +270,7 @@
             $.ajax(url, {
                 success: function (data) {
                     ver = parseInt(data)
-                    if (ver > 10) {
+                    if (ver > 12) {
                         var toastHTML = '<span>새 버전이 있습니다.</span><button class="btn-flat toast-action" onclick="openUpd()">다운로드</button>';
                         M.toast({ html: toastHTML });
                         $('#new').hide();
@@ -541,7 +541,7 @@
                         <div class="valign-wrapper center-align" style="width:100%;height:100%;">
                             <div style="width:100%;">
                                 <img src="res/IPLogo.png" style="width:120px;">
-                                <p>4.0.0</p>
+                                <p>4.0.2</p>
                                 <p id="new">최신 버전입니다.</p>
                                 <p id="old">새 버전이 있습니다. <a onclick="openUpd()">다운로드</a></p>
                                 <p>개발 : 4기 이서현</p>
