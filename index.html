@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>IP 4.0.2</title>
+    <title>IP 4.0.3</title>
     <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
     <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
     <script type="text/javascript" src="js/jquery.js"></script>
@@ -265,14 +265,14 @@
             shell.openExternal('http://iasa.ga/ip')
         }
         function chkUpdate() {
-            if(settings.get('aupd')!=true) return;
+            if (settings.get('aupd') != true) return;
             url = 'http://api.iasa.ga/ip/ver'
             $.ajax(url, {
                 success: function (data) {
                     ver = parseInt(data)
-                    if (ver > 12) {
-                        var toastHTML = '<span>새 버전이 있습니다.</span><button class="btn-flat toast-action" onclick="openUpd()">다운로드</button>';
-                        M.toast({ html: toastHTML });
+                    if (ver > 13) {
+                        $('#modal2').modal({dismissible:false});
+                        $('#modal2').modal('open');
                         $('#new').hide();
                         $('#old').show();
                     }
@@ -373,7 +373,7 @@
             ipcRenderer.send('resetApplication', 'IP')
         }
         function resetIp() {
-            $('.modal').modal();
+            $('#modal1').modal();
             $('#modal1').modal('open');
         }
         function getAdapter() {
@@ -411,6 +411,15 @@
         <div class="modal-footer">
             <a class="modal-close waves-effect waves-green btn-flat" onclick="agreeResetIP();">예</a>
             <a href="#!" class="modal-close waves-effect waves-green btn-flat">아니요</a>
+        </div>
+    </div>
+
+    <div id="modal2" class="modal">
+        <div class="modal-content">
+            <h4>새 버전이 있습니다.</h4>
+        </div>
+        <div class="modal-footer">
+            <a class="modal-close waves-effect waves-green btn-flat" onclick="openUpd();">다운로드</a>
         </div>
     </div>
 
@@ -541,7 +550,7 @@
                         <div class="valign-wrapper center-align" style="width:100%;height:100%;">
                             <div style="width:100%;">
                                 <img src="res/IPLogo.png" style="width:120px;">
-                                <p>4.0.2</p>
+                                <p>4.0.3</p>
                                 <p id="new">최신 버전입니다.</p>
                                 <p id="old">새 버전이 있습니다. <a onclick="openUpd()">다운로드</a></p>
                                 <p>개발 : 4기 이서현</p>

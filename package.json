@@ -1,7 +1,7 @@
 {
   "name": "iasa-ip",
-  "version": "4.0.2",
-  "description": "IP 4.0.2",
+  "version": "4.0.3",
+  "description": "IP 4.0.3",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, Tray, dialog, ipcMain  } = require('electron');
+const { app, BrowserWindow, Menu, Tray, dialog, ipcMain } = require('electron');
 const path = require('path');
 const url = require('url');
 const webControl = require('./webControl.js');
@@ -10,13 +10,13 @@ m = 1;
 f = 0;
 
 const { execSync } = require('child_process');
-try{execSync('regStartup.bat')}catch(e){}
+try { execSync('regStartup.bat') } catch (e) { }
 
 function resetApplication() {
     const settings = require('electron-settings');
     settings.set('svc', true)
     win.close()
-    win=null
+    win = null
     settings.set('ip', null)
     settings.set('svc', false)
     settings.set('adp', null)
@@ -27,7 +27,7 @@ function resetApplication() {
 
 ipcMain.on('resetApplication', (event, arg) => {
     resetApplication();
-  })
+})
 
 
 function openMainWindow() {
@@ -88,7 +88,7 @@ function createAlertWindow(op) {
     })
     awin.setMenu(null);
     awin.loadURL(url.format({
-        pathname: path.join(__dirname, 'alert_'+String(op)+'.html'),
+        pathname: path.join(__dirname, 'alert_' + String(op) + '.html'),
         protocol: 'file:',
         slashes: true
     }))
@@ -106,12 +106,21 @@ function createAlertWindow(op) {
 
 function onBackgroundService() {
     const settings = require('electron-settings');
-    if(settings.get('svc')==null) settings.set('svc', true)
+    if (settings.get('svc') == null) settings.set('svc', true)
     return settings.get('svc')
 }
 
+let notification = null;
+
 function onFirstRun() {
-    if(require('process').argv.length!=2) createMainWindow();
+    const { Notification } = require('electron');
+    notification = new Notification({ title: '업데이트', body: 'IP의 새 버전이 있습니다.', icon: path.join(__dirname, 'res/ipLogo.ico') });
+    notification.on('click', () => {
+        const { shell } = require('electron')
+        shell.openExternal('http://iasa.ga/ip')
+    });
+    chkUpdate();
+    if (require('process').argv.length != 2) createMainWindow();
     createTray();
 }
 
@@ -131,8 +140,8 @@ fir = true;
 app.on('ready', onFirstRun);
 
 async function allCloseHandler() {
-    var res=await onBackgroundService();
-    if(!res) app.exit();
+    var res = await onBackgroundService();
+    if (!res) app.exit();
 }
 
 app.on('window-all-closed', function (e) {
@@ -142,25 +151,40 @@ app.on('window-all-closed', function (e) {
 
 async function makeAlert() {
     var tName = await webControl.getWifiName();
-        if (fir && tName!=null) {
-            fir=false
-            if (win == null && awin == null) {
-                const ipModule=require('./changeIp.js')
-                if(tName=="Iasa_hs" && ipModule.getCurrentState()==0) {
-                    createAlertWindow(0);
-                    await ipModule.changeToSchool();
-                    setTimeout(function () {awin.webContents.send('finishChange')}, 500)
-                }
-                if(tName!="Iasa_hs" && ipModule.getCurrentState()==1) {
-                    createAlertWindow(1);
-                    await ipModule.changeToOut();
-                    setTimeout(function () {awin.webContents.send('finishChange')}, 500)
-                }
+    if (fir && tName != null) {
+        fir = false
+        if (win == null && awin == null) {
+            const ipModule = require('./changeIp.js')
+            if (tName == "Iasa_hs" && ipModule.getCurrentState() == 0) {
+                createAlertWindow(0);
+                await ipModule.changeToSchool();
+                setTimeout(function () { awin.webContents.send('finishChange') }, 500)
+            }
+            if (tName != "Iasa_hs" && ipModule.getCurrentState() == 1) {
+                createAlertWindow(1);
+                await ipModule.changeToOut();
+                setTimeout(function () { awin.webContents.send('finishChange') }, 500)
             }
         }
-        fir = true;
+    }
+    fir = true;
 }
 
 setInterval(function () {
     makeAlert();
 }, 1000);
+
+
+
+function chkUpdate() {
+    var r = require("request")({ url: 'http://api.iasa.ga/ip/ver', timeout: 1000 }, function (e, response) {
+        if (e != null) return;
+        else if (parseInt(response.body) > 13) {
+            notification.close();
+            notification.show();
+        }
+    });
+}
+setInterval(function () {
+    chkUpdate();
+}, 1000*60*10);
