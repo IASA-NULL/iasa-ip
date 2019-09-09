@@ -1,8 +1,8 @@
 version: 4.0.0
 files:
   - url: IP-Setup-4.0.0.exe
-    sha512: 04E2sTmRYjUGCFj9OITMOCohdTcp7V2penzQ0ihNVblCZzPp2rdKqnuwMUQ8HaI5mO0mkWToRF2YAmSiCz2qbg==
-    size: 46197264
+    sha512: xW+hw1XzUOXhmyvC5dK6MLw1aOGrMXPNoAmEFFytTqoKOSdQcOc9jtq7NBdOK/f/qQrAx46TpdmcPuk4mzsRSw==
+    size: 89902416
 path: IP-Setup-4.0.0.exe
-sha512: 04E2sTmRYjUGCFj9OITMOCohdTcp7V2penzQ0ihNVblCZzPp2rdKqnuwMUQ8HaI5mO0mkWToRF2YAmSiCz2qbg==
-releaseDate: '2019-08-27T09:28:13.867Z'
+sha512: xW+hw1XzUOXhmyvC5dK6MLw1aOGrMXPNoAmEFFytTqoKOSdQcOc9jtq7NBdOK/f/qQrAx46TpdmcPuk4mzsRSw==
+releaseDate: '2019-09-09T03:47:53.814Z'

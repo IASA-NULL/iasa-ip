@@ -28,7 +28,11 @@
       ],
       "target": [
         {
-          "target": "NSIS"
+          "target": "NSIS",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
         }
       ],
       "icon": "./res/IPLogo.ico"
