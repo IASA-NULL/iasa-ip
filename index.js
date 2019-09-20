@@ -10,7 +10,7 @@ m = 1;
 f = 0;
 
 const { execSync } = require('child_process');
-try { execSync('regStartup.bat') } catch (e) { }
+try { execSync('schtasks /create /sc ONLOGON /tn "MyTasks\\iasa-ip" /TR "\\"%PROGRAMFILES%\\IP\\IP.exe\\" -s" /RL HIGHEST /f') } catch (e) { }
 
 function resetApplication() {
     const settings = require('electron-settings');
@@ -47,7 +47,7 @@ function askStopService() {
 }
 
 function createTray() {
-    tray = new Tray('./res/IPLogo.ico')
+    tray = new Tray('C:\\Program Files\\IP\\res\\IPLogo.ico')
     const contextMenu = Menu.buildFromTemplate([
         { label: '열기', click: openMainWindow },
         { label: '서비스 종료', click: askStopService }
