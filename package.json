@@ -1,7 +1,7 @@
 {
   "name": "iasa-ip",
-  "version": "4.0.4",
-  "description": "IP 4.0.4",
+  "version": "4.0.5",
+  "description": "IP 4.0.5",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -24,7 +24,8 @@
       "requestedExecutionLevel": "requireAdministrator",
       "extraFiles": [
         "./regStartup.bat",
-        "./res/IPLogo.ico"
+        "./res/IPLogo.ico",
+        "./res/iasa-ip-l.xml"
       ],
       "target": [
         {

@@ -8,6 +8,7 @@ win:
   extraFiles:
     - ./regStartup.bat
     - ./res/IPLogo.ico
+    - ./res/iasa-ip-l.xml
   target:
     - target: NSIS
       arch:

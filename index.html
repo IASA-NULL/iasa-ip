@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>IP 4.0.4</title>
+    <title>IP 4.0.5</title>
     <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
     <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
     <script type="text/javascript" src="js/jquery.js"></script>
@@ -219,6 +219,8 @@
     </div>
 
     <script type="text/javascript">
+        const verNum=15;
+        const verStr="4.0.5";
         const settings = require('electron-settings');
         const ipModule = require('./changeIp.js')
         var adpArr = [0];
@@ -270,7 +272,7 @@
             $.ajax(url, {
                 success: function (data) {
                     ver = parseInt(data)
-                    if (ver > 14) {
+                    if (ver > verNum) {
                         $('#modal2').modal({dismissible:false});
                         $('#modal2').modal('open');
                         $('#new').hide();
@@ -550,7 +552,7 @@
                         <div class="valign-wrapper center-align" style="width:100%;height:100%;">
                             <div style="width:100%;">
                                 <img src="res/IPLogo.png" style="width:120px;">
-                                <p>4.0.4</p>
+                                <p>4.0.5</p>
                                 <p id="new">최신 버전입니다.</p>
                                 <p id="old">새 버전이 있습니다. <a onclick="openUpd()">다운로드</a></p>
                                 <p>개발 : 4기 이서현</p>

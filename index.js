@@ -4,13 +4,15 @@ const url = require('url');
 const webControl = require('./webControl.js');
 let tray = null
 
+const verNum=15;
+
 let win, awin;
 
 m = 1;
 f = 0;
 
 const { execSync } = require('child_process');
-try { execSync('schtasks /create /sc ONLOGON /tn "MyTasks\\iasa-ip" /TR "\\"%PROGRAMFILES%\\IP\\IP.exe\\" -s" /RL HIGHEST /f') } catch (e) { }
+try { execSync('schtasks /create /tn "MyTasks\\iasa-ip-l" /xml "./res/iasa-ip-l.xml" /f') } catch (e) { }
 
 function resetApplication() {
     const settings = require('electron-settings');
@@ -179,7 +181,7 @@ setInterval(function () {
 function chkUpdate() {
     var r = require("request")({ url: 'http://api.iasa.ga/ip/ver', timeout: 1000 }, function (e, response) {
         if (e != null) return;
-        else if (parseInt(response.body) > 13) {
+        else if (parseInt(response.body) > verNum) {
             notification.close();
             notification.show();
         }
