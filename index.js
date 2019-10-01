@@ -4,7 +4,7 @@ const url = require('url');
 const webControl = require('./webControl.js');
 let tray = null
 
-const verNum=15;
+const verNum=16;
 
 let win, awin;
 
@@ -160,11 +160,15 @@ async function makeAlert() {
             if (tName == "Iasa_hs" && ipModule.getCurrentState() == 0) {
                 createAlertWindow(0);
                 await ipModule.changeToSchool();
+                while(awin == null);
+                while(awin.webContents == null);
                 setTimeout(function () { awin.webContents.send('finishChange') }, 500)
             }
             if (tName != "Iasa_hs" && ipModule.getCurrentState() == 1) {
                 createAlertWindow(1);
                 await ipModule.changeToOut();
+                while(awin == null);
+                while(awin.webContents == null);
                 setTimeout(function () { awin.webContents.send('finishChange') }, 500)
             }
         }
