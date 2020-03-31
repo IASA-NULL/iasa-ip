@@ -1,10 +1,10 @@
 {
   "name": "iasa-ip",
-  "version": "4.0.6",
-  "description": "IP 4.0.6",
+  "version": "4.0.7",
+  "description": "IP 4.0.7",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "run": "electron index.js",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
   },

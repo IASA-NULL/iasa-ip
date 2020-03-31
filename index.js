@@ -2,9 +2,9 @@ const { app, BrowserWindow, Menu, Tray, dialog, ipcMain } = require('electron');
 const path = require('path');
 const url = require('url');
 const webControl = require('./webControl.js');
-let tray = null
+let tray = null;
 
-const verNum=16;
+const verNum = 17;
 
 let win, awin;
 
@@ -156,7 +156,7 @@ async function makeAlert() {
     if (fir && tName != null) {
         fir = false
         if (win == null && awin == null) {
-            const ipModule = require('./changeIp.js')
+            const ipModule = require('./changeIp.js');
             if (tName == "Iasa_hs" && ipModule.getCurrentState() == 0) {
                 createAlertWindow(0);
                 await ipModule.changeToSchool();
@@ -183,7 +183,7 @@ setInterval(function () {
 
 
 function chkUpdate() {
-    var r = require("request")({ url: 'http://api.iasa.ga/ip/ver', timeout: 1000 }, function (e, response) {
+    var r = require("request")({url: 'http://api.iasa.kr/ip/ver', timeout: 1000}, function (e, response) {
         if (e != null) return;
         else if (parseInt(response.body) > verNum) {
             notification.close();

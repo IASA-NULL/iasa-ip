@@ -4,8 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <title>IP 4.0.6</title>
-    <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
-    <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
+    <link href="css/materialize.min.css" media="screen,projection" rel="stylesheet" type="text/css"/>
+    <script>if (typeof module === 'object') {
+        window.module = module;
+        module = undefined;
+    }</script>
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript" src="js/materialize.min.js"></script>
     <script>if (window.module) module = window.module;</script>
@@ -201,414 +204,426 @@
             min-height: 450px;
         }
 
-        .switch label input[type=checkbox]:checked+.lever:after {
+        .switch label input[type=checkbox]:checked + .lever:after {
             background-color: #7e57c2 !important;
         }
 
-        .switch label input[type=checkbox]:checked+.lever {
+        .switch label input[type=checkbox]:checked + .lever {
             background-color: #7e57c2 !important;
         }
     </style>
 </head>
 
 <body>
-    <div class="splash">
-        <video width="360" height="360" autoplay>
-            <source src="res/IPSplash.mp4" type="video/mp4" />
-        </video>
-    </div>
+<div class="splash">
+    <video autoplay height="360" width="360">
+        <source src="res/IPSplash.mp4" type="video/mp4"/>
+    </video>
+</div>
 
-    <script type="text/javascript">
-        const verNum=16;
-        const verStr="4.0.6";
-        const settings = require('electron-settings');
-        const ipModule = require('./changeIp.js')
-        var adpArr = [0];
-        $(document).ready(function () {
-            $.fn.pressEnter = function (fn) {
-                return this.each(function () {
-                    $(this).bind('enterPress', fn);
-                    $(this).keyup(function (e) {
-                        if (e.keyCode == 13) {
-                            $(this).trigger("enterPress");
-                        }
-                    })
-                });
-            };
-            $('#chg2').hide();
-            $('#old').hide();
-            chgView();
-            chkUpdate()
-            $('#stuId').pressEnter(submitWelcome)
-            if (settings.get('ip') == null) showWelcome()
-            else if (settings.get('adp') == null) getAdapter()
-            if (settings.get('svc') == 1) {
-                $('#svc').children('label').click()
-            }
-            if (settings.get('aupd') == true) {
-                $('#aupd').children('label').click()
-            }
-            $("#svc").on("click", function () {
-                var status = $(this).find("input[type=checkbox]").prop('checked');
-                if (status == true) settings.set('svc', true);
-                else settings.set('svc', false);
+<script type="text/javascript">
+    const verNum = 17;
+    const verStr = "4.0.7";
+    const settings = require('electron-settings');
+    const ipModule = require('./changeIp.js');
+    var adpArr = [0];
+    $(document).ready(function () {
+        $.fn.pressEnter = function (fn) {
+            return this.each(function () {
+                $(this).bind('enterPress', fn);
+                $(this).keyup(function (e) {
+                    if (e.keyCode == 13) {
+                        $(this).trigger("enterPress");
+                    }
+                })
             });
-            $("#aupd").on("click", function () {
-                var status = $(this).find("input[type=checkbox]").prop('checked');
-                if (status == true) settings.set('aupd', true);
-                else settings.set('aupd', false);
-            });
-            setTimeout(function () {
-                $('body').css('overflow-y', 'scroll');
-            }, 3000);
+        };
+        $('#chg2').hide();
+        $('#old').hide();
+        chgView();
+        chkUpdate();
+        $('#stuId').pressEnter(submitWelcome);
+        if (settings.get('ip') == null) showWelcome();
+        else if (settings.get('adp') == null) getAdapter();
+        if (settings.get('svc') == 1) {
+            $('#svc').children('label').click()
+        }
+        if (settings.get('aupd') == true) {
+            $('#aupd').children('label').click()
+        }
+        $("#svc").on("click", function () {
+            var status = $(this).find("input[type=checkbox]").prop('checked');
+            if (status == true) settings.set('svc', true);
+            else settings.set('svc', false);
         });
-        function openUpd() {
-            const { shell } = require('electron')
-            shell.openExternal('http://ip.iasa.ga')
-        }
-        function chkUpdate() {
-            if (settings.get('aupd') != true) return;
-            url = 'http://api.iasa.ga/ip/ver'
-            $.ajax(url, {
-                success: function (data) {
-                    ver = parseInt(data)
-                    if (ver > verNum) {
-                        $('#modal2').modal({dismissible:false});
-                        $('#modal2').modal('open');
-                        $('#new').hide();
-                        $('#old').show();
-                    }
-                },
-                error: function () {
+        $("#aupd").on("click", function () {
+            var status = $(this).find("input[type=checkbox]").prop('checked');
+            if (status == true) settings.set('aupd', true);
+            else settings.set('aupd', false);
+        });
+        setTimeout(function () {
+            $('body').css('overflow-y', 'scroll');
+        }, 3000);
+    });
+
+    function openUpd() {
+        const {shell} = require('electron');
+        shell.openExternal('http://iasa.kr/program/ip')
+    }
+
+    function chkUpdate() {
+        if (settings.get('aupd') != true) return;
+        url = 'http://api.iasa.kr/ip/ver';
+        $.ajax(url, {
+            success: function (data) {
+                ver = parseInt(data)
+                if (ver > verNum) {
+                    $('#modal2').modal({dismissible: false});
+                    $('#modal2').modal('open');
+                    $('#new').hide();
+                    $('#old').show();
                 }
-            });
-        }
-        function chgView() {
-            if (ipModule.getCurrentState() == 0) {
-                $('#ipIcon').attr('src', './res/school.png')
-                $('#ipInfo').html('IP를 교내 IP로 변경합니다.')
+            },
+            error: function () {
             }
+        });
+    }
+
+    function chgView() {
+        if (ipModule.getCurrentState() == 0) {
+            $('#ipIcon').attr('src', './res/school.png')
+            $('#ipInfo').html('IP를 교내 IP로 변경합니다.')
+        } else {
+            $('#ipIcon').attr('src', './res/house.png')
+            $('#ipInfo').html('IP를 교외 IP로 변경합니다.')
+        }
+    }
+
+    function showSec(v) {
+        $('.section').removeClass('showSection').removeClass('initShowSection').addClass('hideSection')
+        $('#sec' + String(v)).removeClass('hideSection').removeClass('initShowSection').addClass('showSection')
+        setTimeout(function () {
+            $('.section').addClass('novisible');
+            $('#sec' + String(v)).removeClass('novisible');
+        }, 600);
+        chkUpdate()
+    }
+
+    function showMain() {
+        showSec(1)
+    }
+
+    async function chgIp() {
+        showSec(2)
+        if (ipModule.getCurrentState() == 0) await ipModule.changeToSchool();
+        else await ipModule.changeToOut();
+        $('#chg1').show();
+        $('#chg2').hide()
+        setTimeout(function () {
+            $('#chg1').fadeOut(500);
+            chgView();
+        }, 1200)
+        setTimeout(function () {
+            $('#chg2').fadeIn(500)
+        }, 1700)
+        setTimeout(function () {
+            showMain()
+        }, 2200)
+    }
+
+    function showSet() {
+        showSec(3)
+    }
+
+    function showCred() {
+        showSec(4)
+    }
+
+    function showWelcome() {
+        showSec(5)
+        setTimeout(function () {
+            document.getElementById("stuId").focus();
+        }, 3000);
+    }
+
+    function submitError() {
+        $('#stuId').removeClass('validate').addClass('invalid')
+    }
+
+    function submitWelcome() {
+        stuId = $('#stuId').val()
+        if (stuId == null) submitError();
+        else if (stuId.length != String(parseInt(stuId)).length) submitError();
+        else if (stuId.length < 4) submitError();
+        else if (stuId.length > 5) submitError();
+        else {
+            if (stuId.length == 4) {
+                a = Math.floor(parseInt(stuId) / 1000)
+                b = Math.floor(parseInt(stuId) / 100 % 10)
+                c = parseInt(stuId) % 100
+            }
+            if (stuId.length == 5) {
+                a = Math.floor(parseInt(stuId) / 10000)
+                b = Math.floor(parseInt(stuId) / 100 % 10)
+                c = parseInt(stuId) % 100
+            }
+            if (a > 3 || a < 1) submitError();
+            else if (b > 5 || b < 1) submitError();
+            else if (c > 16 || c < 1) submitError();
             else {
-                $('#ipIcon').attr('src', './res/house.png')
-                $('#ipInfo').html('IP를 교외 IP로 변경합니다.')
+                su = 9 + c + (b - 1) * 16
+                if (a == 1) {
+                    ip = '10.140.82.' + String(su)
+                    gate = '10.140.82.254'
+                }
+                if (a == 2) {
+                    ip = '10.140.83.' + String(su)
+                    gate = '10.140.83.254'
+                }
+                if (a == 3) {
+                    ip = '10.140.84.' + String(su)
+                    gate = '10.140.84.254'
+                }
+                settings.set('ip', ip);
+                settings.set('gate', gate);
+                settings.set('svc', true);
+                settings.set('aupd', true);
+                getAdapter()
             }
         }
-        function showSec(v) {
-            $('.section').removeClass('showSection').removeClass('initShowSection').addClass('hideSection')
-            $('#sec' + String(v)).removeClass('hideSection').removeClass('initShowSection').addClass('showSection')
-            setTimeout(function () {
-                $('.section').addClass('novisible');
-                $('#sec' + String(v)).removeClass('novisible');
-            }, 600);
-            chkUpdate()
-        }
-        function showMain() {
+    }
+
+    function agreeResetIP() {
+        const {ipcRenderer} = require('electron')
+        ipcRenderer.send('resetApplication', 'IP')
+    }
+
+    function resetIp() {
+        $('#modal1').modal();
+        $('#modal1').modal('open');
+    }
+
+    function getAdapter() {
+        const os = require('os')
+        dat = os.networkInterfaces();
+        if (dat['Wi-Fi'] != null) {
+            settings.set('adp', 'Wi-Fi')
             showSec(1)
-        }
-        async function chgIp() {
-            showSec(2)
-            if (ipModule.getCurrentState() == 0) await ipModule.changeToSchool();
-            else await ipModule.changeToOut();
-            $('#chg1').show();
-            $('#chg2').hide()
-            setTimeout(function () { $('#chg1').fadeOut(500); chgView(); }, 1200)
-            setTimeout(function () { $('#chg2').fadeIn(500) }, 1700)
-            setTimeout(function () { showMain() }, 2200)
-        }
-        function showSet() {
-            showSec(3)
-        }
-        function showCred() {
-            showSec(4)
-        }
-        function showWelcome() {
-            showSec(5)
-            setTimeout(function () { document.getElementById("stuId").focus(); }, 3000);
-        }
-        function submitError() {
-            $('#stuId').removeClass('validate').addClass('invalid')
-        }
-        function submitWelcome() {
-            stuId = $('#stuId').val()
-            if (stuId == null) submitError();
-            else if (stuId.length != String(parseInt(stuId)).length) submitError();
-            else if (stuId.length < 4) submitError();
-            else if (stuId.length > 5) submitError();
-            else {
-                if (stuId.length == 4) {
-                    a = Math.floor(parseInt(stuId) / 1000)
-                    b = Math.floor(parseInt(stuId) / 100 % 10)
-                    c = parseInt(stuId) % 100
-                }
-                if (stuId.length == 5) {
-                    a = Math.floor(parseInt(stuId) / 10000)
-                    b = Math.floor(parseInt(stuId) / 100 % 10)
-                    c = parseInt(stuId) % 100
-                }
-                if (a > 3 || a < 1) submitError();
-                else if (b > 5 || b < 1) submitError();
-                else if (c > 16 || c < 1) submitError();
-                else {
-                    su = 9 + c + (b - 1) * 16
-                    if (a == 1) {
-                        ip = '10.140.82.' + String(su)
-                        gate = '10.140.82.254'
-                    }
-                    if (a == 2) {
-                        ip = '10.140.83.' + String(su)
-                        gate = '10.140.83.254'
-                    }
-                    if (a == 3) {
-                        ip = '10.140.84.' + String(su)
-                        gate = '10.140.84.254'
-                    }
-                    settings.set('ip', ip);
-                    settings.set('gate', gate);
-                    settings.set('svc', true);
-                    settings.set('aupd', true);
-                    getAdapter()
-                }
+        } else {
+            i = 1
+            for (var n in dat) {
+                $('select').append('<option value="' + String(i) + '">' + n + '</option>')
+                adpArr.push(n)
+                i += 1
             }
+            $('select').formSelect();
+            showSec(6)
         }
-        function agreeResetIP() {
-            const { ipcRenderer } = require('electron')
-            ipcRenderer.send('resetApplication', 'IP')
-        }
-        function resetIp() {
-            $('#modal1').modal();
-            $('#modal1').modal('open');
-        }
-        function getAdapter() {
-            const os = require('os')
-            dat = os.networkInterfaces();
-            if (dat['Wi-Fi'] != null) {
-                settings.set('adp', 'Wi-Fi')
-                showSec(1)
-            }
-            else {
-                i = 1
-                for (var n in dat) {
-                    $('select').append('<option value="' + String(i) + '">' + n + '</option>')
-                    adpArr.push(n)
-                    i += 1
-                }
-                $('select').formSelect();
-                showSec(6)
-            }
-            chkUpdate()
-        }
-        function submitAdapter() {
-            idx = parseInt($('select').val())
-            if (idx == 0) return;
-            settings.set('adp', adpArr[idx])
-            showSec(1)
-        }
-    </script>
+        chkUpdate()
+    }
 
-    <div id="modal1" class="modal">
-        <div class="modal-content">
-            <h4>IP를 초기화하면 모든 설정이 지워집니다.</h4>
-            <p>정말로 IP를 초기화 하시겠어요?</p>
-        </div>
-        <div class="modal-footer">
-            <a class="modal-close waves-effect waves-green btn-flat" onclick="agreeResetIP();">예</a>
-            <a href="#!" class="modal-close waves-effect waves-green btn-flat">아니요</a>
-        </div>
+    function submitAdapter() {
+        idx = parseInt($('select').val())
+        if (idx == 0) return;
+        settings.set('adp', adpArr[idx])
+        showSec(1)
+    }
+</script>
+
+<div class="modal" id="modal1">
+    <div class="modal-content">
+        <h4>IP를 초기화하면 모든 설정이 지워집니다.</h4>
+        <p>정말로 IP를 초기화 하시겠어요?</p>
     </div>
-
-    <div id="modal2" class="modal">
-        <div class="modal-content">
-            <h4>새 버전이 있습니다.</h4>
-        </div>
-        <div class="modal-footer">
-            <a class="modal-close waves-effect waves-green btn-flat" onclick="openUpd();">다운로드</a>
-        </div>
+    <div class="modal-footer">
+        <a class="modal-close waves-effect waves-green btn-flat" onclick="agreeResetIP();">예</a>
+        <a class="modal-close waves-effect waves-green btn-flat" href="#!">아니요</a>
     </div>
+</div>
 
-    <div class="frame">
-        <div class="container">
-            <div class="fixCon">
-                <div id="sec1" class="initShowSection section">
-                    <div class="row">
-                        <div class="col s12 obj" onclick="chgIp();">
-                            <div class="waves-effect z-depth-2 hoverable" style="width:100%;">
-                                <div style="display:inline-block;">
-                                    <div style="float:left;width:140px;">
-                                        <img src="res/school.png"
-                                            style="margin-left:20px;margin-top:20px;margin-bottom:20px;height:90px;"
-                                            id="ipIcon">
-                                    </div>
-                                    <div style="float:left;margin-left:0;">
-                                        <p style="font-size:3em;margin-top:20px;margin-bottom:3px" class="text">IP 변경하기
-                                        </p>
-                                        <p style="font-size:1.2em;margin-top:5px;margin-bottom:20px" class="info"
-                                            id="ipInfo">IP를 교내
-                                            IP로
-                                            변경합니다.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col s12 m6 obj" onclick="showSet();">
-                            <div class="waves-effect z-depth-2 hoverable" style="width:100%;">
-                                <div style="display:inline-block;">
-                                    <div style="float:left;width:140px;">
-                                        <img src="res/op.png"
-                                            style="margin-left:20px;margin-top:20px;margin-bottom:20px;height:90px;">
-                                    </div>
-                                    <div style="float:left;margin-left:0;">
-                                        <p style="font-size:3em;margin-top:20px;margin-bottom:3px" class="text">설정</p>
-                                        <p style="font-size:1.2em;margin-top:5px;margin-bottom:20px" class="info">옵션을
-                                            변경합니다.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col s12 m6 obj" onclick="showCred();">
-                            <div class="waves-effect z-depth-2 hoverable" style="width:100%;">
-                                <div style="display:inline-block;">
-                                    <div style="float:left;width:140px;">
-                                        <img src="res/info.png"
-                                            style="margin-left:20px;margin-top:20px;margin-bottom:20px;height:90px;">
-                                    </div>
-                                    <div style="float:left;margin-left:0;">
-                                        <p style="font-size:3em;margin-top:20px;margin-bottom:3px" class="text">정보
-                                        </p>
-                                        <p style="font-size:1.2em;margin-top:5px;margin-bottom:20px" class="info">프로그램
-                                            정보를
-                                            엽니다.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="sec2" class="hideSection novisible section" style="width:100%;height:80vh;min-height:100%;">
-                    <div class="waves-effect z-depth-2 hoverable" style="width:100%;height:100%;">
-                        <div class="valign-wrapper center-align" style="width:100%;height:100%;">
-                            <div style="width:100%;" id="chg1">
-                                <h1>IP 변경중...</h1>
-                                <div class="preloader-wrapper big active">
-                                    <div class="spinner-layer spinner-blue-only">
-                                        <div class="circle-clipper left">
-                                            <div class="circle"></div>
-                                        </div>
-                                        <div class="gap-patch">
-                                            <div class="circle"></div>
-                                        </div>
-                                        <div class="circle-clipper right">
-                                            <div class="circle"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p>잠시만 기다려 주세요.</p>
-                            </div>
-                            <div style="width:100%;" id="chg2">
-                                <h1>모두 완료되었습니다!</h1>
-                                <img src="./res/done.png" style="width:150px;">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="sec3" class="hideSection novisible section"
-                    style="width:100%;height:80vh;min-height:444px;margin-bottom:20px;">
-                    <div class="z-depth-2 hoverable" style="width:100%;height:100%;">
-                        <div class="valign-wrapper center-align" style="width:100%;height:100%;">
-                            <div style="width:100%;">
-                                <h1>설정</h1>
-                                <h4>IP 자동변경</h4>
-                                <div class="switch" id="svc">
-                                    <label>
-                                        끄기
-                                        <input type="checkbox">
-                                        <span class="lever"></span>
-                                        켜기
-                                    </label>
-                                </div>
-                                <br>
-                                <h4>업데이트 자동 확인</h4>
-                                <div class="switch" id="aupd">
-                                    <label>
-                                        끄기
-                                        <input type="checkbox">
-                                        <span class="lever"></span>
-                                        켜기
-                                    </label>
-                                </div>
-                                <br>
-                                <a class="waves-effect waves-light btn deep-purple lighten-1" onclick="resetIp()">IP
-                                    초기화</a>
-                                <a class="waves-effect waves-light btn deep-purple lighten-1"
-                                    onclick="showMain()">확인</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="sec4" class="hideSection novisible section"
-                    style="width:100%;height:80vh;min-height:450px;margin-bottom:20px;">
-                    <div class="z-depth-2 hoverable" style="width:100%;height:100%;">
-                        <div class="valign-wrapper center-align" style="width:100%;height:100%;">
-                            <div style="width:100%;">
-                                <img src="res/IPLogo.png" style="width:120px;">
-                                <p>4.0.6</p>
-                                <p id="new">최신 버전입니다.</p>
-                                <p id="old">새 버전이 있습니다. <a onclick="openUpd()">다운로드</a></p>
-                                <p>개발 : 4기 이서현</p>
-                                <img src="res/credit.png" style="width:300px;">
-                                <br>
-                                <a class="waves-effect waves-light btn deep-purple lighten-1"
-                                    onclick="showMain()">확인</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<div class="modal" id="modal2">
+    <div class="modal-content">
+        <h4>새 버전이 있습니다.</h4>
+    </div>
+    <div class="modal-footer">
+        <a class="modal-close waves-effect waves-green btn-flat" onclick="openUpd();">다운로드</a>
+    </div>
+</div>
 
-                <div id="sec5" class="hideSection novisible section"
-                    style="width:100%;height:80vh;min-height:320px;margin-bottom:20px;">
-                    <div class="z-depth-2 hoverable" style="width:100%;height:100%;">
-                        <div class="valign-wrapper center-align" style="width:100%;height:100%;">
-                            <div style="width:100%;">
-                                <h1>환영합니다!</h1>
-                                <p>계속하려면 학번을 입력해 주세요.</p>
-                                <div class="row">
-                                    <div class="input-field col offset-s4 s4">
-                                        <input id="stuId" type="text" class="validate" data-error="올바른 학번을 입력해 주세요.">
-                                        <label for="stuId">학번</label>
-                                    </div>
+<div class="frame">
+    <div class="container">
+        <div class="fixCon">
+            <div class="initShowSection section" id="sec1">
+                <div class="row">
+                    <div class="col s12 obj" onclick="chgIp();">
+                        <div class="waves-effect z-depth-2 hoverable" style="width:100%;">
+                            <div style="display:inline-block;">
+                                <div style="float:left;width:140px;">
+                                    <img id="ipIcon"
+                                         src="res/school.png"
+                                         style="margin-left:20px;margin-top:20px;margin-bottom:20px;height:90px;">
                                 </div>
-                                <a class="waves-effect waves-light btn deep-purple lighten-1"
-                                    onclick="submitWelcome()">확인</a>
+                                <div style="float:left;margin-left:0;">
+                                    <p class="text" style="font-size:3em;margin-top:20px;margin-bottom:3px">IP 변경하기
+                                    </p>
+                                    <p class="info" id="ipInfo"
+                                       style="font-size:1.2em;margin-top:5px;margin-bottom:20px">IP를 교내
+                                        IP로
+                                        변경합니다.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s12 m6 obj" onclick="showSet();">
+                        <div class="waves-effect z-depth-2 hoverable" style="width:100%;">
+                            <div style="display:inline-block;">
+                                <div style="float:left;width:140px;">
+                                    <img src="res/op.png"
+                                         style="margin-left:20px;margin-top:20px;margin-bottom:20px;height:90px;">
+                                </div>
+                                <div style="float:left;margin-left:0;">
+                                    <p class="text" style="font-size:3em;margin-top:20px;margin-bottom:3px">설정</p>
+                                    <p class="info" style="font-size:1.2em;margin-top:5px;margin-bottom:20px">옵션을
+                                        변경합니다.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s12 m6 obj" onclick="showCred();">
+                        <div class="waves-effect z-depth-2 hoverable" style="width:100%;">
+                            <div style="display:inline-block;">
+                                <div style="float:left;width:140px;">
+                                    <img src="res/info.png"
+                                         style="margin-left:20px;margin-top:20px;margin-bottom:20px;height:90px;">
+                                </div>
+                                <div style="float:left;margin-left:0;">
+                                    <p class="text" style="font-size:3em;margin-top:20px;margin-bottom:3px">정보
+                                    </p>
+                                    <p class="info" style="font-size:1.2em;margin-top:5px;margin-bottom:20px">프로그램
+                                        정보를
+                                        엽니다.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div id="sec6" class="hideSection novisible section"
-                    style="width:100%;height:80vh;min-height:320px;margin-bottom:20px;">
-                    <div class="z-depth-2 hoverable" style="width:100%;height:100%;">
-                        <div class="valign-wrapper center-align" style="width:100%;height:100%;">
-                            <div style="width:100%;">
-                                <h3>어댑터를 자동으로 탐지할 수 없습니다.</h3>
-                                <p>와이파이 어댑터를 선택해 주세요.</p>
-                                <div class="row">
-                                    <div class="input-field col s6 offset-s3">
-                                        <select>
-                                            <option value="0" disabled selected>어댑터를 선택하세요</option>
-                                        </select>
-                                        <label>어댑터</label>
+            </div>
+            <div class="hideSection novisible section" id="sec2" style="width:100%;height:80vh;min-height:100%;">
+                <div class="waves-effect z-depth-2 hoverable" style="width:100%;height:100%;">
+                    <div class="valign-wrapper center-align" style="width:100%;height:100%;">
+                        <div id="chg1" style="width:100%;">
+                            <h1>IP 변경중...</h1>
+                            <div class="preloader-wrapper big active">
+                                <div class="spinner-layer spinner-blue-only">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div>
+                                    <div class="circle-clipper right">
+                                        <div class="circle"></div>
                                     </div>
                                 </div>
-                                <a class="waves-effect waves-light btn deep-purple lighten-1"
-                                    onclick="submitAdapter()">확인</a>
                             </div>
+                            <p>잠시만 기다려 주세요.</p>
+                        </div>
+                        <div id="chg2" style="width:100%;">
+                            <h1>모두 완료되었습니다!</h1>
+                            <img src="./res/done.png" style="width:150px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="hideSection novisible section" id="sec3"
+                 style="width:100%;height:80vh;min-height:444px;margin-bottom:20px;">
+                <div class="z-depth-2 hoverable" style="width:100%;height:100%;">
+                    <div class="valign-wrapper center-align" style="width:100%;height:100%;">
+                        <div style="width:100%;">
+                            <h1>설정</h1>
+                            <h4>IP 자동변경</h4>
+                            <div class="switch" id="svc">
+                                <label>
+                                    끄기
+                                    <input type="checkbox">
+                                    <span class="lever"></span>
+                                    켜기
+                                </label>
+                            </div>
+                            <br>
+                            <a class="waves-effect waves-light btn deep-purple lighten-1" onclick="resetIp()">IP
+                                초기화</a>
+                            <a class="waves-effect waves-light btn deep-purple lighten-1"
+                               onclick="showMain()">확인</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="hideSection novisible section" id="sec4"
+                 style="width:100%;height:80vh;min-height:450px;margin-bottom:20px;">
+                <div class="z-depth-2 hoverable" style="width:100%;height:100%;">
+                    <div class="valign-wrapper center-align" style="width:100%;height:100%;">
+                        <div style="width:100%;">
+                            <img src="res/IPLogo.png" style="width:120px;">
+                            <p>4.0.6</p>
+                            <p id="new">최신 버전입니다.</p>
+                            <p id="old">새 버전이 있습니다. <a onclick="openUpd()">다운로드</a></p>
+                            <p>개발 : 4기 이서현</p>
+                            <img src="res/credit.png" style="width:300px;">
+                            <br>
+                            <a class="waves-effect waves-light btn deep-purple lighten-1"
+                               onclick="showMain()">확인</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hideSection novisible section" id="sec5"
+                 style="width:100%;height:80vh;min-height:320px;margin-bottom:20px;">
+                <div class="z-depth-2 hoverable" style="width:100%;height:100%;">
+                    <div class="valign-wrapper center-align" style="width:100%;height:100%;">
+                        <div style="width:100%;">
+                            <h1>환영합니다!</h1>
+                            <p>계속하려면 학번을 입력해 주세요.</p>
+                            <div class="row">
+                                <div class="input-field col offset-s4 s4">
+                                    <input class="validate" data-error="올바른 학번을 입력해 주세요." id="stuId" type="text">
+                                    <label for="stuId">학번</label>
+                                </div>
+                            </div>
+                            <a class="waves-effect waves-light btn deep-purple lighten-1"
+                               onclick="submitWelcome()">확인</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hideSection novisible section" id="sec6"
+                 style="width:100%;height:80vh;min-height:320px;margin-bottom:20px;">
+                <div class="z-depth-2 hoverable" style="width:100%;height:100%;">
+                    <div class="valign-wrapper center-align" style="width:100%;height:100%;">
+                        <div style="width:100%;">
+                            <h3>어댑터를 자동으로 탐지할 수 없습니다.</h3>
+                            <p>와이파이 어댑터를 선택해 주세요.</p>
+                            <div class="row">
+                                <div class="input-field col s6 offset-s3">
+                                    <select>
+                                        <option disabled selected value="0">어댑터를 선택하세요</option>
+                                    </select>
+                                    <label>어댑터</label>
+                                </div>
+                            </div>
+                            <a class="waves-effect waves-light btn deep-purple lighten-1"
+                               onclick="submitAdapter()">확인</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </body>
 
 </html>

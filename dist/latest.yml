@@ -1,9 +1,0 @@
-version: 4.0.6
-files:
-  - url: IP-Setup-4.0.6.exe
-    sha512: 7pKpazPy4M1PJkj6/fvoItCiTnjPVJWyLlyscv2Ewh3+sCLH/kAXJkZ2CQd8LUhQRGVlu3l+qoRTkEyA8cRMjw==
-    size: 89915309
-    isAdminRightsRequired: true
-path: IP-Setup-4.0.6.exe
-sha512: 7pKpazPy4M1PJkj6/fvoItCiTnjPVJWyLlyscv2Ewh3+sCLH/kAXJkZ2CQd8LUhQRGVlu3l+qoRTkEyA8cRMjw==
-releaseDate: '2019-10-01T07:45:05.537Z'
