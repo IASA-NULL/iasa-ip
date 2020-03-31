@@ -57,7 +57,7 @@ function askStopService() {
 }
 
 function createTray() {
-    tray = new Tray(path.join(__dirname, 'res/ipLogo.ico'));
+    tray = new Tray('C:\\Program Files\\IP\\res\\ipLogo.ico');
     const contextMenu = Menu.buildFromTemplate([
         {label: '열기', click: openMainWindow},
         {label: '서비스 종료', click: askStopService}
@@ -165,8 +165,8 @@ async function makeAlert() {
             if (tName === "Iasa_hs" && ipModule.getCurrentState() === 0) {
                 createAlertWindow(0);
                 await ipModule.changeToSchool();
-                while (awin == null) ;
-                while (awin.webContents == null) ;
+                while (!awin) ;
+                while (!awin.webContents) ;
                 setTimeout(() => {
                     awin.webContents.send('finishChange')
                 }, 500)
@@ -174,8 +174,8 @@ async function makeAlert() {
             if (tName !== "Iasa_hs" && ipModule.getCurrentState() === 1) {
                 createAlertWindow(1);
                 await ipModule.changeToOut();
-                while (awin == null) ;
-                while (awin.webContents == null) ;
+                while (!awin) ;
+                while (!awin.webContents) ;
                 setTimeout(() => {
                     awin.webContents.send('finishChange');
                 }, 500)

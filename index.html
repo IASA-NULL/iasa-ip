@@ -205,6 +205,12 @@
             margin-top: 5px;
             margin-bottom: 20px
         }
+
+        .text {
+            font-size: 3em;
+            margin-top: 20px;
+            margin-bottom: 3px
+        }
     </style>
 </head>
 
@@ -265,7 +271,7 @@
     }
 
     function chkUpdate() {
-        if (settings.get('aupd') != true) return;
+        if (settings.get('aupd') !== true) return;
         $.ajax('https://api.iasa.kr/ip/ver', {
             success: data => {
                 const ver = parseInt(data);
@@ -305,7 +311,7 @@
 
     async function chgIp() {
         showSec(2);
-        if (ipModule.getCurrentState() == 0) await ipModule.changeToSchool();
+        if (ipModule.getCurrentState() === 0) await ipModule.changeToSchool();
         else await ipModule.changeToOut();
         $('#chg1').show();
         $('#chg2').hide();
@@ -455,7 +461,7 @@
                                          style="margin-left:20px;margin-top:20px;margin-bottom:20px;height:90px;">
                                 </div>
                                 <div style="float:left;margin-left:0;">
-                                    <p class="text" style="font-size:3em;margin-top:20px;margin-bottom:3px">IP 변경하기
+                                    <p class="text">IP 변경하기
                                     </p>
                                     <p class="info" id="ipInfo">IP를 교내 IP로 변경합니다.
                                     </p>
@@ -471,7 +477,7 @@
                                          style="margin-left:20px;margin-top:20px;margin-bottom:20px;height:90px;">
                                 </div>
                                 <div style="float:left;margin-left:0;">
-                                    <p class="text" style="font-size:3em;margin-top:20px;margin-bottom:3px">설정</p>
+                                    <p class="text">설정</p>
                                     <p class="info">옵션을 변경합니다.
                                     </p>
                                 </div>
