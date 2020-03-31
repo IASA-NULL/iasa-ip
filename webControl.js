@@ -1,20 +1,21 @@
 const wifiName = require('wifi-name');
+const network = require('network');
+const dns = require('dns');
 
 function checkDns() {
-    var dns = require('dns');
-    return new Promise((resolve, reject) => {
-        dns.lookupService('8.8.8.8', 53, function (err, hostname, service) {
-            if(err==null) resolve(true);
+    return new Promise((resolve) => {
+        dns.lookupService('8.8.8.8', 53, err => {
+            if (err == null) resolve(true);
             else resolve(false);
         });
     });
 }
 
 function checkInternet() {
-    return new Promise((resolve, reject) => {
-        var r = require("request")({url:'http://www.msftconnecttest.com/', timeout: 1000}, function (e, response) {
-            if (e != null) resolve(false);
-            else if ('<pre>' == response.body.substr(0, 5)) resolve(true);
+    return new Promise((resolve) => {
+        require("request")({url: 'http://www.msftconnecttest.com/', timeout: 1000}, (e, response) => {
+            if (e) resolve(false);
+            else if ('<pre>' === response.body.substr(0, 5)) resolve(true);
             else resolve(false);
         });
     });
@@ -29,12 +30,11 @@ function getWifiName() {
 }
 
 function checkLanCable() {
-    var network = require('network');
-    return new Promise((resolve, reject) => {
-        network.get_active_interface(function(err, obj) {
-            if(String(obj.type)=='Wired') resolve(true);
+    return new Promise((resolve) => {
+        network.get_active_interface((err, obj) => {
+            if (String(obj.type) === 'Wired') resolve(true);
             else resolve(false);
-        })
+        });
     });
 }
 

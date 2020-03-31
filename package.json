@@ -1,7 +1,7 @@
 {
   "name": "iasa-ip",
-  "version": "4.0.7",
-  "description": "IP 4.0.7",
+  "version": "4.1.0",
+  "description": "IP 4.1.0",
   "main": "index.js",
   "scripts": {
     "pack": "electron-builder --dir",
@@ -40,17 +40,16 @@
     },
     "nsis": {
       "createStartMenuShortcut": true,
-      "perMachine": true,
-      "language": "65001"
+      "perMachine": true
     }
   },
   "homepage": "https://github.com/IASA-Null/iasa-ip#readme",
   "dependencies": {
-    "electron-settings": "^3.2.0",
-    "network": "^0.4.1",
-    "network-config": "^2.0.0",
-    "request": "^2.88.0",
-    "wifi-name": "^3.1.1"
+    "electron-settings": "3.2.0",
+    "network": "0.5.0",
+    "network-config": "2.0.0",
+    "request": "2.88.2",
+    "wifi-name": "3.1.1"
   },
   "devDependencies": {
     "electron": "latest",

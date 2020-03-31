@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>IP 4.0.7</title>
+    <title>IP 4.1.0</title>
     <link href="css/materialize.min.css" media="screen,projection" rel="stylesheet" type="text/css"/>
-    <script>if (typeof module === 'object') {
-        window.module = module;
-        module = undefined;
-    }</script>
+    <script>
+        if (typeof module === 'object') {
+            window.module = module;
+            module = undefined;
+        }
+    </script>
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript" src="js/materialize.min.js"></script>
     <script>if (window.module) module = window.module;</script>
@@ -62,11 +63,6 @@
             align-items: center;
         }
 
-        .splashimage {
-            position: absolute;
-            vertical-align: middle;
-        }
-
         @font-face {
             font-family: 'nanum';
             src: url("res/NSR.ttf");
@@ -112,10 +108,6 @@
             vertical-align: middle;
         }
 
-        .hide-first {
-            transition: cont 3s ease;
-        }
-
         .novisible {
             display: none;
         }
@@ -147,28 +139,28 @@
         @keyframes fadein {
             0% {
                 opacity: 0;
-                padding-bottom: 0%;
+                padding-bottom: 0;
                 padding-top: 5%;
             }
 
             100% {
                 opacity: 1;
-                padding-bottom: 0%;
-                padding-top: 0%;
+                padding-bottom: 0;
+                padding-top: 0;
             }
         }
 
         @keyframes fadeout {
             0% {
                 opacity: 1;
-                padding-bottom: 0%;
-                padding-top: 0%;
+                padding-bottom: 0;
+                padding-top: 0;
             }
 
             100% {
                 opacity: 0;
                 padding-bottom: 5%;
-                padding-top: 0%;
+                padding-top: 0;
             }
         }
 
@@ -180,7 +172,7 @@
 
             100% {
                 opacity: 1;
-                margin-top: 0%;
+                margin-top: 0;
             }
         }
 
@@ -200,16 +192,18 @@
             padding: 10px !important;
         }
 
-        .force-overflow {
-            min-height: 450px;
-        }
-
         .switch label input[type=checkbox]:checked + .lever:after {
             background-color: #7e57c2 !important;
         }
 
         .switch label input[type=checkbox]:checked + .lever {
             background-color: #7e57c2 !important;
+        }
+
+        .info {
+            font-size: 1.2em;
+            margin-top: 5px;
+            margin-bottom: 20px
         }
     </style>
 </head>
@@ -222,17 +216,16 @@
 </div>
 
 <script type="text/javascript">
-    const verNum = 17;
-    const verStr = "4.0.7";
+    const verNum = 19;
     const settings = require('electron-settings');
     const ipModule = require('./changeIp.js');
-    var adpArr = [0];
-    $(document).ready(function () {
-        $.fn.pressEnter = function (fn) {
-            return this.each(function () {
+    let adpArr = [0];
+    $(document).ready(() => {
+        $.fn.pressEnter = fn => {
+            return this.each(() => {
                 $(this).bind('enterPress', fn);
-                $(this).keyup(function (e) {
-                    if (e.keyCode == 13) {
+                $(this).keyup(e => {
+                    if (e.keyCode === 13) {
                         $(this).trigger("enterPress");
                     }
                 })
@@ -243,22 +236,22 @@
         chgView();
         chkUpdate();
         $('#stuId').pressEnter(submitWelcome);
-        if (settings.get('ip') == null) showWelcome();
-        else if (settings.get('adp') == null) getAdapter();
+        if (!settings.get('ip')) showWelcome();
+        else if (!settings.get('adp')) getAdapter();
         if (settings.get('svc') == 1) {
             $('#svc').children('label').click()
         }
-        if (settings.get('aupd') == true) {
+        if (settings.get('aupd')) {
             $('#aupd').children('label').click()
         }
-        $("#svc").on("click", function () {
-            var status = $(this).find("input[type=checkbox]").prop('checked');
-            if (status == true) settings.set('svc', true);
+        $("#svc").on("click", () => {
+            const status = $(this).find("input[type=checkbox]").prop('checked');
+            if (status) settings.set('svc', true);
             else settings.set('svc', false);
         });
-        $("#aupd").on("click", function () {
-            var status = $(this).find("input[type=checkbox]").prop('checked');
-            if (status == true) settings.set('aupd', true);
+        $("#aupd").on("click", () => {
+            const status = $(this).find("input[type=checkbox]").prop('checked');
+            if (status) settings.set('aupd', true);
             else settings.set('aupd', false);
         });
         setTimeout(function () {
@@ -268,134 +261,132 @@
 
     function openUpd() {
         const {shell} = require('electron');
-        shell.openExternal('http://iasa.kr/program/ip')
+        shell.openExternal('https://iasa.kr/program/ip');
     }
 
     function chkUpdate() {
         if (settings.get('aupd') != true) return;
-        url = 'http://api.iasa.kr/ip/ver';
-        $.ajax(url, {
-            success: function (data) {
-                ver = parseInt(data)
+        $.ajax('https://api.iasa.kr/ip/ver', {
+            success: data => {
+                const ver = parseInt(data);
                 if (ver > verNum) {
                     $('#modal2').modal({dismissible: false});
                     $('#modal2').modal('open');
                     $('#new').hide();
                     $('#old').show();
                 }
-            },
-            error: function () {
             }
         });
     }
 
     function chgView() {
-        if (ipModule.getCurrentState() == 0) {
-            $('#ipIcon').attr('src', './res/school.png')
-            $('#ipInfo').html('IP를 교내 IP로 변경합니다.')
+        if (ipModule.getCurrentState() === 0) {
+            $('#ipIcon').attr('src', './res/school.png');
+            $('#ipInfo').html('IP를 교내 IP로 변경합니다.');
         } else {
-            $('#ipIcon').attr('src', './res/house.png')
-            $('#ipInfo').html('IP를 교외 IP로 변경합니다.')
+            $('#ipIcon').attr('src', './res/house.png');
+            $('#ipInfo').html('IP를 교외 IP로 변경합니다.');
         }
     }
 
     function showSec(v) {
         $('.section').removeClass('showSection').removeClass('initShowSection').addClass('hideSection')
         $('#sec' + String(v)).removeClass('hideSection').removeClass('initShowSection').addClass('showSection')
-        setTimeout(function () {
+        setTimeout(() => {
             $('.section').addClass('novisible');
             $('#sec' + String(v)).removeClass('novisible');
         }, 600);
-        chkUpdate()
+        chkUpdate();
     }
 
     function showMain() {
-        showSec(1)
+        showSec(1);
     }
 
     async function chgIp() {
-        showSec(2)
+        showSec(2);
         if (ipModule.getCurrentState() == 0) await ipModule.changeToSchool();
         else await ipModule.changeToOut();
         $('#chg1').show();
-        $('#chg2').hide()
-        setTimeout(function () {
+        $('#chg2').hide();
+        setTimeout(() => {
             $('#chg1').fadeOut(500);
             chgView();
-        }, 1200)
-        setTimeout(function () {
+        }, 1200);
+        setTimeout(() => {
             $('#chg2').fadeIn(500)
-        }, 1700)
-        setTimeout(function () {
-            showMain()
-        }, 2200)
+        }, 1700);
+        setTimeout(() => {
+            showMain();
+        }, 2200);
     }
 
     function showSet() {
-        showSec(3)
+        showSec(3);
     }
 
     function showCred() {
-        showSec(4)
+        showSec(4);
     }
 
     function showWelcome() {
-        showSec(5)
-        setTimeout(function () {
+        showSec(5);
+        setTimeout(() => {
             document.getElementById("stuId").focus();
         }, 3000);
     }
 
     function submitError() {
-        $('#stuId').removeClass('validate').addClass('invalid')
+        $('#stuId').removeClass('validate').addClass('invalid');
     }
 
     function submitWelcome() {
-        stuId = $('#stuId').val()
+        let a, b, c, su, ip, gate;
+        const stuId = $('#stuId').val();
         if (stuId == null) submitError();
-        else if (stuId.length != String(parseInt(stuId)).length) submitError();
+        else if (stuId.length !== String(parseInt(stuId)).length) submitError();
         else if (stuId.length < 4) submitError();
         else if (stuId.length > 5) submitError();
         else {
-            if (stuId.length == 4) {
-                a = Math.floor(parseInt(stuId) / 1000)
-                b = Math.floor(parseInt(stuId) / 100 % 10)
-                c = parseInt(stuId) % 100
+            if (stuId.length === 4) {
+                a = Math.floor(parseInt(stuId) / 1000);
+                b = Math.floor(parseInt(stuId) / 100 % 10);
+                c = parseInt(stuId) % 100;
             }
-            if (stuId.length == 5) {
-                a = Math.floor(parseInt(stuId) / 10000)
-                b = Math.floor(parseInt(stuId) / 100 % 10)
-                c = parseInt(stuId) % 100
+            if (stuId.length === 5) {
+                a = Math.floor(parseInt(stuId) / 10000);
+                b = Math.floor(parseInt(stuId) / 100 % 10);
+                c = parseInt(stuId) % 100;
             }
             if (a > 3 || a < 1) submitError();
             else if (b > 5 || b < 1) submitError();
             else if (c > 16 || c < 1) submitError();
             else {
-                su = 9 + c + (b - 1) * 16
-                if (a == 1) {
-                    ip = '10.140.82.' + String(su)
-                    gate = '10.140.82.254'
+                su = 9 + c + (b - 1) * 16;
+                if (a === 1) {
+                    ip = '10.140.82.' + String(su);
+                    gate = '10.140.82.254';
                 }
-                if (a == 2) {
-                    ip = '10.140.83.' + String(su)
-                    gate = '10.140.83.254'
+                if (a === 2) {
+                    ip = '10.140.83.' + String(su);
+                    gate = '10.140.83.254';
                 }
-                if (a == 3) {
-                    ip = '10.140.84.' + String(su)
-                    gate = '10.140.84.254'
+                if (a === 3) {
+                    ip = '10.140.84.' + String(su);
+                    gate = '10.140.84.254';
                 }
                 settings.set('ip', ip);
                 settings.set('gate', gate);
                 settings.set('svc', true);
                 settings.set('aupd', true);
-                getAdapter()
+                getAdapter();
             }
         }
     }
 
     function agreeResetIP() {
-        const {ipcRenderer} = require('electron')
-        ipcRenderer.send('resetApplication', 'IP')
+        const {ipcRenderer} = require('electron');
+        ipcRenderer.send('resetApplication', 'IP');
     }
 
     function resetIp() {
@@ -404,29 +395,29 @@
     }
 
     function getAdapter() {
-        const os = require('os')
-        dat = os.networkInterfaces();
+        const os = require('os');
+        const dat = os.networkInterfaces();
         if (dat['Wi-Fi'] != null) {
-            settings.set('adp', 'Wi-Fi')
-            showSec(1)
+            settings.set('adp', 'Wi-Fi');
+            showMain();
         } else {
-            i = 1
-            for (var n in dat) {
-                $('select').append('<option value="' + String(i) + '">' + n + '</option>')
-                adpArr.push(n)
-                i += 1
+            let i = 1;
+            for (let n in dat) {
+                $('select').append('<option value="' + String(i) + '">' + n + '</option>');
+                adpArr.push(n);
+                i += 1;
             }
             $('select').formSelect();
-            showSec(6)
+            showSec(6);
         }
-        chkUpdate()
+        chkUpdate();
     }
 
     function submitAdapter() {
-        idx = parseInt($('select').val())
-        if (idx == 0) return;
-        settings.set('adp', adpArr[idx])
-        showSec(1)
+        const idx = parseInt($('select').val());
+        if (!idx) return;
+        settings.set('adp', adpArr[idx]);
+        showSec(1);
     }
 </script>
 
@@ -437,7 +428,7 @@
     </div>
     <div class="modal-footer">
         <a class="modal-close waves-effect waves-green btn-flat" onclick="agreeResetIP();">예</a>
-        <a class="modal-close waves-effect waves-green btn-flat" href="#!">아니요</a>
+        <a class="modal-close waves-effect waves-green btn-flat" href="#">아니요</a>
     </div>
 </div>
 
@@ -466,10 +457,7 @@
                                 <div style="float:left;margin-left:0;">
                                     <p class="text" style="font-size:3em;margin-top:20px;margin-bottom:3px">IP 변경하기
                                     </p>
-                                    <p class="info" id="ipInfo"
-                                       style="font-size:1.2em;margin-top:5px;margin-bottom:20px">IP를 교내
-                                        IP로
-                                        변경합니다.
+                                    <p class="info" id="ipInfo">IP를 교내 IP로 변경합니다.
                                     </p>
                                 </div>
                             </div>
@@ -484,8 +472,7 @@
                                 </div>
                                 <div style="float:left;margin-left:0;">
                                     <p class="text" style="font-size:3em;margin-top:20px;margin-bottom:3px">설정</p>
-                                    <p class="info" style="font-size:1.2em;margin-top:5px;margin-bottom:20px">옵션을
-                                        변경합니다.
+                                    <p class="info">옵션을 변경합니다.
                                     </p>
                                 </div>
                             </div>
@@ -499,11 +486,8 @@
                                          style="margin-left:20px;margin-top:20px;margin-bottom:20px;height:90px;">
                                 </div>
                                 <div style="float:left;margin-left:0;">
-                                    <p class="text" style="font-size:3em;margin-top:20px;margin-bottom:3px">정보
-                                    </p>
-                                    <p class="info" style="font-size:1.2em;margin-top:5px;margin-bottom:20px">프로그램
-                                        정보를
-                                        엽니다.</p>
+                                    <p class="text">정보</p>
+                                    <p class="info">프로그램 정보를 엽니다.</p>
                                 </div>
                             </div>
                         </div>
@@ -553,10 +537,8 @@
                                 </label>
                             </div>
                             <br>
-                            <a class="waves-effect waves-light btn deep-purple lighten-1" onclick="resetIp()">IP
-                                초기화</a>
-                            <a class="waves-effect waves-light btn deep-purple lighten-1"
-                               onclick="showMain()">확인</a>
+                            <a class="waves-effect waves-light btn deep-purple lighten-1" onclick="resetIp()">IP 초기화</a>
+                            <a class="waves-effect waves-light btn deep-purple lighten-1" onclick="showMain()">확인</a>
                         </div>
                     </div>
                 </div>
@@ -567,7 +549,7 @@
                     <div class="valign-wrapper center-align" style="width:100%;height:100%;">
                         <div style="width:100%;">
                             <img src="res/IPLogo.png" style="width:120px;">
-                            <p>4.0.6</p>
+                            <p>4.1.0</p>
                             <p id="new">최신 버전입니다.</p>
                             <p id="old">새 버전이 있습니다. <a onclick="openUpd()">다운로드</a></p>
                             <p>개발 : 4기 이서현</p>
@@ -625,5 +607,4 @@
     </div>
 </div>
 </body>
-
 </html>
