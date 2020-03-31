@@ -4,7 +4,6 @@
   "description": "IP 4.0.7",
   "main": "index.js",
   "scripts": {
-    "run": "electron index.js",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
   },
@@ -12,7 +11,7 @@
     "type": "git",
     "url": "git+https://github.com/IASA-Null/iasa-ip.git"
   },
-  "author": "NULL <04seohyun@gmail.com>",
+  "author": "NULL <ip@iasa.kr>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/IASA-Null/iasa-ip/issues"
@@ -20,10 +19,12 @@
   "build": {
     "productName": "IP",
     "appId": "iasa.null.ip",
+    "directories": {
+      "output": "build"
+    },
     "win": {
       "requestedExecutionLevel": "requireAdministrator",
       "extraFiles": [
-        "./regStartup.bat",
         "./res/IPLogo.ico",
         "./res/iasa-ip-l.xml"
       ],
@@ -31,8 +32,7 @@
         {
           "target": "NSIS",
           "arch": [
-            "x64",
-            "ia32"
+            "x64"
           ]
         }
       ],
@@ -40,7 +40,8 @@
     },
     "nsis": {
       "createStartMenuShortcut": true,
-      "perMachine": true
+      "perMachine": true,
+      "language": "65001"
     }
   },
   "homepage": "https://github.com/IASA-Null/iasa-ip#readme",
@@ -53,6 +54,6 @@
   },
   "devDependencies": {
     "electron": "latest",
-    "electron-builder": "^21.2.0"
+    "electron-builder": "^22.4.1"
   }
 }
