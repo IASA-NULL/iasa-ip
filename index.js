@@ -21,11 +21,11 @@ function resetApplication() {
     settings.set('svc', true);
     win.close();
     win = null;
-    settings.set('ip', null);
+    settings.delete('ip');
     settings.set('svc', false);
     settings.set('adp', null);
     settings.set('gate', null);
-    settings.set('aupd', false);
+    settings.set('aupd', true);
     createMainWindow();
 }
 
@@ -147,7 +147,7 @@ app.on('second-instance', openMainWindow);
 app.on('ready', onFirstRun);
 
 async function allCloseHandler() {
-    const res = await onBackgroundService();
+    const res = onBackgroundService();
     if (!res) app.exit();
 }
 

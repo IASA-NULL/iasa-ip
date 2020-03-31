@@ -227,7 +227,7 @@
     const ipModule = require('./changeIp.js');
     let adpArr = [0];
     $(document).ready(() => {
-        $.fn.pressEnter = fn => {
+        $.fn.pressEnter = function (fn) {
             return this.each(() => {
                 $(this).bind('enterPress', fn);
                 $(this).keyup(e => {
@@ -251,14 +251,10 @@
             $('#aupd').children('label').click()
         }
         $("#svc").on("click", () => {
-            const status = $(this).find("input[type=checkbox]").prop('checked');
+            const status = $("#svc").find('input').is(':checked');
+            console.log(status);
             if (status) settings.set('svc', true);
             else settings.set('svc', false);
-        });
-        $("#aupd").on("click", () => {
-            const status = $(this).find("input[type=checkbox]").prop('checked');
-            if (status) settings.set('aupd', true);
-            else settings.set('aupd', false);
         });
         setTimeout(function () {
             $('body').css('overflow-y', 'scroll');
