@@ -22,3 +22,13 @@ cache:
 
 script:
   - npm run-script dist
+
+
+deploy:
+  local-dir: ./dist
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  keep-history: true
+  on:
+    branch: master
