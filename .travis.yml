@@ -6,7 +6,8 @@ node_js:
 
 branches:
   only:
-    - local
+    - gh-pages
+    - /.*/
 
 before_install:
   - npm install -g hexo-cli
