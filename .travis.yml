@@ -4,13 +4,21 @@ language: node_js
 node_js:
   - "lts/*"
 
+os: windows
+
 branches:
   only:
     - gh-pages
     - /.*/
 
-before_install:
-  - npm install -g hexo-cli
-
 install:
   - npm install
+
+cache:
+  directories:
+    - node_modules
+    - $HOME/.cache/electron
+    - $HOME/.cache/electron-builder
+
+script:
+  - npm run-script dist
