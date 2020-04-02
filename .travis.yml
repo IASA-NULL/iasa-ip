@@ -24,7 +24,7 @@ script:
   - npm run-script dist
 
 deploy:
-  local-dir: build\IP.exe
+  local-dir: C:\Users\travis\build\IASA-Null\iasa-ip\build\IP.exe
   provider: pages
   skip-cleanup: true
   github-token: $GITHUB_TOKEN
