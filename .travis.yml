@@ -24,7 +24,7 @@ script:
   - npm run-script dist
 
 deploy:
-  local-dir: ./build
+  local-dir: build\IP.exe
   provider: pages
   skip-cleanup: true
   github-token: $GITHUB_TOKEN
