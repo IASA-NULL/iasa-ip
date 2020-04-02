@@ -1,0 +1,17 @@
+html {
+    background: #222222;
+    color: white;
+}
+
+.obj > div {
+    background: #1e1e1e;
+}
+
+::-webkit-scrollbar {
+    background: #222222;
+}
+
+.modal, .modal * {
+    background: #333333 !important;
+    color: white;
+}

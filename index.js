@@ -51,8 +51,8 @@ function askStopService() {
         message: '서비스를 종료하면 IP가 자동으로 바뀌지 않습니다.\n정말로 종료할까요?',
         title: "IP"
     };
-    dialog.showMessageBox(dialogOptions, i => {
-        if (i == 0) app.exit()
+    dialog.showMessageBox(dialogOptions).then(res => {
+        if (!res.response) app.exit();
     });
 }
 
@@ -85,6 +85,7 @@ function createMainWindow() {
     });
     win.once('ready-to-show', () => {
         win.show();
+        //win.webContents.openDevTools()
     });
 }
 

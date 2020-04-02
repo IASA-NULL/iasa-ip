@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>IP 4.1.0</title>
+    <title>IP 4.2.0</title>
     <link href="css/materialize.min.css" media="screen,projection" rel="stylesheet" type="text/css"/>
     <script>
         if (typeof module === 'object') {
@@ -13,205 +13,8 @@
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript" src="js/materialize.min.js"></script>
     <script>if (window.module) module = window.module;</script>
-    <style>
-        html {
-            width: 100%;
-            height: 100%;
-        }
-
-        body {
-            width: 100%;
-            height: 100%;
-            padding: 3%;
-            overflow-x: hidden;
-            float: left;
-            overflow-y: hidden;
-        }
-
-        ::-webkit-scrollbar {
-            width: 14px;
-            height: 18px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            height: 6px;
-            border: 4px solid rgba(0, 0, 0, 0);
-            background-clip: padding-box;
-            -webkit-border-radius: 7px;
-            background-color: rgba(50, 50, 50, 0.801);
-        }
-
-        ::-webkit-scrollbar-button {
-            width: 0;
-            height: 0;
-            display: none;
-        }
-
-        ::-webkit-scrollbar-corner {
-            background-color: transparent;
-        }
-
-        .splash {
-            width: 100%;
-            height: 100%;
-            margin: 0 auto;
-            text-align: center;
-            animation: splash 3s;
-            animation-fill-mode: forwards;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        @font-face {
-            font-family: 'nanum';
-            src: url("res/NSR.ttf");
-        }
-
-        * {
-            font-family: 'nanum';
-        }
-
-        *::selection {
-            background-color: blueviolet;
-            color: white;
-        }
-
-        .initShowSection {
-            opacity: 0;
-            animation: fadein 1s ease-out;
-            animation-delay: 3s;
-            animation-fill-mode: forwards;
-        }
-
-        .showSection {
-            opacity: 0;
-            animation: fadein 0.5s ease-out;
-            animation-delay: 0.6s;
-            animation-fill-mode: forwards;
-        }
-
-        .hideSection {
-            opacity: 1;
-            animation: fadeout 0.5s ease-in;
-            animation-fill-mode: forwards;
-        }
-
-        .frame {
-            display: table;
-            width: 100%;
-            height: 100%;
-        }
-
-        .container {
-            display: table-cell;
-            vertical-align: middle;
-        }
-
-        .novisible {
-            display: none;
-        }
-
-        @keyframes splash {
-            0% {
-                opacity: 0;
-            }
-
-            20% {
-                opacity: 1;
-            }
-
-            70% {
-                opacity: 1;
-            }
-
-            90% {
-                opacity: 0;
-                height: 100%;
-            }
-
-            100% {
-                opacity: 0;
-                height: 0;
-            }
-        }
-
-        @keyframes fadein {
-            0% {
-                opacity: 0;
-                padding-bottom: 0;
-                padding-top: 5%;
-            }
-
-            100% {
-                opacity: 1;
-                padding-bottom: 0;
-                padding-top: 0;
-            }
-        }
-
-        @keyframes fadeout {
-            0% {
-                opacity: 1;
-                padding-bottom: 0;
-                padding-top: 0;
-            }
-
-            100% {
-                opacity: 0;
-                padding-bottom: 5%;
-                padding-top: 0;
-            }
-        }
-
-        @keyframes obj {
-            0% {
-                opacity: 0;
-                margin-top: 2.5%;
-            }
-
-            100% {
-                opacity: 1;
-                margin-top: 0;
-            }
-        }
-
-        @keyframes cont {
-            0% {
-                height: 0;
-                margin-top: 0;
-            }
-
-            100% {
-                height: 0;
-                margin-top: 0;
-            }
-        }
-
-        .obj {
-            padding: 10px !important;
-        }
-
-        .switch label input[type=checkbox]:checked + .lever:after {
-            background-color: #7e57c2 !important;
-        }
-
-        .switch label input[type=checkbox]:checked + .lever {
-            background-color: #7e57c2 !important;
-        }
-
-        .info {
-            font-size: 1.2em;
-            margin-top: 5px;
-            margin-bottom: 20px
-        }
-
-        .text {
-            font-size: 3em;
-            margin-top: 20px;
-            margin-bottom: 3px
-        }
-    </style>
+    <link href="css/mainUI/common.css" rel="stylesheet" type="text/css"/>
+    <link id="theme" rel="stylesheet" type="text/css">
 </head>
 
 <body>
@@ -222,11 +25,15 @@
 </div>
 
 <script type="text/javascript">
-    const verNum = 19;
+    const verNum = 18;
     const settings = require('electron-settings');
     const ipModule = require('./changeIp.js');
     let adpArr = [0];
+
+
     $(document).ready(() => {
+        if (window.matchMedia('(prefers-color-scheme:dark)').matches) document.getElementById("theme").href = "css/mainUI/dark.css";
+        else document.getElementById("theme").href = "css/mainUI/light.css";
         $.fn.pressEnter = function (fn) {
             return this.each(() => {
                 $(this).bind('enterPress', fn);
@@ -429,8 +236,8 @@
         <p>정말로 IP를 초기화 하시겠어요?</p>
     </div>
     <div class="modal-footer">
-        <a class="modal-close waves-effect waves-green btn-flat" onclick="agreeResetIP();">예</a>
-        <a class="modal-close waves-effect waves-green btn-flat" href="#">아니요</a>
+        <a class="modal-close waves-effect btn-flat" onclick="agreeResetIP();">예</a>
+        <a class="modal-close waves-effect btn-flat" href="#">아니요</a>
     </div>
 </div>
 
@@ -439,7 +246,7 @@
         <h4>새 버전이 있습니다.</h4>
     </div>
     <div class="modal-footer">
-        <a class="modal-close waves-effect waves-green btn-flat" onclick="openUpd();">다운로드</a>
+        <a class="modal-close waves-effect btn-flat" onclick="openUpd();">다운로드</a>
     </div>
 </div>
 
@@ -551,7 +358,7 @@
                     <div class="valign-wrapper center-align" style="width:100%;height:100%;">
                         <div style="width:100%;">
                             <img src="res/IPLogo.png" style="width:120px;">
-                            <p>4.1.0</p>
+                            <p>4.2.0</p>
                             <p id="new">최신 버전입니다.</p>
                             <p id="old">새 버전이 있습니다. <a onclick="openUpd()">다운로드</a></p>
                             <p>개발 : 4기 이서현</p>
