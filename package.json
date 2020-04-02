@@ -19,6 +19,7 @@
   "build": {
     "productName": "IP",
     "appId": "iasa.null.ip",
+    "artifactName": "IP.${ext}",
     "directories": {
       "output": "build"
     },

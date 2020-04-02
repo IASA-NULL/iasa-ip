@@ -23,7 +23,6 @@ cache:
 script:
   - npm run-script dist
 
-
 deploy:
   local-dir: ./build
   provider: pages
