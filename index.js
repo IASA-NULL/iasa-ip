@@ -125,7 +125,7 @@ function onFirstRun() {
     notification = new Notification({
         title: '업데이트',
         body: 'IP의 새 버전이 있습니다.',
-        icon: path.join(__dirname, 'res/ipLogo.ico')
+        icon: 'C:\\Program Files\\IP\\res\\ipLogo.ico'
     });
     notification.on('click', () => {
         const {shell} = require('electron');

@@ -1,0 +1,15 @@
+# .travis.yml
+language: node_js
+
+node_js:
+  - "lts/*"
+
+branches:
+  only:
+    - local
+
+before_install:
+  - npm install -g hexo-cli
+
+install:
+  - npm install
