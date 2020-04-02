@@ -25,7 +25,7 @@ script:
 
 
 deploy:
-  local-dir: ./dist
+  local-dir: ./build
   provider: pages
   skip-cleanup: true
   github-token: $GITHUB_TOKEN
