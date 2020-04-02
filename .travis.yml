@@ -8,8 +8,7 @@ os: windows
 
 branches:
   only:
-    - gh-pages
-    - /.*/
+    - master
 
 install:
   - npm install
