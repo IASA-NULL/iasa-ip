@@ -52,7 +52,7 @@ function askStopService() {
         title: "IP"
     };
     dialog.showMessageBox(dialogOptions, i => {
-        if (!i) app.exit()
+        if (i == 0) app.exit()
     });
 }
 
@@ -192,8 +192,7 @@ setInterval(() => {
 
 function chkUpdate() {
     require("request")({url: 'https://api.iasa.kr/ip/ver', timeout: 1000}, (e, response) => {
-        if (e) return;
-        else if (parseInt(response.body) > verNum) {
+        if (!e && parseInt(response.body) > verNum) {
             notification.close();
             notification.show();
         }
