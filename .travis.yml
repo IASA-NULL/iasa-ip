@@ -28,5 +28,3 @@ deploy:
   api_key: $GITHUB_TOKEN
   file: build/IP.exe
   skip_cleanup: true
-  on:
-    tags: true
