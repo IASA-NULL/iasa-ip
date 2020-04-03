@@ -21,6 +21,7 @@ cache:
 
 script:
   - npm run-script dist
+  - npm prune --production
 
 deploy:
   provider: releases

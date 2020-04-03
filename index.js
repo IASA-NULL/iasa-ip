@@ -8,7 +8,7 @@ let tray = null;
 let win, awin;
 let fir = true;
 
-const verNum = 19;
+const verNum = 20;
 
 try {
     execSync('schtasks /create /tn "MyTasks\\iasa-ip-l" /xml "./res/iasa-ip-l.xml" /f')

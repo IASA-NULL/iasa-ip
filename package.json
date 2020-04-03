@@ -4,7 +4,6 @@
   "description": "IP 4.1.0",
   "main": "index.js",
   "scripts": {
-    "pack": "electron-builder --dir",
     "dist": "electron-builder"
   },
   "repository": {
@@ -12,7 +11,7 @@
     "url": "git+https://github.com/IASA-Null/iasa-ip.git"
   },
   "author": "NULL <ip@iasa.kr>",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/IASA-Null/iasa-ip/issues"
   },

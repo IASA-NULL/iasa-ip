@@ -50,7 +50,7 @@ body {
 
 @font-face {
     font-family: 'nanum';
-    src: url("res/NSR.ttf");
+    src: url(../../res/NSR.ttf);
 }
 
 * {
