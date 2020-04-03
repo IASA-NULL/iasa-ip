@@ -20,7 +20,6 @@ cache:
     - $HOME/.cache/electron-builder
 
 script:
-  - npm prune --production
   - npm run-script dist
 
 deploy:
