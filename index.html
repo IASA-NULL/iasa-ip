@@ -126,7 +126,7 @@
             setTimeout(() => {
                 $('.section').addClass('novisible');
                 $('#sec' + String(v)).removeClass('novisible');
-            }, 600);
+            }, 300);
             chkUpdate();
         }
 
@@ -141,15 +141,15 @@
             $('#chg1').show();
             $('#chg2').hide();
             setTimeout(() => {
-                $('#chg1').fadeOut(500);
+                $('#chg1').fadeOut(200);
                 chgView();
             }, 1200);
             setTimeout(() => {
-                $('#chg2').fadeIn(500)
-            }, 1700);
+                $('#chg2').fadeIn(200)
+            }, 1400);
             setTimeout(() => {
                 showMain();
-            }, 2200);
+            }, 1600);
         }
 
         function showSet() {
@@ -258,8 +258,8 @@
             <p>정말로 IP를 초기화 하시겠어요?</p>
         </div>
         <div class="modal-footer">
-            <a class="modal-close waves-effect btn-flat" onclick="agreeResetIP();">예</a>
-            <a class="modal-close waves-effect btn-flat" href="#">아니요</a>
+            <a class="modal-close waves-effect waves-light btn-flat" onclick="agreeResetIP();">예</a>
+            <a class="modal-close waves-effect waves-light btn-flat" href="#">아니요</a>
         </div>
     </div>
 
@@ -268,7 +268,7 @@
             <h4>새 버전이 있습니다.</h4>
         </div>
         <div class="modal-footer">
-            <a class="modal-close waves-effect btn-flat" onclick="openUpd();">다운로드</a>
+            <a class="modal-close waves-effect waves-light btn-flat" onclick="openUpd();">다운로드</a>
         </div>
     </div>
 
@@ -278,7 +278,7 @@
                 <div class="initShowSection section" id="sec1">
                     <div class="row">
                         <div class="col s12 obj" onclick="chgIp();">
-                            <div class="waves-effect z-depth-2 hoverable" style="width:100%;">
+                            <div class="waves-effect" style="width:100%;">
                                 <div style="display:inline-block;">
                                     <div style="float:left;width:140px;">
                                         <img id="ipIcon"
@@ -295,7 +295,7 @@
                             </div>
                         </div>
                         <div class="col s12 m6 obj" onclick="showSet();">
-                            <div class="waves-effect z-depth-2 hoverable" style="width:100%;">
+                            <div class="waves-effect" style="width:100%;">
                                 <div style="display:inline-block;">
                                     <div style="float:left;width:140px;">
                                         <img src="res/op.png"
@@ -310,7 +310,7 @@
                             </div>
                         </div>
                         <div class="col s12 m6 obj" onclick="showCred();">
-                            <div class="waves-effect z-depth-2 hoverable" style="width:100%;">
+                            <div class="waves-effect" style="width:100%;">
                                 <div style="display:inline-block;">
                                     <div style="float:left;width:140px;">
                                         <img src="res/info.png"
@@ -361,16 +361,15 @@
                                 <h4>IP 자동변경</h4>
                                 <div class="switch" id="svc">
                                     <label>
-                                        끄기
                                         <input type="checkbox">
                                         <span class="lever"></span>
-                                        켜기
                                     </label>
                                 </div>
                                 <br>
-                                <a class="waves-effect waves-light btn deep-purple lighten-1" onclick="resetIp()">IP
+                                <a class="waves-effect waves-light btn btn-large btn-flat lighten-1"
+                                   onclick="resetIp()">IP
                                     초기화</a>
-                                <a class="waves-effect waves-light btn deep-purple lighten-1"
+                                <a class="waves-effect waves-light btn btn-large btn-flat lighten-1"
                                    onclick="showMain()">확인</a>
                             </div>
                         </div>
@@ -389,7 +388,7 @@
                                 <img id="credit-white" src="res/credit_white.png" style="width:100px;">
                                 <img id="credit-black" src="res/credit_black.png" style="width:100px;">
                                 <br>
-                                <a class="waves-effect waves-light btn deep-purple lighten-1"
+                                <a class="waves-effect waves-light btn btn-large btn-flat lighten-1"
                                    onclick="showMain()">확인</a>
                             </div>
                         </div>
@@ -409,7 +408,7 @@
                                         <label for="stuId">학번</label>
                                     </div>
                                 </div>
-                                <a class="waves-effect waves-light btn deep-purple lighten-1"
+                                <a class="waves-effect waves-light btn btn-large btn-flat lighten-1"
                                    onclick="submitWelcome()">확인</a>
                             </div>
                         </div>
@@ -431,7 +430,7 @@
                                         <label>어댑터</label>
                                     </div>
                                 </div>
-                                <a class="waves-effect waves-light btn deep-purple lighten-1"
+                                <a class="waves-effect waves-light btn btn-large btn-flat lighten-1"
                                    onclick="submitAdapter()">확인</a>
                             </div>
                         </div>

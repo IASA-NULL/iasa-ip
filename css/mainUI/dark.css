@@ -1,10 +1,14 @@
 html {
-    background: #22222288;
+    background: #222222aa;
     color: white;
 }
 
 .obj > div {
-    background: #1e1e1e;
+    background: #00000000;
+}
+
+.obj > div:hover {
+    background: #00000022;
 }
 
 .modal, .modal * {
@@ -26,4 +30,8 @@ html {
 
 #window-controls .button:active {
     background: rgba(255, 255, 255, 0.2);
+}
+
+input {
+    color: white;
 }
