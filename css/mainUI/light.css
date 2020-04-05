@@ -1,0 +1,24 @@
+html {
+    background: #ffffff88;
+    color: black;
+}
+
+::-webkit-scrollbar {
+    background: #222222;
+}
+
+#wrapper {
+    border-color: black;
+}
+
+#credit-white {
+    display: none;
+}
+
+#window-controls .button:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+#window-controls .button:active {
+    background: rgba(0, 0, 0, 0.2);
+}

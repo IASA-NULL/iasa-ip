@@ -1,5 +1,5 @@
 html {
-    background: #222222;
+    background: #22222288;
     color: white;
 }
 
@@ -7,11 +7,23 @@ html {
     background: #1e1e1e;
 }
 
-::-webkit-scrollbar {
-    background: #222222;
-}
-
 .modal, .modal * {
     background: #333333 !important;
     color: white;
+}
+
+#wrapper {
+    border-color: white;
+}
+
+#credit-black {
+    display: none;
+}
+
+#window-controls .button:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+#window-controls .button:active {
+    background: rgba(255, 255, 255, 0.2);
 }

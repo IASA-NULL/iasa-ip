@@ -1,6 +1,7 @@
 const {app, BrowserWindow, Menu, Tray, dialog, ipcMain} = require('electron');
 const path = require('path');
 const url = require('url');
+const vibrancy = require('electron-acrylic-window');
 const webControl = require('./webControl.js');
 const {execSync} = require('child_process');
 
@@ -72,7 +73,7 @@ function createMainWindow() {
         width: 850, height: 600, webPreferences: {
             nodeIntegration: true,
             webSecurity: false
-        }, show: false, icon: path.join(__dirname, 'res/ipLogo.ico')
+        }, show: false, icon: path.join(__dirname, 'res/ipLogo.ico'), frame: false, transparent: true
     });
     win.setMenu(null);
     win.loadURL(url.format({
@@ -85,6 +86,11 @@ function createMainWindow() {
     });
     win.once('ready-to-show', () => {
         win.show();
+        vibrancy.setVibrancy(win);
+        win.setResizable(false);
+        ipcMain.on('hide', (event, arg) => {
+            win.minimize();
+        });
         //win.webContents.openDevTools()
     });
 }
