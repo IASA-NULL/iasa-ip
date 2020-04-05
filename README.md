@@ -2,7 +2,8 @@
 
 <img alt="logo" src="./res/IPLogo.png" width="100" height="100">  
   
-[![Build Status](https://travis-ci.org/IASA-Null/iasa-ip.svg?branch=master)](https://travis-ci.org/IASA-Null/iasa-ip)  
+[![Build Status](https://travis-ci.org/IASA-Null/iasa-ip.svg?branch=master)](https://travis-ci.org/IASA-Null/iasa-ip) 
+[![Dependencies](https://david-dm.org/IASA-Null/iasa-ip.svg)](https://david-dm.org/IASA-Null/iasa-ip)  
 
 IP is Tool for change IP easily in IASA.
 
