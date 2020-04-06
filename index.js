@@ -4,6 +4,7 @@ const url = require('url');
 const vibrancy = require('electron-acrylic-window');
 const webControl = require('./webControl.js');
 const {execSync} = require('child_process');
+const settings = require('electron-settings');
 
 let tray = null;
 let win, awin;
@@ -18,12 +19,10 @@ try {
 }
 
 function resetApplication() {
-    const settings = require('electron-settings');
     settings.set('svc', true);
     win.close();
     win = null;
     settings.delete('ip');
-    settings.set('svc', false);
     settings.set('adp', null);
     settings.set('gate', null);
     settings.set('aupd', true);
@@ -120,7 +119,6 @@ function createAlertWindow(op) {
 }
 
 function onBackgroundService() {
-    const settings = require('electron-settings');
     if (settings.get('svc') == null) settings.set('svc', true);
     return settings.get('svc');
 }

@@ -35,3 +35,11 @@ html {
 input {
     color: white;
 }
+
+.btn-flat {
+    color: white;
+}
+
+ul.dropdown-content.select-dropdown {
+    background: #333333;
+}

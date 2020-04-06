@@ -26,3 +26,20 @@ html {
 #window-controls .button:active {
     background: rgba(0, 0, 0, 0.2);
 }
+
+.btn-flat {
+    color: black;
+}
+
+input {
+    border-bottom: 1px solid black !important;
+    box-shadow: 0 1px 0 0 black !important;
+}
+
+label {
+    color: black !important;
+}
+
+ul.dropdown-content.select-dropdown {
+    background: #ffffff;
+}

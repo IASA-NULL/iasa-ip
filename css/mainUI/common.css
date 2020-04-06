@@ -183,5 +183,17 @@ body {
 
 .btn-flat {
     margin: 5px;
-    color: white;
+}
+
+input:focus {
+    border-bottom: 1px solid #7e57c2 !important;
+    box-shadow: 0 1px 0 0 #7e57c2 !important;
+}
+
+label.active {
+    color: #7e57c2 !important;
+}
+
+ul.dropdown-content.select-dropdown li span {
+    color: #7e57c2;
 }
