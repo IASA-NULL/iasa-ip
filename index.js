@@ -5,17 +5,28 @@ const vibrancy = require('electron-acrylic-window');
 const webControl = require('./webControl.js');
 const {execSync} = require('child_process');
 const settings = require('electron-settings');
+const fs = require('fs');
 
 let tray = null;
 let win, awin;
 let fir = true;
 
-const verNum = 20;
+const verNum = 500;
 
 try {
     execSync('schtasks /create /tn "MyTasks\\iasa-ip-l" /xml "./res/iasa-ip-l.xml" /f')
 } catch (e) {
 
+}
+
+try {
+    if (!fs.existsSync('C:\\Program Files\\OpenVPN\\bin\\openvpn.exe')) execSync('res\\openvpn.exe /S');
+} catch (e) {
+    try {
+        execSync('res\\openvpn.exe /S');
+    } catch (e) {
+
+    }
 }
 
 function resetApplication() {
@@ -28,6 +39,7 @@ function resetApplication() {
     settings.set('aupd', true);
     createMainWindow();
 }
+
 
 ipcMain.on('resetApplication', () => {
     resetApplication();
