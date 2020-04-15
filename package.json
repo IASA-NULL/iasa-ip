@@ -4,7 +4,8 @@
   "description": "IP 4.2.0",
   "main": "index.js",
   "scripts": {
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "run": "electron index.js"
   },
   "repository": {
     "type": "git",

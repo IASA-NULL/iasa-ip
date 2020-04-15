@@ -43,3 +43,7 @@ input {
 ul.dropdown-content.select-dropdown {
     background: #333333;
 }
+
+#splashFont {
+    fill: #333333;
+}

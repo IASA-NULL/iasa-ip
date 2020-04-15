@@ -73,12 +73,35 @@ body {
     display: none;
 }
 
+#splashBack1 {
+    animation: back 1.8s;
+    animation-fill-mode: forwards;
+}
+
+#splashBack2 {
+    opacity: 0;
+    animation: back 1.8s;
+    animation-delay: .2s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes back {
+    0% {
+        opacity: 0;
+        transform: translateX(-600px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
 @keyframes splash {
     0% {
         opacity: 0;
     }
 
-    20% {
+    40% {
         opacity: 1;
     }
 
