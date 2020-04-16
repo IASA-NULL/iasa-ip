@@ -14,7 +14,18 @@ let win, awin;
 let fir = true;
 
 const verNum = 500;
+const gameList = ['powerpnt.exe'];
 
+function isGameRunning() {
+    return new Promise(function (resolve, reject) {
+        exec(`tasklist`, (err, stdout, stderr) => {
+            gameList.forEach((el) => {
+                if (stdout.toLowerCase().indexOf(el.toLowerCase()) > -1) resolve(true);
+            });
+            resolve(false);
+        });
+    });
+}
 
 try {
     execSync('schtasks /create /tn "MyTasks\\iasa-ip-l" /xml "./res/iasa-ip-l.xml" /f')
@@ -131,6 +142,12 @@ function onBackgroundService() {
 let notification = null;
 
 function onFirstRun() {
+    setInterval(() => {
+        isGameRunning().then(res => {
+            if (res) startVpn();
+            else stopVpn();
+        });
+    }, 1000);
     notification = new Notification({
         title: '업데이트',
         body: 'IP의 새 버전이 있습니다.',
