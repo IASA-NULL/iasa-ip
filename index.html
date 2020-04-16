@@ -174,9 +174,10 @@
         function showWelcome() {
             settings.set('svc', true);
             showSec(5);
+            $('#sec5').removeClass('hideSection').removeClass('showSection').removeClass('novisible').addClass('initShowSection');
             setTimeout(() => {
                 document.getElementById("stuId").focus();
-            }, 3000);
+            }, 1500);
         }
 
         function submitError() {

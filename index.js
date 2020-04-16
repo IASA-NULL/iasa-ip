@@ -10,6 +10,7 @@ const fs = require('fs');
 let tray = null;
 let win, awin;
 let fir = true;
+let isOpenVpn = false;
 
 const verNum = 500;
 
@@ -19,15 +20,23 @@ try {
 
 }
 
-try {
-    if (!fs.existsSync('C:\\Program Files\\OpenVPN\\bin\\openvpn.exe')) execSync('res\\openvpn.exe /S');
-} catch (e) {
+let vpnintv;
+
+function checkOpenVpn() {
     try {
-        execSync('res\\openvpn.exe /S');
+        if (!fs.existsSync('C:\\Program Files\\OpenVPN\\bin\\openvpn.exe')) execSync('res\\openvpn.exe /S');
+        else {
+            clearInterval(vpnintv);
+            vpnintv = null;
+            isOpenVpn = true;
+        }
     } catch (e) {
 
     }
 }
+
+checkOpenVpn();
+if (!isOpenVpn) vpnintv = setInterval(checkOpenVpn, 30000);
 
 function resetApplication() {
     settings.set('svc', true);
