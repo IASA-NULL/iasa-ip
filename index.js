@@ -1,4 +1,4 @@
-const {app, BrowserWindow, Menu, Tray, dialog, ipcMain} = require('electron');
+const {app, BrowserWindow, Menu, Tray, dialog, ipcMain, Notification} = require('electron');
 const path = require('path');
 const url = require('url');
 const vibrancy = require('electron-acrylic-window');
@@ -6,37 +6,21 @@ const webControl = require('./webControl.js');
 const {execSync} = require('child_process');
 const settings = require('electron-settings');
 const fs = require('fs');
+const {startVpn, stopVpn} = require('./vpn.js');
+const exec = require('child_process').exec;
 
 let tray = null;
 let win, awin;
 let fir = true;
-let isOpenVpn = false;
 
 const verNum = 500;
+
 
 try {
     execSync('schtasks /create /tn "MyTasks\\iasa-ip-l" /xml "./res/iasa-ip-l.xml" /f')
 } catch (e) {
 
 }
-
-let vpnintv;
-
-function checkOpenVpn() {
-    try {
-        if (!fs.existsSync('C:\\Program Files\\OpenVPN\\bin\\openvpn.exe')) execSync('res\\openvpn.exe /S');
-        else {
-            clearInterval(vpnintv);
-            vpnintv = null;
-            isOpenVpn = true;
-        }
-    } catch (e) {
-
-    }
-}
-
-checkOpenVpn();
-if (!isOpenVpn) vpnintv = setInterval(checkOpenVpn, 30000);
 
 function resetApplication() {
     settings.set('svc', true);
@@ -147,7 +131,6 @@ function onBackgroundService() {
 let notification = null;
 
 function onFirstRun() {
-    const {Notification} = require('electron');
     notification = new Notification({
         title: '업데이트',
         body: 'IP의 새 버전이 있습니다.',
