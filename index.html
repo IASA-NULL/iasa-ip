@@ -23,7 +23,7 @@
     <header id="titlebar">
         <div id="drag-region">
             <div id="window-title">
-                <span id="appTitle">IP 4.2.0</span>
+                <span id="appTitle">IP 4.2.1</span>
             </div>
             <div id="window-controls">
                 <div class="button" id="min-button">
@@ -57,16 +57,29 @@
     </div>
 
     <script type="text/javascript">
-        const verNum = 20;
+        const verNum = 421;
         const settings = require('electron-settings');
         const ipModule = require('./changeIp.js');
         const {ipcRenderer} = require('electron');
         let adpArr = [0];
 
+        function getTheme() {
+            if (!settings.get('atheme')) {
+                if (window.matchMedia('(prefers-color-scheme:dark)').matches) return true;
+                else return false;
+            } else {
+                if (settings.get('dtheme')) return true;
+                else return false;
+            }
+        }
+
+        function loadTheme() {
+            if (getTheme()) document.getElementById("theme").href = "./css/mainUI/dark.css";
+            else document.getElementById("theme").href = "./css/mainUI/light.css";
+        }
 
         $(document).ready(() => {
-            if (window.matchMedia('(prefers-color-scheme:dark)').matches) document.getElementById("theme").href = "css/mainUI/dark.css";
-            else document.getElementById("theme").href = "css/mainUI/light.css";
+            loadTheme();
             $.fn.pressEnter = function (fn) {
                 return this.each(() => {
                     $(this).bind('enterPress', fn);
@@ -85,13 +98,40 @@
             if (!settings.get('ip')) showWelcome();
             else if (!settings.get('adp')) getAdapter();
             if (settings.get('svc')) {
-                $('#svc').children('label').click()
+                $('#svc').children('label').click();
+            }
+            if (!settings.get('atheme')) {
+                $('#atheme').children('label').click();
+                $('#userTheme').hide();
+            }
+            if (settings.get('dtheme')) {
+                $('#dtheme').children('label').click();
             }
             $("#svc").on("click", () => {
                 const status = $("#svc").find('input').is(':checked');
-                console.log(status);
                 if (status) settings.set('svc', true);
                 else settings.set('svc', false);
+            });
+            $("#atheme").on("click", () => {
+                const status = $("#atheme").find('input').is(':checked');
+                if (!status) settings.set('atheme', true);
+                else settings.set('atheme', false);
+                if (settings.get('atheme')) {
+                    $('#userTheme').show();
+                } else $('#userTheme').hide();
+                if (window.matchMedia('(prefers-color-scheme:dark)').matches ^ $("#dtheme").find('input').is(':checked')) {
+                    $("#dtheme").children('label').click();
+                    const status2 = $("#dtheme").find('input').is(':checked');
+                    if (status2) settings.set('dtheme', true);
+                    else settings.set('dtheme', false);
+                }
+                loadTheme();
+            });
+            $("#dtheme").on("click", () => {
+                const status = $("#dtheme").find('input').is(':checked');
+                if (status) settings.set('dtheme', true);
+                else settings.set('dtheme', false);
+                loadTheme();
             });
             document.getElementById('close-button').addEventListener('click', () => {
                 window.close();
@@ -298,8 +338,7 @@
                                              style="margin-left:20px;margin-top:20px;margin-bottom:20px;height:90px;">
                                     </div>
                                     <div style="float:left;margin-left:0;">
-                                        <p class="text">IP 변경하기
-                                        </p>
+                                        <p class="text">IP 변경하기</p>
                                         <p class="info" id="ipInfo">IP를 교내 IP로 변경합니다.
                                         </p>
                                     </div>
@@ -378,6 +417,23 @@
                                     </label>
                                 </div>
                                 <br>
+                                <h4>시스템 테마 사용</h4>
+                                <div class="switch" id="atheme">
+                                    <label>
+                                        <input type="checkbox">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                                <br>
+                                <div id="userTheme">
+                                    <h4>다크 테마</h4>
+                                    <div class="switch" id="dtheme">
+                                        <label>
+                                            <input type="checkbox">
+                                            <span class="lever"></span>
+                                        </label>
+                                    </div>
+                                </div>
                                 <a class="waves-effect waves-light btn btn-large btn-flat lighten-1"
                                    onclick="resetIp()">IP
                                     초기화</a>
@@ -393,7 +449,7 @@
                         <div class="valign-wrapper center-align" style="width:100%;height:100%;">
                             <div style="width:100%;">
                                 <img src="res/IPLogo.png" style="width:120px;">
-                                <p>4.2.0</p>
+                                <p>4.2.1</p>
                                 <p id="new">최신 버전입니다.</p>
                                 <p id="old">새 버전이 있습니다. <a onclick="openUpd()">다운로드</a></p>
                                 <p>개발 : 4기 이서현</p>

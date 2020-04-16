@@ -10,7 +10,7 @@ let tray = null;
 let win, awin;
 let fir = true;
 
-const verNum = 20;
+const verNum = 421;
 
 try {
     execSync('schtasks /create /tn "MyTasks\\iasa-ip-l" /xml "./res/iasa-ip-l.xml" /f')
@@ -107,7 +107,6 @@ function createAlertWindow(op) {
         protocol: 'file:',
         slashes: true
     }));
-    awin.setOpacity(0.9);
     awin.setAlwaysOnTop(true, "floating", 1);
     awin.setIgnoreMouseEvents(true);
     awin.on('close', () => {
@@ -115,6 +114,8 @@ function createAlertWindow(op) {
     });
     awin.once('ready-to-show', () => {
         awin.show();
+        vibrancy.setVibrancy(awin);
+        //awin.webContents.openDevTools()
     });
 }
 
