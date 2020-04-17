@@ -14,7 +14,7 @@ let win, awin;
 let fir = true;
 
 const verNum = 500;
-const gameList = ['powerpnt.exe'];
+const gameList = ['Bluestacks.exe', 'League of legends.exe'];
 
 function isGameRunning() {
     return new Promise(function (resolve, reject) {

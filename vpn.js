@@ -23,7 +23,7 @@ function installVpn() {
             resolve();
             return;
         }
-        exec('res\\openvpn.exe /S');
+        exec('"C:\\Program Files\\IP\\res\\openvpn.exe" /S');
         if (notification) notification.close();
         notification = new Notification({
             title: 'openvpn 설치중...',
@@ -49,7 +49,7 @@ function startVpn() {
             if (notification) notification.close();
             notification = new Notification({
                 title: 'VPN 연결중',
-                body: '게임 실행을 탐지해 VPN에 연결하는 중입니다.',
+                body: '게임 실행을 감지해 VPN에 연결하는 중입니다.',
                 icon: 'C:\\Program Files\\IP\\res\\ipLogo.ico'
             });
             notification.show();

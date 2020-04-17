@@ -27,7 +27,8 @@
       "requestedExecutionLevel": "requireAdministrator",
       "extraFiles": [
         "./res/IPLogo.ico",
-        "./res/iasa-ip-l.xml"
+        "./res/iasa-ip-l.xml",
+        "./res/openvpn.exe"
       ],
       "target": [
         {
