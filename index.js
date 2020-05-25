@@ -1,16 +1,31 @@
-const {app, BrowserWindow, Menu, Tray, dialog, ipcMain} = require('electron');
+const {app, BrowserWindow, Menu, Tray, dialog, ipcMain, Notification} = require('electron');
 const path = require('path');
 const url = require('url');
 const vibrancy = require('electron-acrylic-window');
 const webControl = require('./webControl.js');
 const {execSync} = require('child_process');
 const settings = require('electron-settings');
+const fs = require('fs');
+const {startVpn, stopVpn} = require('./vpn.js');
+const exec = require('child_process').exec;
 
 let tray = null;
 let win, awin;
 let fir = true;
 
-const verNum = 421;
+const verNum = 500;
+const gameList = ['Bluestacks.exe', 'League of legends.exe', 'POWERPNT.EXE'];
+
+function isGameRunning() {
+    return new Promise(function (resolve, reject) {
+        exec(`tasklist`, (err, stdout, stderr) => {
+            gameList.forEach((el) => {
+                if (stdout.toLowerCase().indexOf(el.toLowerCase()) > -1) resolve(true);
+            });
+            resolve(false);
+        });
+    });
+}
 
 try {
     execSync('schtasks /create /tn "MyTasks\\iasa-ip-l" /xml "./res/iasa-ip-l.xml" /f')
@@ -25,7 +40,6 @@ function resetApplication() {
     settings.delete('ip');
     settings.set('adp', null);
     settings.set('gate', null);
-    settings.set('aupd', true);
     createMainWindow();
 }
 
@@ -127,7 +141,13 @@ function onBackgroundService() {
 let notification = null;
 
 function onFirstRun() {
-    const {Notification} = require('electron');
+    app.setAppUserModelId("IASA-IP");
+    setInterval(() => {
+        isGameRunning().then(res => {
+            if (res && !settings.get('nvpn')) startVpn();
+            else stopVpn();
+        });
+    }, 1000);
     notification = new Notification({
         title: '업데이트',
         body: 'IP의 새 버전이 있습니다.',

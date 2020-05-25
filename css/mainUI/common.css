@@ -21,7 +21,7 @@ body {
     height: 100%;
     margin: 0 auto;
     text-align: center;
-    animation: splash 3s;
+    animation: splash 1.5s;
     animation-fill-mode: forwards;
     display: flex;
     justify-content: center;
@@ -36,7 +36,7 @@ body {
 .initShowSection {
     opacity: 0;
     animation: fadein .4s cubic-bezier(.16, .9, .39, 1.01);
-    animation-delay: 3s;
+    animation-delay: 1.5s;
     animation-fill-mode: forwards;
 }
 
@@ -75,13 +75,13 @@ body {
 }
 
 #splashBack1 {
-    animation: back 1.8s;
+    animation: back 1s;
     animation-fill-mode: forwards;
 }
 
 #splashBack2 {
     opacity: 0;
-    animation: back 1.8s;
+    animation: back 1s;
     animation-delay: .2s;
     animation-fill-mode: forwards;
 }
@@ -102,11 +102,11 @@ body {
         opacity: 0;
     }
 
-    40% {
+    30% {
         opacity: 1;
     }
 
-    70% {
+    60% {
         opacity: 1;
     }
 
@@ -220,4 +220,8 @@ label.active {
 
 ul.dropdown-content.select-dropdown li span {
     color: #7e57c2;
+}
+
+.main-menu:hover {
+    background-color: #7e57c255 !important;
 }
