@@ -142,6 +142,7 @@ function onBackgroundService() {
 let notification = null;
 
 function onFirstRun() {
+    app.setAppUserModelId("IASA-IP");
     setInterval(() => {
         isGameRunning().then(res => {
             if (res) startVpn();
