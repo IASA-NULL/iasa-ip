@@ -14,7 +14,7 @@ let win, awin;
 let fir = true;
 
 const verNum = 500;
-const gameList = ['Bluestacks.exe', 'League of legends.exe'];
+const gameList = ['Bluestacks.exe', 'League of legends.exe', 'POWERPNT.EXE'];
 
 function isGameRunning() {
     return new Promise(function (resolve, reject) {
@@ -40,7 +40,6 @@ function resetApplication() {
     settings.delete('ip');
     settings.set('adp', null);
     settings.set('gate', null);
-    settings.set('aupd', true);
     createMainWindow();
 }
 
@@ -145,7 +144,7 @@ function onFirstRun() {
     app.setAppUserModelId("IASA-IP");
     setInterval(() => {
         isGameRunning().then(res => {
-            if (res) startVpn();
+            if (res && !settings.get('nvpn')) startVpn();
             else stopVpn();
         });
     }, 1000);

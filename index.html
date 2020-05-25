@@ -87,11 +87,16 @@
             if (settings.get('svc')) {
                 $('#svc').children('label').click()
             }
+            if (!settings.get('nvpn')) {
+                $('#vpn').children('label').click()
+            }
             $("#svc").on("click", () => {
                 const status = $("#svc").find('input').is(':checked');
-                console.log(status);
-                if (status) settings.set('svc', true);
-                else settings.set('svc', false);
+                settings.set('svc', status);
+            });
+            $("#vpn").on("click", () => {
+                const status = $("#vpn").find('input').is(':checked');
+                settings.set('nvpn', !status);
             });
             document.getElementById('close-button').addEventListener('click', () => {
                 window.close();
@@ -107,7 +112,6 @@
         }
 
         function chkUpdate() {
-            if (settings.get('aupd') !== true) return;
             $.ajax('https://api.iasa.kr/ip/ver', {
                 success: data => {
                     const ver = parseInt(data);
@@ -222,7 +226,6 @@
                     settings.set('ip', ip);
                     settings.set('gate', gate);
                     settings.set('svc', true);
-                    settings.set('aupd', true);
                     getAdapter();
                 }
             }
@@ -263,6 +266,10 @@
             settings.set('adp', adpArr[idx]);
             showSec(1);
         }
+
+        function showVpnSet() {
+            showSec(7);
+        }
     </script>
 
     <div class="modal" id="modal1">
@@ -291,7 +298,7 @@
                 <div class="initShowSection section" id="sec1">
                     <div class="row">
                         <div class="col s12 m6 obj" onclick="chgIp();">
-                            <div class="waves-effect" style="width:100%;">
+                            <div class="waves-effect waves-light main-menu" style="width:100%;">
                                 <div style="display:inline-block;">
                                     <div style="float:left;width:140px;">
                                         <img id="ipIcon"
@@ -304,11 +311,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col s12 m6 obj" onclick="chgIp();">
-                            <div class="waves-effect" style="width:100%;">
+                        <div class="col s12 m6 obj" onclick="showVpnSet();">
+                            <div class="waves-effect waves-light main-menu" style="width:100%;">
                                 <div style="display:inline-block;">
                                     <div style="float:left;width:140px;">
-                                        <img src="res/school.png"
+                                        <img src="res/vpn.png"
                                              style="margin-left:20px;margin-top:20px;margin-bottom:20px;height:90px;">
                                     </div>
                                     <div style="float:left;margin-left:0;">
@@ -319,7 +326,7 @@
                             </div>
                         </div>
                         <div class="col s12 m6 obj" onclick="showSet();">
-                            <div class="waves-effect" style="width:100%;">
+                            <div class="waves-effect waves-light main-menu" style="width:100%;">
                                 <div style="display:inline-block;">
                                     <div style="float:left;width:140px;">
                                         <img src="res/op.png"
@@ -334,7 +341,7 @@
                             </div>
                         </div>
                         <div class="col s12 m6 obj" onclick="showCred();">
-                            <div class="waves-effect" style="width:100%;">
+                            <div class="waves-effect waves-light main-menu" style="width:100%;">
                                 <div style="display:inline-block;">
                                     <div style="float:left;width:140px;">
                                         <img src="res/info.png"
@@ -456,6 +463,26 @@
                                 </div>
                                 <a class="waves-effect waves-light btn btn-large btn-flat lighten-1"
                                    onclick="submitAdapter()">확인</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hideSection novisible section" id="sec7"
+                     style="width:100%;height:80vh;min-height:450px;margin-bottom:20px;">
+                    <div style="width:100%;height:100%;">
+                        <div class="valign-wrapper center-align" style="width:100%;height:100%;">
+                            <div style="width:100%;">
+                                <h1>VPN 설정</h1>
+                                <h4>게임 실행시 VPN 자동연결</h4>
+                                <div class="switch" id="vpn">
+                                    <label>
+                                        <input type="checkbox">
+                                        <span class="lever"></span>
+                                    </label>
+                                </div>
+                                <br>
+                                <a class="waves-effect waves-light btn btn-large btn-flat lighten-1"
+                                   onclick="showMain()">확인</a>
                             </div>
                         </div>
                     </div>

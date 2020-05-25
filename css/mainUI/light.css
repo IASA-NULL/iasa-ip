@@ -3,10 +3,6 @@ html {
     color: black;
 }
 
-.obj > div:hover {
-    background: #00000022;
-}
-
 ::-webkit-scrollbar {
     background: #222222;
 }

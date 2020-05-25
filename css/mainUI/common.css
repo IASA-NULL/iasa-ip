@@ -220,3 +220,7 @@ label.active {
 ul.dropdown-content.select-dropdown li span {
     color: #7e57c2;
 }
+
+.main-menu:hover {
+    background-color: #7e57c255 !important;
+}

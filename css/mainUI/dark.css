@@ -7,10 +7,6 @@ html {
     background: #00000000;
 }
 
-.obj > div:hover {
-    background: #00000022;
-}
-
 .modal, .modal * {
     background: #333333 !important;
     color: white;
