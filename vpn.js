@@ -7,6 +7,7 @@ const fs = require('fs');
 let proc = null;
 let notification = null;
 let intv = null;
+let manualVpnSW = false;
 
 function checkOpenVpn() {
     try {

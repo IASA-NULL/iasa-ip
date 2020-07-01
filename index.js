@@ -8,13 +8,42 @@ const settings = require('electron-settings');
 const fs = require('fs');
 const {startVpn, stopVpn} = require('./vpn.js');
 const exec = require('child_process').exec;
+const temp = require('temp');
+const request = require('request');
 
 let tray = null;
 let win, awin;
 let fir = true;
 
 const verNum = 500;
-const gameList = ['Bluestacks.exe', 'League of legends.exe', 'POWERPNT.EXE'];
+const gameList = ['Bluestacks.exe', 'League of legends.exe', 'riotclientservices.exe', 'POWERPNT.EXE'];
+
+function updateIP() {
+    request('https://api.iasa.kr/ip/link/lastest', function (error, response, url) {
+        const fName = temp.path({suffix: '.exe'});
+        let file = fs.createWriteStream(fName);
+        let receivedBytes = 0;
+        let totalBytes;
+        request(url).on('response', (response) => {
+            totalBytes = response.headers['content-length'];
+        }).on('data', (chunk) => {
+            receivedBytes += chunk.length;
+            win.webContents.send('updProgress', (receivedBytes / totalBytes * 100).toString() + '%');
+        }).pipe(file);
+        file.on('finish', function () {
+            file.close();
+            setTimeout(() => {
+                const spawn = require('child_process').spawn;
+                let child = spawn(fName, [], {
+                    detached: true,
+                    stdio: ['ignore', 'ignore', 'ignore']
+                });
+                child.unref();
+                app.exit();
+            }, 1500);
+        });
+    });
+}
 
 function isGameRunning() {
     return new Promise(function (resolve, reject) {
@@ -45,6 +74,10 @@ function resetApplication() {
 
 ipcMain.on('resetApplication', () => {
     resetApplication();
+});
+
+ipcMain.on('update', () => {
+    updateIP();
 });
 
 
@@ -104,7 +137,7 @@ function createMainWindow() {
         ipcMain.on('hide', (event, arg) => {
             win.minimize();
         });
-        //win.webContents.openDevTools()
+        //win.webContents.openDevTools();
     });
 }
 
@@ -147,7 +180,7 @@ function onFirstRun() {
             if (res && !settings.get('nvpn')) startVpn();
             else stopVpn();
         });
-    }, 1000);
+    }, 1500);
     notification = new Notification({
         title: '업데이트',
         body: 'IP의 새 버전이 있습니다.',

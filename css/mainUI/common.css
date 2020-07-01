@@ -61,8 +61,12 @@ body {
     overflow-y: scroll;
 }
 
+.modal * {
+    font-family: 'nanum' !important;
+}
+
 .frame * {
-    font-family: 'nanum';
+    font-family: 'nanum' !important;
 }
 
 .container {

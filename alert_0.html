@@ -16,7 +16,6 @@
 
 <body>
 <script>
-    const {ipcRenderer} = require('electron');
     const settings = require('electron-settings');
 
     function getTheme() {
@@ -34,7 +33,7 @@
         else document.getElementById("theme").href = "./css/alert/light.css";
     }
 
-    ipcRenderer.on('finishChange', () => {
+    setTimeout(() => {
         $('.indeterminate').fadeOut(500);
         $('#text').html('완료!');
         setTimeout(() => {
@@ -50,7 +49,7 @@
             self.opener = self;
             window.close();
         }, 1700);
-    });
+    }, 800);
     $(document).ready(() => {
         $('.determinate').hide();
         loadTheme();
