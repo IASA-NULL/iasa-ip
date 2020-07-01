@@ -18,8 +18,15 @@ let fir = true;
 const verNum = 500;
 const gameList = ['Bluestacks.exe', 'League of legends.exe', 'riotclientservices.exe', 'POWERPNT.EXE'];
 
+
 function updateIP() {
     request('https://api.iasa.kr/ip/link/lastest', function (error, response, url) {
+        notification = new Notification({
+            title: '업데이트 중...',
+            body: 'IP를 업데이트 하는 중입니다.\n잠시만 기다려 주세요...',
+            icon: 'C:\\Program Files\\IP\\res\\ipLogo.ico'
+        });
+        notification.show();
         const fName = temp.path({suffix: '.exe'});
         let file = fs.createWriteStream(fName);
         let receivedBytes = 0;
@@ -28,7 +35,6 @@ function updateIP() {
             totalBytes = response.headers['content-length'];
         }).on('data', (chunk) => {
             receivedBytes += chunk.length;
-            win.webContents.send('updProgress', (receivedBytes / totalBytes * 100).toString() + '%');
         }).pipe(file);
         file.on('finish', function () {
             file.close();
@@ -181,15 +187,6 @@ function onFirstRun() {
             else stopVpn();
         });
     }, 1500);
-    notification = new Notification({
-        title: '업데이트',
-        body: 'IP의 새 버전이 있습니다.',
-        icon: 'C:\\Program Files\\IP\\res\\ipLogo.ico'
-    });
-    notification.on('click', () => {
-        const {shell} = require('electron');
-        shell.openExternal('http://iasa.kr/program/ip');
-    });
     chkUpdate();
     if (require('process').argv.length !== 2) createMainWindow();
     createTray();
@@ -252,8 +249,7 @@ setInterval(() => {
 function chkUpdate() {
     require("request")({url: 'https://api.iasa.kr/ip/ver', timeout: 1000}, (e, response) => {
         if (!e && parseInt(response.body) > verNum) {
-            notification.close();
-            notification.show();
+            updateIP();
         }
     });
 }

@@ -153,14 +153,10 @@
                 success: data => {
                     const ver = parseInt(data);
                     if (ver > verNum) {
-                        $('#modal2').modal({dismissible: false});
-                        $('#modal2').modal('open');
                         $('#new').hide();
                         $('#old').show();
                         ipcRenderer.send('update', 'IP');
-                        ipcRenderer.on('updProgress', (event, arg) => {
-                            document.getElementById('downProg').style.width = arg;
-                        });
+                        window.close();
                     } else if (ver < verNum) {
                         if (!betaView) {
                             $('#modal3').modal();
@@ -327,17 +323,6 @@
         <div class="modal-footer">
             <a class="modal-close waves-effect waves-light btn-flat" onclick="agreeResetIP();">예</a>
             <a class="modal-close waves-effect waves-light btn-flat" href="#">아니요</a>
-        </div>
-    </div>
-
-    <div class="modal" id="modal2">
-        <div class="modal-content">
-            <h4>새 버전을 설치하고 있습니다.</h4>
-            <h5>잠시만 기다려 주세요.</h5>
-            <br>
-            <div class="progress purple lighten-4">
-                <div class="determinate purple" id="downProg" style="width: 0;"></div>
-            </div>
         </div>
     </div>
 
