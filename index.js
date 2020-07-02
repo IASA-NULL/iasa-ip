@@ -12,7 +12,7 @@ const temp = require('temp');
 const request = require('request');
 
 let tray = null;
-let win, awin;
+let win;
 let fir = true;
 
 const verNum = 500;
@@ -21,7 +21,7 @@ const gameList = ['Bluestacks.exe', 'League of legends.exe', 'riotclientservices
 
 function updateIP() {
     request('https://api.iasa.kr/ip/link/lastest', function (error, response, url) {
-        notification = new Notification({
+        let notification = new Notification({
             title: '업데이트 중...',
             body: 'IP를 업데이트 하는 중입니다.\n잠시만 기다려 주세요...',
             icon: 'C:\\Program Files\\IP\\res\\ipLogo.ico'
@@ -147,31 +147,6 @@ function createMainWindow() {
     });
 }
 
-function createAlertWindow(op) {
-    awin = new BrowserWindow({
-        width: 600, height: 200, webPreferences: {
-            nodeIntegration: true,
-            webSecurity: false,
-        }, frame: false, transparent: true, show: false, icon: path.join(__dirname, 'res/ipLogo.ico')
-    });
-    awin.setMenu(null);
-    awin.loadURL(url.format({
-        pathname: path.join(__dirname, 'alert_' + String(op) + '.html'),
-        protocol: 'file:',
-        slashes: true
-    }));
-    awin.setAlwaysOnTop(true, "floating", 1);
-    awin.setIgnoreMouseEvents(true);
-    awin.on('close', () => {
-        awin = null;
-    });
-    awin.once('ready-to-show', () => {
-        awin.show();
-        vibrancy.setVibrancy(awin);
-        //awin.webContents.openDevTools()
-    });
-}
-
 function onBackgroundService() {
     if (settings.get('svc') == null) settings.set('svc', true);
     return settings.get('svc');
@@ -212,29 +187,29 @@ app.on('window-all-closed', async e => {
     await allCloseHandler();
 });
 
-async function makeAlert() {
+async function autoIpUpdate() {
     const tName = await webControl.getWifiName();
     if (fir && tName != null) {
         fir = false;
-        if (win == null && awin == null) {
+        if (win == null) {
             const ipModule = require('./changeIp.js');
             if (tName === "Iasa_hs" && ipModule.getCurrentState() === 0) {
-                createAlertWindow(0);
+                let notification = new Notification({
+                    title: 'IP 변경됨',
+                    body: 'IP가 학교 내부망으로 변경되었습니다.',
+                    icon: 'C:\\Program Files\\IP\\res\\ipLogo.ico'
+                });
+                notification.show();
                 await ipModule.changeToSchool();
-                while (!awin) ;
-                while (!awin.webContents) ;
-                setTimeout(() => {
-                    awin.webContents.send('finishChange')
-                }, 500)
             }
             if (tName !== "Iasa_hs" && ipModule.getCurrentState() === 1) {
-                createAlertWindow(1);
+                let notification = new Notification({
+                    title: 'IP 변경됨',
+                    body: 'IP가 학교 외부망으로 변경되었습니다.',
+                    icon: 'C:\\Program Files\\IP\\res\\ipLogo.ico'
+                });
+                notification.show();
                 await ipModule.changeToOut();
-                while (!awin) ;
-                while (!awin.webContents) ;
-                setTimeout(() => {
-                    awin.webContents.send('finishChange');
-                }, 500)
             }
         }
     }
@@ -242,7 +217,7 @@ async function makeAlert() {
 }
 
 setInterval(() => {
-    makeAlert();
+    autoIpUpdate();
 }, 1000);
 
 
