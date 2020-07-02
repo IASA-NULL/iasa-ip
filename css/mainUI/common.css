@@ -35,20 +35,20 @@ body {
 
 .initShowSection {
     opacity: 0;
-    animation: fadein .4s cubic-bezier(.16, .9, .39, 1.01);
+    animation: easein .4s cubic-bezier(.16, .9, .39, 1.01);
     animation-delay: 1.5s;
     animation-fill-mode: forwards;
 }
 
 .showSection {
     opacity: 0;
-    animation: fadein .4s cubic-bezier(.16, .9, .39, 1.01);
+    animation: easein .4s cubic-bezier(.16, .9, .39, 1.01);
     animation-fill-mode: forwards;
 }
 
 .hideSection {
     opacity: 1;
-    animation: fadeout .3s cubic-bezier(.59, .33, .76, .47);
+    animation: easeout .3s cubic-bezier(.59, .33, .76, .47);
     animation-fill-mode: forwards;
 }
 
@@ -125,7 +125,7 @@ body {
     }
 }
 
-@keyframes fadein {
+@keyframes easein {
     0% {
         opacity: 0;
         padding-bottom: 0;
@@ -139,7 +139,7 @@ body {
     }
 }
 
-@keyframes fadeout {
+@keyframes easeout {
     0% {
         opacity: 1;
         padding-bottom: 0;
@@ -228,4 +228,34 @@ ul.dropdown-content.select-dropdown li span {
 
 .main-menu:hover {
     background-color: #7e57c255 !important;
+}
+
+.fadein {
+    animation: fadein .2s;
+    animation-fill-mode: forwards;
+}
+
+.fadeout {
+    animation: fadeout .2s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fadein {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeout {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
 }
