@@ -65,11 +65,9 @@
 
         function getTheme() {
             if (!settings.get('atheme')) {
-                if (window.matchMedia('(prefers-color-scheme:dark)').matches) return true;
-                else return false;
+                return window.matchMedia('(prefers-color-scheme:dark)').matches;
             } else {
-                if (settings.get('dtheme')) return true;
-                else return false;
+                return !!settings.get('dtheme');
             }
         }
 
@@ -86,6 +84,10 @@
             document.getElementById('stuId').addEventListener("keydown", e => {
                 if (e.key === "Enter") submitWelcome();
             });
+            if (settings.get('ver') !== 500) {
+                M.Modal.init(document.getElementById('modal-new')).open();
+                settings.set('ver', 500);
+            }
             if (!settings.get('ip')) showWelcome();
             else if (!settings.get('adp')) getAdapter();
             if (settings.get('svc')) document.getElementById('svc').querySelector('label').click();
@@ -135,7 +137,7 @@
                     ipcRenderer.send('update', 'IP');
                 } else if (ver < verNum) {
                     if (!betaView) {
-                        M.Modal.init(document.getElementById('modal3')).open();
+                        M.Modal.init(document.getElementById('modal-beta')).open();
                         betaView = true;
                     }
                 }
@@ -272,7 +274,7 @@
         }
 
         function resetIp() {
-            M.Modal.init(document.getElementById('modal1')).open();
+            M.Modal.init(document.getElementById('modal-reset')).open();
         }
 
         function getAdapter() {
@@ -301,9 +303,13 @@
         function showVpnSet() {
             showSec(7);
         }
+
+        function showNew() {
+            M.Modal.init(document.getElementById('modal-new')).open();
+        }
     </script>
 
-    <div class="modal" id="modal1">
+    <div class="modal" id="modal-reset">
         <div class="modal-content">
             <h4>IP를 초기화하면 모든 설정이 지워집니다.</h4>
             <p>정말로 IP를 초기화 하시겠어요?</p>
@@ -314,8 +320,22 @@
         </div>
     </div>
 
+    <div class="modal" id="modal-new">
+        <div class="modal-content">
+            <h4>새로운 기능!</h4>
+            <h5>5.0.0</h5>
+            <p>VPN 설정이 추가되었습니다.</p>
+            <p>속도가 매우 향상되었습니다.</p>
+            <p>어댑터를 더 정확하게 잡아냅니다.</p>
+            <p>자동 업데이트가 도입되었습니다.</p>
+            <p>IP가 바뀔때 창이 닫히지 않는 문제를 해결했습니다.</p>
+        </div>
+        <div class="modal-footer">
+            <a class="modal-close waves-effect waves-light btn-flat" href="#">닫기</a>
+        </div>
+    </div>
 
-    <div class="modal" id="modal3">
+    <div class="modal" id="modal-beta">
         <div class="modal-content">
             <h4>베타 버전을 사용하고 있습니다.</h4>
             <p>베타 버전은 정식 버전보다 불안정할 수 있습니다.</p>
@@ -470,6 +490,8 @@
                                 <img id="credit-white" src="res/credit_white.png" style="width:100px;">
                                 <img id="credit-black" src="res/credit_black.png" style="width:100px;">
                                 <br>
+                                <a class="waves-effect waves-light btn btn-large btn-flat lighten-1"
+                                   onclick="showNew();">새로운 기능</a>
                                 <a class="waves-effect waves-light btn btn-large btn-flat lighten-1"
                                    onclick="showMain()">확인</a>
                             </div>

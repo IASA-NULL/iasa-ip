@@ -20,7 +20,11 @@ const gameList = ['Bluestacks.exe', 'League of legends.exe', 'riotclientservices
 
 
 function updateIP() {
-    win.close();
+    try {
+        win.close();
+    } catch (e) {
+
+    }
     request('https://api.iasa.kr/ip/link/lastest', (error, response, url) => {
         let notification = new Notification({
             title: '업데이트 중...',
