@@ -20,7 +20,7 @@ const gameList = ['Bluestacks.exe', 'League of legends.exe', 'riotclientservices
 
 
 function updateIP() {
-    request('https://api.iasa.kr/ip/link/lastest', function (error, response, url) {
+    request('https://api.iasa.kr/ip/link/lastest', (error, response, url) => {
         let notification = new Notification({
             title: '업데이트 중...',
             body: 'IP를 업데이트 하는 중입니다.\n잠시만 기다려 주세요...',
@@ -31,12 +31,12 @@ function updateIP() {
         let file = fs.createWriteStream(fName);
         let receivedBytes = 0;
         let totalBytes;
-        request(url).on('response', (response) => {
+        request(url).on('response', response => {
             totalBytes = response.headers['content-length'];
-        }).on('data', (chunk) => {
+        }).on('data', chunk => {
             receivedBytes += chunk.length;
         }).pipe(file);
-        file.on('finish', function () {
+        file.on('finish', () => {
             file.close();
             setTimeout(() => {
                 const spawn = require('child_process').spawn;
@@ -52,9 +52,9 @@ function updateIP() {
 }
 
 function isGameRunning() {
-    return new Promise(function (resolve, reject) {
-        exec(`tasklist`, (err, stdout, stderr) => {
-            gameList.forEach((el) => {
+    return new Promise(resolve => {
+        exec(`tasklist`, (err, stdout) => {
+            gameList.forEach(el => {
                 if (stdout.toLowerCase().indexOf(el.toLowerCase()) > -1) resolve(true);
             });
             resolve(false);
@@ -88,10 +88,8 @@ ipcMain.on('update', () => {
 
 
 function openMainWindow() {
-    if (win) {
-        if (!win.isVisible()) {
-            win.show();
-        }
+    if (win && !win.isVisible()) {
+        win.show();
     } else {
         createMainWindow();
     }
@@ -140,7 +138,7 @@ function createMainWindow() {
         win.show();
         vibrancy.setVibrancy(win);
         win.setResizable(false);
-        ipcMain.on('hide', (event, arg) => {
+        ipcMain.on('hide', () => {
             win.minimize();
         });
         //win.webContents.openDevTools();
@@ -152,10 +150,8 @@ function onBackgroundService() {
     return settings.get('svc');
 }
 
-let notification = null;
-
 function onFirstRun() {
-    app.setAppUserModelId("IASA-IP");
+    app.setAppUserModelId("iasa.null.ip");
     setInterval(() => {
         isGameRunning().then(res => {
             if (res && !settings.get('nvpn')) startVpn();

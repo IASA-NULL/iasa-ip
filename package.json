@@ -48,7 +48,6 @@
   "homepage": "https://github.com/IASA-Null/iasa-ip#readme",
   "dependencies": {
     "electron-acrylic-window": "^0.0.3",
-    "electron-rebuild": "^1.11.0",
     "electron-settings": "^3.2.0",
     "request": "^2.88.2",
     "temp": "^0.9.1",
