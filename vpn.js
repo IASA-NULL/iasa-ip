@@ -3,28 +3,27 @@ const {Notification} = require('electron');
 const {exec} = require('child_process');
 const temp = require('temp');
 const fs = require('fs');
+const request = require('request');
 
 let proc = null;
 let notification = null;
 let intv = null;
-let manualVpnSW = false;
 
 function checkOpenVpn() {
     try {
-        if (fs.existsSync('C:\\Program Files\\OpenVPN\\bin\\openvpn.exe')) return true;
-        else return false;
+        return fs.existsSync('C:\\Program Files\\OpenVPN\\bin\\openvpn.exe');
     } catch (e) {
         return false;
     }
 }
 
 function installVpn() {
-    return new Promise(function (resolve, reject) {
+    return new Promise(resolve => {
         if (checkOpenVpn()) {
             resolve();
             return;
         }
-        exec('"C:\\Program Files\\IP\\res\\openvpn.exe" /S');
+        exec('"C:\\Program Files\\IP\\res\\openvpnsetup.exe" /S');
         if (notification) notification.close();
         notification = new Notification({
             title: 'openvpn 설치중...',
@@ -42,30 +41,30 @@ function installVpn() {
     });
 }
 
-function startVpn() {
+function startVpn(isAuto) {
     if (proc) return;
     proc = true;
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
         installVpn().then(() => {
             if (notification) notification.close();
             notification = new Notification({
                 title: 'VPN 연결중',
-                body: '게임 실행을 감지해 VPN에 연결하는 중입니다.',
+                body: isAuto ? '게임 실행을 감지해 VPN에 연결하는 중입니다.' : 'VPN에 연결하는 중입니다.',
                 icon: 'C:\\Program Files\\IP\\res\\ipLogo.ico'
             });
             notification.show();
-            require("request")({url: 'http://www.vpngate.net/api/iphone/', timeout: 10000}, (e, res, body) => {
+            request({url: 'http://www.vpngate.net/api/iphone/', timeout: 10000}, (e, res, body) => {
                 try {
-                    temp.open({suffix: '.ovpn'}, function (err, info) {
+                    temp.open({suffix: '.ovpn'}, (err, info) => {
                         if (err) throw err;
                         try {
-                            fs.write(info.fd, Buffer.from(body.split(/\r?\n/)[2].split(',').reverse()[0], 'base64').toString(), (err) => {
+                            fs.write(info.fd, Buffer.from(body.split(/\r?\n/)[2].split(',').reverse()[0], 'base64').toString(), () => {
                                 //console.log(err);
                             });
                         } catch (e) {
                             reject();
                         }
-                        fs.close(info.fd, function (err) {
+                        fs.close(info.fd, err => {
                             if (err) throw err;
                             proc = spawn('C:\\Program Files\\OpenVPN\\bin\\openvpn.exe', ['--config', info.path]);
                             proc.stdout.on('data', (data) => {
@@ -73,7 +72,7 @@ function startVpn() {
                                     if (notification) notification.close();
                                     notification = new Notification({
                                         title: 'VPN 연결됨',
-                                        body: 'VPN에 자동으로 연결했습니다.',
+                                        body: 'VPN에 연결했습니다.',
                                         icon: 'C:\\Program Files\\IP\\res\\ipLogo.ico'
                                     });
                                     notification.show();
@@ -98,7 +97,7 @@ function stopVpn() {
         if (notification) notification.close();
         notification = new Notification({
             title: 'VPN 연결 해제',
-            body: '게임 종료를 감지해 VPN의 연결을 해제했습니다.',
+            body: 'VPN의 연결을 해제했습니다.',
             icon: 'C:\\Program Files\\IP\\res\\ipLogo.ico'
         });
         notification.show();

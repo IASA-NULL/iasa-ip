@@ -1,14 +1,9 @@
 html {
-    background: #ffffff88;
     color: black;
 }
 
 ::-webkit-scrollbar {
     background: #222222;
-}
-
-#wrapper {
-    border-color: black;
 }
 
 #credit-white {
@@ -42,4 +37,9 @@ ul.dropdown-content.select-dropdown {
 
 #splashFont {
     fill: #ffffff;
+}
+
+.toast {
+    background: white;
+    color: black;
 }

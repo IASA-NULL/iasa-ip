@@ -1,7 +1,7 @@
-const {app, BrowserWindow, Menu, Tray, dialog, ipcMain, Notification} = require('electron');
+const {app, Menu, Tray, dialog, ipcMain, Notification} = require('electron');
 const path = require('path');
 const url = require('url');
-const vibrancy = require('electron-acrylic-window');
+const {BrowserWindow} = require('electron-acrylic-window');
 const webControl = require('./webControl.js');
 const {execSync} = require('child_process');
 const settings = require('electron-settings');
@@ -10,13 +10,17 @@ const {startVpn, stopVpn} = require('./vpn.js');
 const exec = require('child_process').exec;
 const temp = require('temp');
 const request = require('request');
+const spawn = require('child_process').spawn;
+const ipModule = require('./changeIp.js');
+const process = require('process');
 
 let tray = null;
 let win;
 let fir = true;
+let manualVpnSW = false;
 
-const verNum = 500;
-const gameList = ['Bluestacks.exe', 'League of legends.exe', 'riotclientservices.exe', 'POWERPNT.EXE'];
+const verNum = 502;
+const gameList = ['Bluestacks.exe', 'League of legends.exe', 'riotclientservices.exe'];
 
 
 function updateIP() {
@@ -25,6 +29,7 @@ function updateIP() {
     } catch (e) {
 
     }
+    win = null;
     request('https://api.iasa.kr/ip/link/lastest', (error, response, url) => {
         let notification = new Notification({
             title: '업데이트 중...',
@@ -44,7 +49,6 @@ function updateIP() {
         file.on('finish', () => {
             file.close();
             setTimeout(() => {
-                const spawn = require('child_process').spawn;
                 let child = spawn(fName, [], {
                     detached: true,
                     stdio: ['ignore', 'ignore', 'ignore']
@@ -73,13 +77,13 @@ try {
 
 }
 
-function resetApplication() {
-    settings.set('svc', true);
+async function resetApplication() {
     win.close();
+    await settings.set('svc', true);
     win = null;
-    settings.delete('ip');
-    settings.set('adp', null);
-    settings.set('gate', null);
+    await settings.set('ip', null);
+    await settings.set('adp', null);
+    await settings.set('gate', null);
     createMainWindow();
 }
 
@@ -91,9 +95,32 @@ ipcMain.on('update', () => {
     updateIP();
 });
 
+ipcMain.on('toggleVPN', () => {
+    manualVpnSW = !manualVpnSW
+});
+
+
+ipcMain.on('hide', () => {
+    if (win) win.minimize();
+});
+
+
+ipcMain.on('vibrancyLight', () => {
+    if (win) {
+        win.setVibrancy('#FFFFFF77');
+        win.show();
+    }
+});
+ipcMain.on('vibrancyDark', () => {
+    if (win) {
+        win.setVibrancy('#00000077');
+        win.show();
+    }
+});
+
 
 function openMainWindow() {
-    if (win && !win.isVisible()) {
+    if (win) {
         win.show();
     } else {
         createMainWindow();
@@ -125,46 +152,45 @@ function createTray() {
 
 function createMainWindow() {
     win = new BrowserWindow({
-        width: 850, height: 600, webPreferences: {
+        width: 850,
+        height: 550,
+        webPreferences: {
             nodeIntegration: true,
-            webSecurity: false
-        }, show: false, icon: path.join(__dirname, 'res/ipLogo.ico'), frame: false, transparent: true
+            webSecurity: false,
+            enableRemoteModule: true,
+            contextIsolation:false
+        },
+        icon: 'C:\\Program Files\\IP\\res\\ipLogo.ico',
+        frame: false,
+        backgroundColor: '#00000000'
     });
-    win.setMenu(null);
     win.loadURL(url.format({
         pathname: path.join(__dirname, 'index.html'),
         protocol: 'file:',
         slashes: true
     }));
-    win.on('close', () => {
+    win.once('close', () => {
         win = null;
     });
-    win.once('ready-to-show', () => {
-        win.show();
-        vibrancy.setVibrancy(win);
-        win.setResizable(false);
-        ipcMain.on('hide', () => {
-            win.minimize();
-        });
-        //win.webContents.openDevTools();
-    });
+    win.setResizable(false);
+    //win.webContents.openDevTools({mode: "detach"});
 }
 
-function onBackgroundService() {
-    if (settings.get('svc') == null) settings.set('svc', true);
-    return settings.get('svc');
+async function onBackgroundService() {
+    if (await settings.get('svc') == null) await settings.set('svc', true);
+    return await settings.get('svc');
 }
 
 function onFirstRun() {
     app.setAppUserModelId("iasa.null.ip");
     setInterval(() => {
-        isGameRunning().then(res => {
-            if (res && !settings.get('nvpn')) startVpn();
+        isGameRunning().then(async res => {
+            if ((res && !await settings.get('nvpn')) || manualVpnSW) startVpn(!manualVpnSW);
             else stopVpn();
         });
     }, 1500);
     chkUpdate();
-    if (require('process').argv.length !== 2) createMainWindow();
+    if (process.argv.length !== 2) createMainWindow();
     createTray();
 }
 
@@ -179,7 +205,7 @@ app.on('second-instance', openMainWindow);
 app.on('ready', onFirstRun);
 
 async function allCloseHandler() {
-    const res = onBackgroundService();
+    const res = await onBackgroundService();
     if (!res) app.exit();
 }
 
@@ -193,8 +219,7 @@ async function autoIpUpdate() {
     if (fir && tName != null) {
         fir = false;
         if (win == null) {
-            const ipModule = require('./changeIp.js');
-            if (tName === "Iasa_hs" && ipModule.getCurrentState() === 0) {
+            if (tName === "Iasa_hs" && await ipModule.getCurrentState() === 0) {
                 let notification = new Notification({
                     title: 'IP 변경됨',
                     body: 'IP가 학교 내부망으로 변경되었습니다.',
@@ -203,7 +228,7 @@ async function autoIpUpdate() {
                 notification.show();
                 await ipModule.changeToSchool();
             }
-            if (tName !== "Iasa_hs" && ipModule.getCurrentState() === 1) {
+            if (tName !== "Iasa_hs" && await ipModule.getCurrentState() === 1) {
                 let notification = new Notification({
                     title: 'IP 변경됨',
                     body: 'IP가 학교 외부망으로 변경되었습니다.',
@@ -223,7 +248,7 @@ setInterval(() => {
 
 
 function chkUpdate() {
-    require("request")({url: 'https://api.iasa.kr/ip/ver', timeout: 1000}, (e, response) => {
+    request({url: 'https://api.iasa.kr/ip/ver', timeout: 1000}, (e, response) => {
         if (!e && parseInt(response.body) > verNum) {
             updateIP();
         }
@@ -233,3 +258,7 @@ function chkUpdate() {
 setInterval(() => {
     chkUpdate();
 }, 1000 * 60 * 10);
+
+setInterval(() => {
+    if (win) win.webContents.send('vpnStat', manualVpnSW)
+}, 100)

@@ -4,14 +4,7 @@
     <meta charset="UTF-8">
     <title>IP</title>
     <link href="css/materialize.min.css" media="screen,projection" rel="stylesheet" type="text/css"/>
-    <script>
-        if (typeof module === 'object') {
-            window.module = module;
-            module = undefined;
-        }
-    </script>
     <script src="js/materialize.min.js" type="text/javascript"></script>
-    <script>if (window.module) module = window.module;</script>
     <link href="css/mainUI/header.css" rel="stylesheet" type="text/css"/>
     <link href="css/mainUI/common.css" rel="stylesheet" type="text/css"/>
     <link id="theme" rel="stylesheet" type="text/css">
@@ -22,7 +15,7 @@
     <header id="titlebar">
         <div id="drag-region">
             <div id="window-title">
-                <span id="appTitle">IP 5.0.0</span>
+                <span id="appTitle">IP 5.0.2</span>
             </div>
             <div id="window-controls">
                 <div class="button" id="min-button">
@@ -55,259 +48,7 @@
         </svg>
     </div>
 
-    <script type="text/javascript">
-        const verNum = 500;
-        const settings = require('electron-settings');
-        const ipModule = require('./changeIp.js');
-        const {ipcRenderer} = require('electron');
-        let adpArr = [0];
-        let betaView = false;
-
-        function getTheme() {
-            if (!settings.get('atheme')) {
-                return window.matchMedia('(prefers-color-scheme:dark)').matches;
-            } else {
-                return !!settings.get('dtheme');
-            }
-        }
-
-        function loadTheme() {
-            if (getTheme()) document.getElementById("theme").href = "./css/mainUI/dark.css";
-            else document.getElementById("theme").href = "./css/mainUI/light.css";
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            loadTheme();
-            document.getElementById('chg2').style.display = 'none';
-            chgView();
-            chkUpdate();
-            document.getElementById('stuId').addEventListener("keydown", e => {
-                if (e.key === "Enter") submitWelcome();
-            });
-            if (settings.get('ver') !== 500) {
-                M.Modal.init(document.getElementById('modal-new')).open();
-                settings.set('ver', 500);
-            }
-            if (!settings.get('ip')) showWelcome();
-            else if (!settings.get('adp')) getAdapter();
-            if (settings.get('svc')) document.getElementById('svc').querySelector('label').click();
-            if (!settings.get('atheme')) {
-                document.getElementById('atheme').querySelector('label').click();
-                document.getElementById('userTheme').style.display = 'none';
-            }
-            if (settings.get('dtheme')) document.getElementById('dtheme').querySelector('label').click();
-            if (!settings.get('nvpn')) document.getElementById('vpn').querySelector('label').click();
-            document.getElementById('svc').addEventListener("click", () => {
-                settings.set('svc', document.getElementById('svc').querySelector('input').checked);
-            });
-            document.getElementById('vpn').addEventListener("click", () => {
-                const status = document.getElementById('vpn').querySelector('input').checked;
-                settings.set('nvpn', !status);
-            });
-            document.getElementById('atheme').addEventListener("click", () => {
-                if (!document.getElementById('atheme').querySelector('input').checked) settings.set('atheme', true);
-                else settings.set('atheme', false);
-                if (settings.get('atheme')) document.getElementById('userTheme').style.display = '';
-                else document.getElementById('userTheme').style.display = 'none';
-                if (window.matchMedia('(prefers-color-scheme:dark)').matches ^ document.getElementById('dtheme').querySelector('input').checked) {
-                    document.getElementById('dtheme').querySelector('label').click();
-                    if (document.getElementById('dtheme').querySelector('input').checked) settings.set('dtheme', true);
-                    else settings.set('dtheme', false);
-                }
-                loadTheme();
-            });
-            document.getElementById('dtheme').addEventListener("click", () => {
-                const status = document.getElementById('dtheme').querySelector('input').checked;
-                if (status) settings.set('dtheme', true);
-                else settings.set('dtheme', false);
-                loadTheme();
-            });
-            document.getElementById('close-button').addEventListener('click', () => {
-                window.close();
-            });
-            document.getElementById('min-button').addEventListener('click', () => {
-                ipcRenderer.send('hide', 'IP');
-            });
-        });
-
-        function chkUpdate() {
-            fetch('https://api.iasa.kr/ip/ver').then(res => res.text()).then(data => {
-                const ver = parseInt(data);
-                if (ver > verNum) {
-                    ipcRenderer.send('update', 'IP');
-                } else if (ver < verNum) {
-                    if (!betaView) {
-                        M.Modal.init(document.getElementById('modal-beta')).open();
-                        betaView = true;
-                    }
-                }
-            });
-        }
-
-        function chgView() {
-            if (ipModule.getCurrentState() === 0) {
-                document.getElementById('ipIcon').src = './res/school.png';
-                document.getElementById('ipInfo').innerText = 'IP를 교내 IP로 변경합니다.';
-            } else {
-                document.getElementById('ipIcon').src = './res/house.png';
-                document.getElementById('ipInfo').innerText = 'IP를 교외 IP로 변경합니다.';
-            }
-        }
-
-        function showSec(v) {
-            document.querySelectorAll('.section').forEach((el) => {
-                el.classList.remove('showSection');
-                el.classList.remove('initShowSection');
-                el.classList.add('hideSection');
-            });
-            document.getElementById('sec' + String(v)).classList.remove('hideSection');
-            document.getElementById('sec' + String(v)).classList.remove('initShowSection');
-            document.getElementById('sec' + String(v)).classList.add('showSection');
-            setTimeout(() => {
-                document.querySelectorAll('.section').forEach((el) => {
-                    el.classList.add('novisible');
-                });
-                document.getElementById('sec' + String(v)).classList.remove('novisible');
-            }, 300);
-            chkUpdate();
-        }
-
-        function showMain() {
-            showSec(1);
-        }
-
-        function chgIp() {
-            showSec(2);
-            document.getElementById('chg1').style.display = '';
-            document.getElementById('chg1').classList.remove('fadeout');
-            document.getElementById('chg2').style.display = 'none';
-            setTimeout(async () => {
-                if (ipModule.getCurrentState() === 0) await ipModule.changeToSchool();
-                else await ipModule.changeToOut();
-                setTimeout(() => {
-                    document.getElementById('chg1').classList.add('fadeout');
-                    chgView();
-                }, 200);
-                setTimeout(() => {
-                    document.getElementById('chg1').style.display = 'none';
-                    document.getElementById('chg2').style.display = '';
-                    document.getElementById('chg2').classList.add('fadein');
-                }, 400);
-                setTimeout(() => {
-                    showMain();
-                }, 600);
-            }, 600);
-        }
-
-        function showSet() {
-            showSec(3);
-        }
-
-        function showCred() {
-            showSec(4);
-        }
-
-        function showWelcome() {
-            settings.set('svc', true);
-            showSec(5);
-            document.getElementById('sec5').classList.remove('hideSection');
-            document.getElementById('sec5').classList.remove('showSection');
-            document.getElementById('sec5').classList.remove('novisible');
-            document.getElementById('sec5').classList.add('initShowSection');
-            setTimeout(() => {
-                document.getElementById("stuId").focus();
-            }, 1500);
-        }
-
-        function submitError() {
-            document.getElementById('stuId').classList.add('invalid');
-            document.getElementById('stuId').classList.remove('validate');
-        }
-
-        function submitWelcome() {
-            let a, b, c, su, ip, gate;
-            const stuId = document.getElementById('stuId').value;
-            if (stuId == null) submitError();
-            else if (stuId.length !== String(parseInt(stuId)).length) submitError();
-            else if (stuId.length < 4) submitError();
-            else if (stuId.length > 5) submitError();
-            else {
-                if (stuId.length === 4) {
-                    a = Math.floor(parseInt(stuId) / 1000);
-                    b = Math.floor(parseInt(stuId) / 100 % 10);
-                    c = parseInt(stuId) % 100;
-                }
-                if (stuId.length === 5) {
-                    a = Math.floor(parseInt(stuId) / 10000);
-                    b = Math.floor(parseInt(stuId) / 100 % 10);
-                    c = parseInt(stuId) % 100;
-                }
-                if (a > 3 || a < 1) submitError();
-                else if (b > 5 || b < 1) submitError();
-                else if (c > 16 || c < 1) submitError();
-                else {
-                    su = 9 + c + (b - 1) * 16;
-                    if (a === 1) {
-                        ip = '10.140.82.' + String(su);
-                        gate = '10.140.82.254';
-                    }
-                    if (a === 2) {
-                        ip = '10.140.83.' + String(su);
-                        gate = '10.140.83.254';
-                    }
-                    if (a === 3) {
-                        ip = '10.140.84.' + String(su);
-                        gate = '10.140.84.254';
-                    }
-                    settings.set('ip', ip);
-                    settings.set('gate', gate);
-                    settings.set('svc', true);
-                    settings.set('adp', 'Wi-Fi');
-                    showMain();
-                }
-            }
-        }
-
-        function agreeResetIP() {
-            const {ipcRenderer} = require('electron');
-            ipcRenderer.send('resetApplication', 'IP');
-        }
-
-        function resetIp() {
-            M.Modal.init(document.getElementById('modal-reset')).open();
-        }
-
-        function getAdapter() {
-            const os = require('os');
-            const dat = os.networkInterfaces();
-            let i = 1;
-            let adpHtml = `<option selected value="0">어댑터를 선택하세요</option>`;
-            for (let n in dat) {
-                adpHtml += `<option class="waves-effect" value="${String(i)}">${n}</option>`
-                adpArr.push(n);
-                i += 1;
-            }
-            document.getElementById('adpSel').innerHTML = adpHtml;
-            M.FormSelect.init(document.getElementById('adpSel'));
-            showSec(6);
-            chkUpdate();
-        }
-
-        function submitAdapter() {
-            const idx = parseInt(document.getElementById('adpSel').value);
-            if (!idx) return;
-            settings.set('adp', adpArr[idx]);
-            showSec(1);
-        }
-
-        function showVpnSet() {
-            showSec(7);
-        }
-
-        function showNew() {
-            M.Modal.init(document.getElementById('modal-new')).open();
-        }
-    </script>
+    <script src="js/main.js"></script>
 
     <div class="modal" id="modal-reset">
         <div class="modal-content">
@@ -342,6 +83,17 @@
         </div>
         <div class="modal-footer">
             <a class="modal-close waves-effect waves-light btn-flat" onclick="">닫기</a>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-adp-reset">
+        <div class="modal-content">
+            <h4>어댑터를 초기화하면 IP가 제대로 설정되지 않는 문제를 대부분의 경우에서 해결할 수 있습니다.</h4>
+            <p>계속하시겠습니까?</p>
+        </div>
+        <div class="modal-footer">
+            <a class="modal-close waves-effect waves-light btn-flat" onclick="resetAdp();">예</a>
+            <a class="modal-close waves-effect waves-light btn-flat" href="#">아니요</a>
         </div>
     </div>
 
@@ -387,8 +139,7 @@
                                     </div>
                                     <div style="float:left;margin-left:0;">
                                         <p class="text">설정</p>
-                                        <p class="info">옵션을 변경합니다.
-                                        </p>
+                                        <p class="info">옵션을 변경합니다.</p>
                                     </div>
                                 </div>
                             </div>
@@ -473,6 +224,8 @@
                                 <a class="waves-effect waves-light btn btn-large btn-flat lighten-1"
                                    onclick="getAdapter();">어댑터 수동 설정</a>
                                 <a class="waves-effect waves-light btn btn-large btn-flat lighten-1"
+                                   onclick="reqResetAdp();">어댑터 초기화</a>
+                                <a class="waves-effect waves-light btn btn-large btn-flat lighten-1"
                                    onclick="showMain();">확인</a>
                             </div>
                         </div>
@@ -484,7 +237,7 @@
                         <div class="valign-wrapper center-align" style="width:100%;height:100%;">
                             <div style="width:100%;">
                                 <img src="res/IPLogo.png" style="width:120px;">
-                                <p>5.0.0</p>
+                                <p>5.0.2</p>
                                 <p>최신 버전입니다.</p>
                                 <p>개발 : 4기 이서현</p>
                                 <img id="credit-white" src="res/credit_white.png" style="width:100px;">
@@ -528,7 +281,7 @@
                                 <div class="row">
                                     <div class="input-field col s6 offset-s3">
                                         <select id="adpSel"></select>
-                                        <label>어댑터</label>
+                                        <label for="adpSel">어댑터</label>
                                     </div>
                                 </div>
                                 <a class="waves-effect waves-light btn btn-large btn-flat lighten-1"
@@ -554,7 +307,7 @@
                                 </div>
                                 <br>
                                 <a class="waves-effect waves-light btn btn-large btn-flat lighten-1"
-                                   onclick="">VPN 수동 연결</a>
+                                   id="toggleVpnButton" onclick="toggleVPN();">VPN 연결/해제</a>
                                 <a class="waves-effect waves-light btn btn-large btn-flat lighten-1"
                                    onclick="showMain();">확인</a>
                             </div>
