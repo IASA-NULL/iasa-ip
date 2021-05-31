@@ -1,4 +1,6 @@
-const verNum = 502;
+
+const {version : verStr}=require('./package.json')
+const verNum = parseInt(verStr.match(  /\d+/g ).join(''));
 const settings = require('electron-settings');
 const ipModule = require('./changeIp.js');
 const {ipcRenderer} = require('electron');
@@ -31,6 +33,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById('chg2').style.display = 'none';
     chgView();
     chkUpdate();
+    document.getElementById('nowver').innerText=verStr;
+    document.getElementById('nowver-title').innerText=verStr;
     document.getElementById('stuId').addEventListener("keydown", e => {
         if (e.key === "Enter") submitWelcome();
     });
@@ -211,6 +215,7 @@ async function submitWelcome() {
             await settings.set('gate', gate);
             await settings.set('svc', true);
             await settings.set('adp', 'Wi-Fi');
+            await settings.set('lcy', new Date().getYear());
             showMain();
         }
     }

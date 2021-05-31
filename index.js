@@ -15,11 +15,12 @@ const ipModule = require('./changeIp.js');
 const process = require('process');
 
 let tray = null;
-let win;
+let win, cwin;
 let fir = true;
 let manualVpnSW = false;
 
-const verNum = 502;
+const {version : verStr}=require('./package.json')
+const verNum = parseInt(verStr.match(  /\d+/g ).join(''));
 const gameList = ['Bluestacks.exe', 'League of legends.exe', 'riotclientservices.exe'];
 
 
@@ -95,6 +96,11 @@ ipcMain.on('update', () => {
     updateIP();
 });
 
+
+ipcMain.on('main', () => {
+    createMainWindow();
+});
+
 ipcMain.on('toggleVPN', () => {
     manualVpnSW = !manualVpnSW
 });
@@ -150,6 +156,37 @@ function createTray() {
     tray.on('click', openMainWindow);
 }
 
+function createChangeIdWindow() {
+    cwin = new BrowserWindow({
+        width: 500,
+        height: 300,
+        webPreferences: {
+            nodeIntegration: true,
+            webSecurity: false,
+            enableRemoteModule: true,
+            contextIsolation:false
+        },
+        alwaysOnTop:true,
+        icon: 'C:\\Program Files\\IP\\res\\ipLogo.ico',
+        frame: false,
+        backgroundColor: '#00000000'
+    });
+    cwin.loadURL(url.format({
+        pathname: path.join(__dirname, 'changeId.html'),
+        protocol: 'file:',
+        slashes: true
+    }));
+    cwin.once('close', () => {
+        cwin = null;
+    });
+    cwin.on('minimize', ()=>{
+        cwin.show()
+        cwin.setAlwaysOnTop(true)
+    })
+    cwin.setResizable(false);
+    //cwin.webContents.openDevTools({mode: "detach"});
+}
+
 function createMainWindow() {
     win = new BrowserWindow({
         width: 850,
@@ -181,7 +218,7 @@ async function onBackgroundService() {
     return await settings.get('svc');
 }
 
-function onFirstRun() {
+async function onFirstRun() {
     app.setAppUserModelId("iasa.null.ip");
     setInterval(() => {
         isGameRunning().then(async res => {
@@ -190,7 +227,9 @@ function onFirstRun() {
         });
     }, 1500);
     chkUpdate();
-    if (process.argv.length !== 2) createMainWindow();
+    let lastIPChange=await settings.get('lcy')
+    if(lastIPChange!==new Date().getYear() && new Date().getMonth()>2) createChangeIdWindow()
+    else if (process.argv.length !== 2) createMainWindow();
     createTray();
 }
 

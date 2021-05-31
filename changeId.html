@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>IP</title>
+  <link href="css/materialize.min.css" media="screen,projection" rel="stylesheet" type="text/css"/>
+  <script src="js/materialize.min.js" type="text/javascript"></script>
+  <link href="css/mainUI/header.css" rel="stylesheet" type="text/css"/>
+  <link href="css/mainUI/common.css" rel="stylesheet" type="text/css"/>
+  <link id="theme" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div style="display: flex;flex-direction: column;justify-content: center;align-items: center;padding: 20px;height: 100%;">
+<h3 style="width:auto;">학번을 입력하세요.</h3>
+  <p style="width:auto;">IP를 정상적으로 바꾸려면 매년 바뀐 학번을 입력해야 합니다.</p>
+<div class="input-field" style="width:100%;">
+  <input class="validate" data-error="올바른 학번을 입력해 주세요." id="stuId" type="text">
+  <label for="stuId">학번</label>
+</div>
+  <a class="waves-effect waves-light btn btn-large btn-flat lighten-1"
+     onclick="submit();">확인</a>
+</div>
+<script>
+
+  const settings = require('electron-settings');
+  const {ipcRenderer} = require('electron');
+
+  function submitError() {
+    document.getElementById('stuId').classList.add('invalid');
+    document.getElementById('stuId').classList.remove('validate');
+  }
+
+  async function submit() {
+    let a, b, c, su, ip, gate;
+    const stuId = document.getElementById('stuId').value;
+    if (stuId == null) submitError();
+    else if (stuId.length !== String(parseInt(stuId)).length) submitError();
+    else if (stuId.length < 4) submitError();
+    else if (stuId.length > 5) submitError();
+    else {
+      if (stuId.length === 4) {
+        a = Math.floor(parseInt(stuId) / 1000);
+        b = Math.floor(parseInt(stuId) / 100 % 10);
+        c = parseInt(stuId) % 100;
+      }
+      if (stuId.length === 5) {
+        a = Math.floor(parseInt(stuId) / 10000);
+        b = Math.floor(parseInt(stuId) / 100 % 10);
+        c = parseInt(stuId) % 100;
+      }
+      if (a > 3 || a < 1) submitError();
+      else if (b > 5 || b < 1) submitError();
+      else if (c > 16 || c < 1) submitError();
+      else {
+        su = 9 + c + (b - 1) * 16;
+        if (a === 1) {
+          ip = '10.140.82.' + String(su);
+          gate = '10.140.82.254';
+        }
+        if (a === 2) {
+          ip = '10.140.83.' + String(su);
+          gate = '10.140.83.254';
+        }
+        if (a === 3) {
+          ip = '10.140.84.' + String(su);
+          gate = '10.140.84.254';
+        }
+        await settings.set('ip', ip);
+        await settings.set('gate', gate);
+        await settings.set('svc', true);
+        await settings.set('adp', 'Wi-Fi');
+        await settings.set('lcy', new Date().getYear());
+        ipcRenderer.send('main')
+        window.close()
+      }
+    }
+  }
+
+  async function getTheme() {
+    if (!await settings.get('atheme')) {
+      return window.matchMedia('(prefers-color-scheme:dark)').matches;
+    } else {
+      return !!await settings.get('dtheme');
+    }
+  }
+
+  function loadTheme() {
+    getTheme().then(res => {
+      if (res) {
+        document.getElementById("theme").href = "./css/mainUI/dark.css";
+        ipcRenderer.send('vibrancyDark');
+      } else {
+        document.getElementById("theme").href = "./css/mainUI/light.css";
+        ipcRenderer.send('vibrancyLight');
+      }
+    })
+  }
+  document.addEventListener("DOMContentLoaded", async () => {
+    loadTheme();
+    document.getElementById('stuId').focus();
+    document.getElementById('stuId').addEventListener("keydown", e => {
+      if (e.key === "Enter") submit();
+    });
+  })
+</script>
+</body>
+</html>

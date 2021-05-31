@@ -1,7 +1,7 @@
 {
   "name": "iasa-ip",
-  "version": "5.0.2",
-  "description": "IP 5.0.2",
+  "version": "5.0.3",
+  "description": "IP 5.0.3",
   "main": "index.js",
   "scripts": {
     "dist": "electron-builder",
