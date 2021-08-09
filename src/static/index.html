@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width,initial-scale=1'>
+
+    <title>스튜디오 서리</title>
+
+    <link rel='icon' type='image/png' href='favicon.ico'>
+    <link rel='stylesheet' id='theme'>
+    <link rel='stylesheet' href='global.css'>
+    <link rel='stylesheet' href='smui.min.css'>
+    <link rel='stylesheet' href='../../build/bundle.css'>
+
+    <script defer src='../../build/bundle.js'></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) document.getElementById('theme').href = 'theme/dark.css'
+            else document.getElementById('theme').href = 'theme/light.css'
+        })
+    </script>
+</head>
+
+<body>
+</body>
+</html>
