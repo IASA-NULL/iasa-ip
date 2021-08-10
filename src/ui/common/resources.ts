@@ -1,0 +1,1 @@
+export const getImagePath = (fileName: string) => `../../../res/img/${fileName}.png`

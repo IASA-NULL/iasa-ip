@@ -1,0 +1,65 @@
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: url(../../../../res/fonts/icon.woff2) format('woff2');
+}
+
+@font-face {
+    font-family: 'FontL';
+    src: url(../../../../res/fonts/NotoSansKR-Light.woff2) format('woff2');
+}
+
+@font-face {
+    font-family: 'FontM';
+    src: url(../../../../res/fonts/NotoSansKR-Medium.woff2) format('woff2');
+}
+
+@font-face {
+    font-family: 'FontB';
+    src: url(../../../../res/fonts/NotoSansKR-Black.woff2) format('woff2');
+}
+
+html, body {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+* {
+    font-family: 'FontM';
+    font-weight: 200;
+    color: var(--mdc-theme-on-surface);
+}
+
+input {
+    color: var(--mdc-theme-on-surface) !important;
+}
+
+.mdc-deprecated-list-item__secondary-text {
+    font-family: 'FontM' !important;
+}
+
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+}
+
+.mdc-line-ripple::before {
+    border-bottom-color: var(--mdc-theme-on-surface) !important;
+}
+
+.mdc-floating-label {
+    color: var(--mdc-theme-on-surface) !important;
+}
