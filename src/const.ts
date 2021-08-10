@@ -22,9 +22,21 @@ export function getPlaceName(place: PLACE, english = false) {
     }
 }
 
-export enum PAGE {
+enum MAINPAGE {
     main,
     about,
     setting,
     loading
+}
+
+enum WELCOMEPAGE {
+    main,
+    id,
+    set,
+    done
+}
+
+export const PAGE = {
+    main: MAINPAGE,
+    welcome: WELCOMEPAGE
 }

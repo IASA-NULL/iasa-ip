@@ -16,7 +16,7 @@ export function createMainWindow(dev = false) {
         webPreferences: {
             preload: path.join(__dirname, "preload.js")
         },
-        icon: path.join(__dirname, '..', 'res', 'logo.png'),
+        icon: path.join(__dirname, '..', '..', 'res', 'logo.png'),
         frame: false,
         backgroundColor: '#00000000',
         x: displayRect.x + displayRect.width - 410,
@@ -26,13 +26,14 @@ export function createMainWindow(dev = false) {
         resizable: false
     });
     win.loadURL(url.format({
-        pathname: path.join(__dirname, '..', 'src', 'static', 'index.html'),
+        pathname: path.join(__dirname, '..', 'ui', 'main', 'index.html'),
         protocol: 'file:',
         slashes: true
     }));
     win.once('blur', () => {
         if (!dev) win.close()
     })
+    win.setAlwaysOnTop(true, 'floating');
     if (dev) win.webContents.openDevTools({mode: "detach"});
 
     return win

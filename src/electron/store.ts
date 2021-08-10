@@ -3,9 +3,8 @@ import {PLACE} from "../const";
 
 const store = new Store({
     schema: {
-        uid: {
-            type: 'number',
-            default: 0
+        userId: {
+            type: 'string'
         },
         lastVer: {
             type: 'string'
@@ -20,11 +19,15 @@ const store = new Store({
         },
         currentPlace: {
             type: 'number',
-            default: PLACE.unknown
+            default: PLACE.home
         },
         adapter: {
             type: 'string',
             default: 'Wi-Fi'
+        },
+        firstRun: {
+            type: 'boolean',
+            default: true
         }
     }
 })

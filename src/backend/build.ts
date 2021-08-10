@@ -5,8 +5,8 @@ import rcedit from 'rcedit'
 import {version} from '../../package.json'
 
 const ver = 'v3.2'
-const customIconPath = path.join(__dirname, '..', 'res', 'logo.ico');
-const resourceHackerPath = path.join(__dirname, '..', 'build_tool', 'RH.exe')
+const customIconPath = path.join(__dirname, '..', '..', 'res', 'logo.ico');
+const resourceHackerPath = path.join(__dirname, '..', '..', 'build_tool', 'RH.exe')
 
 let pkgPrecompiledBinaries
 
@@ -21,11 +21,11 @@ setTimeout(() => {
     fs.readdir('pkg-cache/' + ver, async (err, files) => {
         let fileName = files[0].replace('fetched', 'built')
         fs.renameSync(
-            path.join(__dirname, '..', 'pkg-cache', ver, files[0]),
-            path.join(__dirname, '..', 'pkg-cache', ver, fileName)
+            path.join(__dirname, '..', '..', 'pkg-cache', ver, files[0]),
+            path.join(__dirname, '..', '..', 'pkg-cache', ver, fileName)
         );
         pkgPrecompiledBinaries =
-            path.join(__dirname, '..', 'pkg-cache', ver, fileName)
+            path.join(__dirname, '..', '..', 'pkg-cache', ver, fileName)
         console.log("Customize pkg precompiled libraries");
         await customizePkgPrecompiledBinaries();
         console.log("Build customized executables");
@@ -55,7 +55,7 @@ function buildCustomizedExecutables() {
 
 function executePkg(exeName) {
     execSync(
-        `yarn run cross-env PKG_CACHE_PATH=./pkg-cache pkg build/backend.js --target node14-win-x64 --output "${exeName}"`
+        `yarn run cross-env PKG_CACHE_PATH=./pkg-cache pkg build/backend/main.js --target node14-win-x64 --output "${exeName}"`
     );
 }
 

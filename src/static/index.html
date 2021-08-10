@@ -8,15 +8,15 @@
 
     <link rel='icon' type='image/png' href='favicon.ico'>
     <link rel='stylesheet' id='theme'>
-    <link rel='stylesheet' href='global.css'>
-    <link rel='stylesheet' href='smui.min.css'>
-    <link rel='stylesheet' href='../../build/bundle.css'>
-
-    <script defer src='../../build/bundle.js'></script>
+    <link rel='stylesheet' href='style/global.css'>
+    <link rel='stylesheet' href='style/smui.min.css'>
+    <link rel='stylesheet' href='main.css'>
+    <link rel='stylesheet' href='style/config/__ENTRY__.css'>
+    <script defer src='main.js'></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) document.getElementById('theme').href = 'theme/dark.css'
-            else document.getElementById('theme').href = 'theme/light.css'
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) document.getElementById('theme').href = 'style/theme/dark.css'
+            else document.getElementById('theme').href = 'style/theme/light.css'
         })
     </script>
 </head>

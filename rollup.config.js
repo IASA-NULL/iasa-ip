@@ -7,129 +7,86 @@ import css from 'rollup-plugin-css-only';
 import json from "@rollup/plugin-json";
 import {nodeResolve} from '@rollup/plugin-node-resolve';
 import externals from 'rollup-plugin-node-externals'
+import copy from 'rollup-plugin-copy'
 
 const production = !process.env.ROLLUP_WATCH;
 
-export default [{
-    input: 'src/electron/main.ts',
-    output: {
-        sourcemap: true,
-        format: 'cjs',
-        file: 'build/main.js'
-    },
-    plugins: [
-        externals({deps: true}),
-        nodeResolve(),
-        json(),
-        commonjs({
-            include: './node_modules/**',
-        }),
-        typescript({
-            sourceMap: !production,
-            inlineSources: !production
-        })
-    ],
-    watch: {
-        clearScreen: false
+function nodeConfig(entryName) {
+    return {
+        input: `src/${entryName}.ts`,
+        output: {
+            sourcemap: true,
+            format: 'cjs',
+            file: `build/${entryName}.js`
+        },
+        plugins: [
+            externals({deps: true}),
+            nodeResolve(),
+            json(),
+            commonjs({
+                include: './node_modules/**',
+            }),
+            typescript({
+                sourceMap: !production,
+                inlineSources: !production
+            })
+        ],
+        watch: {
+            clearScreen: false
+        }
     }
-}, {
-    input: 'src/electron/preload.ts',
-    output: {
-        sourcemap: true,
-        format: 'cjs',
-        name: 'electron',
-        file: 'build/preload.js'
-    },
-    plugins: [
-        externals({deps: true}),
-        nodeResolve(),
-        json(),
-        commonjs({
-            include: './node_modules/**',
-        }),
-        typescript({
-            sourceMap: !production,
-            inlineSources: !production
-        })
-    ],
-    watch: {
-        clearScreen: false
+}
+
+function svelteConfig(entryName) {
+    return {
+        input: `src/ui/${entryName}/main.ts`,
+        output: {
+            sourcemap: true,
+            format: 'iife',
+            file: `build/ui/${entryName}/main.js`
+        },
+        plugins: [
+            copy({
+                targets: [{
+                    src: 'src/static/style/**/*',
+                    dest: `build/ui/${entryName}/style`,
+                    flatten: false
+                }, {
+                    src: 'src/static/index.html',
+                    dest: `build/ui/${entryName}`,
+                    transform: (contents, filename) => contents.toString().replace('__ENTRY__', entryName)
+                }]
+            }),
+            json(),
+            svelte({
+                preprocess: sveltePreprocess({sourceMap: !production}),
+                compilerOptions: {
+                    dev: !production
+                }
+            }),
+            css({output: 'main.css'}),
+            nodeResolve(),
+            resolve({
+                browser: true,
+                dedupe: ['svelte']
+            }),
+            commonjs(),
+            typescript({
+                sourceMap: !production,
+                inlineSources: !production
+            })
+        ],
+        watch: {
+            clearScreen: false
+        }
     }
-}, {
-    input: 'src/backend/main.ts',
-    output: {
-        sourcemap: true,
-        format: 'cjs',
-        name: 'backend',
-        file: 'build/backend.js'
-    },
-    plugins: [
-        externals({deps: true}),
-        nodeResolve(),
-        json(),
-        commonjs({
-            include: './node_modules/**',
-        }),
-        typescript({
-            sourceMap: !production,
-            inlineSources: !production
-        })
-    ],
-    watch: {
-        clearScreen: false
-    }
-}, {
-    input: 'src/backend/build.ts',
-    output: {
-        sourcemap: true,
-        format: 'cjs',
-        name: 'backend_build',
-        file: 'build/backend_build.js'
-    },
-    plugins: [
-        externals({deps: true}),
-        nodeResolve(),
-        json(),
-        commonjs({
-            include: './node_modules/**',
-        }),
-        typescript({
-            sourceMap: !production,
-            inlineSources: !production
-        })
-    ],
-    watch: {
-        clearScreen: false
-    }
-}, {
-    input: 'src/ui/main.ts',
-    output: {
-        sourcemap: true,
-        format: 'iife',
-        name: 'ui',
-        file: 'build/bundle.js'
-    },
-    plugins: [
-        json(),
-        svelte({
-            preprocess: sveltePreprocess({sourceMap: !production}),
-            compilerOptions: {
-                dev: !production
-            }
-        }),
-        css({output: 'bundle.css'}),
-        nodeResolve(),
-        resolve({
-            browser: true,
-            dedupe: ['svelte']
-        }),
-        commonjs(),
-        typescript({
-            sourceMap: !production,
-            inlineSources: !production
-        })
-    ],
-    watch: {
-        clearScreen: false
-    }
-}];
+}
+
+export default [
+    nodeConfig('electron/main'),
+    nodeConfig('electron/preload'),
+    nodeConfig('backend/main'),
+    nodeConfig('backend/build'),
+    svelteConfig('main'),
+    svelteConfig('welcome')
+];

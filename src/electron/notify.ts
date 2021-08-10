@@ -6,7 +6,7 @@ function createNotify(title: string, body: string, icon = 'logo') {
     let notification = new Notification({
         title: title,
         body: body,
-        icon: path.join(__dirname, '..', 'res', 'img', icon + '.png')
+        icon: path.join(__dirname, '..', '..', 'res', 'img', icon + '.png')
     });
     notification.show();
 }
@@ -22,4 +22,8 @@ export function pausedAutomaticChange() {
 
 export function startingService() {
     createNotify('서비스 시작중...', 'IP의 서비스가 종료돼서 재시작하고 있어요. 잠시만 기다리세요.', 'setting_plain')
+}
+
+export function updating() {
+    createNotify('업데이트를 다운받는 중...', '업데이트를 다운받고 있어요. 잠시만 기다리세요.', 'up_plain')
 }

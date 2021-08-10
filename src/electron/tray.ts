@@ -9,7 +9,7 @@ export interface trayAction {
 }
 
 export function createTray(action: trayAction) {
-    tray = new Tray(path.join(__dirname, '..', 'res', 'logo.ico'));
+    tray = new Tray(path.join(__dirname, '..', '..', 'res', 'logo.ico'));
     const contextMenu = Menu.buildFromTemplate([
         {label: '열기', click: action.openMainWindow},
         {label: '서비스 종료', click: action.askStopService}

@@ -56,12 +56,14 @@ function getServiceConfig(name: string, command: string) {
 </Task>`
 }
 
-function registerService() {
+function registerService(silent = false) {
     return new Promise<void>(((resolve, reject) => {
-        try {
-            execSync('schtasks /run /tn "MyTasks\\iasa-ip-stop"')
-        } catch (e) {
+        if (!silent) {
+            try {
+                execSync('schtasks /run /tn "MyTasks\\iasa-ip-stop"')
+            } catch (e) {
 
+            }
         }
         try {
             execSync('schtasks /delete /tn "MyTasks\\iasa-ip" /f');
@@ -107,7 +109,7 @@ app.get('/', async (req, res) => {
 });
 
 (async () => {
-    await registerService()
+    await registerService(process.argv.slice(-1)[0] === '-s')
     if (process.argv.slice(-1)[0] !== '-s') {
         execSync('schtasks /run /tn "MyTasks\\iasa-ip"')
         process.exit(0)

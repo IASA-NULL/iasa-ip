@@ -4,6 +4,7 @@ import path from "path"
 import {startingService} from "./notify";
 import type {PLACE} from "../const";
 import {version} from '../../package.json'
+import Store from './store'
 
 function timeout(ms, promise) {
     return new Promise((resolve, reject) => {
@@ -29,7 +30,7 @@ function startService() {
         if ((execSync('schtasks /tn "MyTasks\\iasa-ip"') as any).stderr) throw new Error()
         execSync('schtasks /run /tn "MyTasks\\iasa-ip"')
     } catch (e) {
-        execSync(path.join(__dirname, '..', '..', '..', 'res', `IP_SERVICE_${version}.exe`))
+        execSync(path.join(__dirname, '..', '..', '..', '..', 'res', `IP_SERVICE_${version}.exe`))
     }
 }
 
@@ -52,7 +53,7 @@ export async function changeToPlace(place: PLACE) {
     await startBackend();
     let result = (await (await fetch("http://localhost:5008/change", {
         method: 'POST',
-        body: JSON.stringify({place: place, adapter: "Wi-Fi", id: "30106"}),
+        body: JSON.stringify({place: place, adapter: "Wi-Fi", id: Store.get('userId')}),
         headers: {'Content-Type': 'application/json'},
     })).json())
 }
