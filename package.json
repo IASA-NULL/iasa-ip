@@ -42,14 +42,7 @@
           ]
         }
       ],
-      "icon": "./res/logo.ico",
-      "publish": [
-        {
-          "provider": "github",
-          "owner": "IASA-Null",
-          "repo": "iasa-ip"
-        }
-      ]
+      "icon": "./res/logo.ico"
     }
   },
   "devDependencies": {
