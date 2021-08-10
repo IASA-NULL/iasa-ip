@@ -1,23 +1,15 @@
 <script>
+    import '../../../common/preload'
     import Button, {Group, Label} from '@smui/button'
     import {version} from '../../../../../package.json'
+    import {CenterContainer} from '../../../common/container'
     import {PAGE} from '../../../../const'
 
     export let moveToPage;
 </script>
 
-<style>
-    .centerContainer {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-        align-items: center;
-    }
-</style>
-
-<div class="centerContainer">
-    <img src="../../../res/logo.png" width="70">
+<CenterContainer>
+    <img src="../../../res/logo.png" width="70" alt="LOGO">
     <h2 style="margin-bottom: 0;">IP {version}</h2>
     <div style="text-align: center">
         <h3>Copyright 2019-2021 SEORII®.</h3>
@@ -34,4 +26,4 @@
             <Label>닫기</Label>
         </Button>
     </Group>
-</div>
+</CenterContainer>>

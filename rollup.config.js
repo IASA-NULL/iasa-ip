@@ -15,7 +15,7 @@ function nodeConfig(entryName) {
     return {
         input: `src/${entryName}.ts`,
         output: {
-            sourcemap: true,
+            sourcemap: !production,
             format: 'cjs',
             file: `build/${entryName}.js`
         },
@@ -41,8 +41,9 @@ function svelteConfig(entryName) {
     return {
         input: `src/ui/${entryName}/main.ts`,
         output: {
-            sourcemap: true,
+            sourcemap: !production,
             format: 'iife',
+            name: entryName,
             file: `build/ui/${entryName}/main.js`
         },
         plugins: [
@@ -87,6 +88,8 @@ export default [
     nodeConfig('electron/preload'),
     nodeConfig('backend/main'),
     nodeConfig('backend/build'),
+
     svelteConfig('main'),
-    svelteConfig('welcome')
+    svelteConfig('welcome'),
+    svelteConfig('renew')
 ];

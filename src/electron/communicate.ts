@@ -50,10 +50,13 @@ export function startBackend(run = true) {
 }
 
 export async function changeToPlace(place: PLACE) {
+    if (!Store.get('userId')) return false
     await startBackend();
     let result = (await (await fetch("http://localhost:5008/change", {
         method: 'POST',
         body: JSON.stringify({place: place, adapter: "Wi-Fi", id: Store.get('userId')}),
         headers: {'Content-Type': 'application/json'},
     })).json())
+    return result.success;
+
 }

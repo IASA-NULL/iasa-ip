@@ -36,7 +36,12 @@ enum WELCOMEPAGE {
     done
 }
 
+enum RENEWPAGE {
+    main
+}
+
 export const PAGE = {
     main: MAINPAGE,
-    welcome: WELCOMEPAGE
+    welcome: WELCOMEPAGE,
+    renew: RENEWPAGE
 }

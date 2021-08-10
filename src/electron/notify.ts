@@ -14,6 +14,7 @@ function createNotify(title: string, body: string, icon = 'logo') {
 export function changedToPlace(place: PLACE) {
     if (place === PLACE.home) createNotify('IP 변경됨', 'IP를 학교 외부망으로 변경했어요.', 'home_plain')
     if (place === PLACE.school) createNotify('IP 변경됨', 'IP를 학교 내부망으로 변경했어요.', 'school_plain')
+    if (place === PLACE.unknown) createNotify('오류', '오류로 인해 IP를 변경하지 못했어요.', 'error_plain')
 }
 
 export function pausedAutomaticChange() {

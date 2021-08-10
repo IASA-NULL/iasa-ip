@@ -28,6 +28,10 @@ const store = new Store({
         firstRun: {
             type: 'boolean',
             default: true
+        },
+        lastIdChanged: {
+            type: 'number',
+            default: 0
         }
     }
 })

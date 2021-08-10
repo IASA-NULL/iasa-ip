@@ -1,5 +1,5 @@
 import {app, dialog, ipcMain, shell} from 'electron';
-import {createMainWindow} from "./mainWindow";
+import {createMainWindow} from "./window/mainWindow";
 import {createTray} from "./tray"
 import Store from './store'
 import {changedToPlace, pausedAutomaticChange, updating} from "./notify"
@@ -9,7 +9,9 @@ import wifiName from 'wifi-name'
 import {autoUpdater} from 'electron-updater'
 import {execSync} from "child_process";
 import AutoLaunch from 'auto-launch'
-import {createWelcomeWindow} from "./welcomeWindow";
+import {createWelcomeWindow} from "./window/welcomeWindow";
+import {createChangeIdWindow} from "./window/changeIdWindow";
+import {validateUserId} from "../ui/common/validate";
 
 let mainWindow
 let updatingIP = false, currentPlace: PLACE
@@ -38,10 +40,16 @@ function openMainWindow() {
         mainWindow.focus()
         return
     }
-    mainWindow = createMainWindow()
-    mainWindow.once('close', () => {
-        mainWindow = null;
-    })
+    const lastIPChange = Store.get('lastIdChanged')
+    if (Store.get('firstRun')) createWelcomeWindow()
+    else if (lastIPChange !== new Date().getFullYear() && new Date().getMonth() > 2) createChangeIdWindow()
+    else if (!validateUserId(Store.get('userId') as string)) createChangeIdWindow()
+    else {
+        mainWindow = createMainWindow()
+        mainWindow.once('close', () => {
+            mainWindow = null;
+        })
+    }
 }
 
 function askStopService() {
@@ -65,9 +73,12 @@ function getWifiName() {
 }
 
 async function changeToPlaceProcess(place: PLACE) {
-    await changeToPlace(place)
-    currentPlace = place
-    Store.set("currentPlace", place)
+    if (await changeToPlace(place)) {
+        currentPlace = place
+        Store.set("currentPlace", place)
+        return true
+    }
+    return false
 }
 
 async function autoIPUpdate() {
@@ -76,12 +87,10 @@ async function autoIPUpdate() {
         updatingIP = false;
         if (mainWindow == null) {
             if (wifiName === "Iasa_hs" && await currentPlace !== PLACE.school) {
-                await changeToPlaceProcess(PLACE.school)
-                changedToPlace(PLACE.school)
+                if (await changeToPlaceProcess(PLACE.school)) changedToPlace(PLACE.school)
             }
             if (wifiName !== "Iasa_hs" && await currentPlace !== PLACE.home) {
-                await changeToPlaceProcess(PLACE.home)
-                changedToPlace(PLACE.home)
+                if (await changeToPlaceProcess(PLACE.home)) changedToPlace(PLACE.home)
             }
         }
     }
@@ -92,7 +101,10 @@ function init() {
     app.setAppUserModelId("com.null.ip");
     createTray({openMainWindow: openMainWindow, askStopService: askStopService})
     currentPlace = Store.get('currentPlace') as PLACE
+    const lastIPChange = Store.get('lastIdChanged')
     if (Store.get('firstRun')) createWelcomeWindow()
+    else if (lastIPChange !== new Date().getFullYear() && new Date().getMonth() > 2) createChangeIdWindow()
+    else if (!validateUserId(Store.get('userId') as string)) createChangeIdWindow()
     startBackend().then()
 }
 
@@ -102,11 +114,11 @@ app.on('window-all-closed', async e => {
     e.preventDefault();
 });
 
-autoUpdater.on('update-available', (info) => {
+autoUpdater.on('update-available', () => {
     updating()
 });
 
-autoUpdater.on('update-downloaded', (info) => {
+autoUpdater.on('update-downloaded', () => {
     try {
         execSync('schtasks /run /tn "MyTasks\\iasa-ip-stop"')
     } catch (e) {
@@ -117,15 +129,19 @@ autoUpdater.on('update-downloaded', (info) => {
 
 ipcMain.on("close", askStopService);
 
+ipcMain.on("openIdChangeWindow", () => {
+    createChangeIdWindow()
+});
+
 ipcMain.on("openWebPage", (event, src: string) => {
     shell.openExternal(src).then()
 });
 
-ipcMain.on("enableAutomaticChange", (event) => {
+ipcMain.on("enableAutomaticChange", () => {
     sessionPauseAutomaticChange = false
 });
 
-ipcMain.on("isAutomaticPaused", (event => {
+ipcMain.on("isAutomaticPaused", (() => {
     if (mainWindow) mainWindow.webContents.send("isAutomaticPausedHandler", sessionPauseAutomaticChange);
 }))
 
@@ -138,11 +154,14 @@ ipcMain.on("set", (e, data: { key: string, value: any }) => {
 });
 
 ipcMain.on("changeToPlace", async (e, place: PLACE) => {
-    if (!sessionPauseAutomaticChange) pausedAutomaticChange()
-    sessionPauseAutomaticChange = true
-    await changeToPlaceProcess(place)
-    if (mainWindow) mainWindow.webContents.send("changeToPlaceHandler")
-    else changedToPlace(place)
+    const result = await changeToPlaceProcess(place)
+    if (result) {
+        if (!sessionPauseAutomaticChange) pausedAutomaticChange()
+        sessionPauseAutomaticChange = true
+    }
+    if (mainWindow) mainWindow.webContents.send("changeToPlaceHandler", result)
+    else if (result) changedToPlace(place)
+    else changedToPlace(PLACE.unknown)
 });
 
 setInterval(autoIPUpdate, 1000)

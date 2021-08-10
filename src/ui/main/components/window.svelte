@@ -1,4 +1,5 @@
 <script lang="ts">
+    import '../../common/preload'
     import IconButton from '@smui/icon-button'
     import Menu from '@smui/menu'
     import List, {Item, Text} from '@smui/list'
@@ -22,16 +23,11 @@
     .titlebar {
         width: calc(100% - 40px);
         height: 40px;
-        padding: 20px;
+        padding: 20px 20px 0;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-content: center;
-    }
-
-    .wrapper {
-        width: 100%;
-        height: 100vh;
     }
 
     .appTitle, .appTitle * {
@@ -47,7 +43,7 @@
     }
 </style>
 
-<div class="wrapper">
+<Wrapper>
     <header class="titlebar">
         <span class="appTitle">IP <span class="version">{version}</span></span>
         <div>
@@ -72,4 +68,4 @@
         </div>
     </header>
     <slot></slot>
-</div>
+</Wrapper>

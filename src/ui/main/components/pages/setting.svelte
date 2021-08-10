@@ -1,6 +1,8 @@
 <script>
-    import Button, {Label} from '@smui/button'
+    import '../../../common/preload'
+    import Button, {Label, Group} from '@smui/button'
     import Switch from '@smui/switch';
+    import {CenterContainer} from '../../../common/container'
     import {PAGE} from '../../../../const'
 
     export let moveToPage, developing
@@ -13,30 +15,16 @@
     })()
 
     $: (async () => {
-        if (autoChange !== undefined) await window.electron.set('autoChange', autoChange)
-        if (autoVpn !== undefined) await window.electron.set('autoVpn', autoVpn)
+        try {
+            if (autoChange !== undefined) await window.electron.set('autoChange', autoChange)
+            if (autoVpn !== undefined) await window.electron.set('autoVpn', autoVpn)
+        } catch (e) {
+
+        }
     })()
 </script>
 
-<style>
-    .centerContainer {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-        align-items: center;
-    }
-
-    .centerContainer > div {
-        text-align: center;
-    }
-
-    * {
-        color: var(--mdc-theme-on-surface);
-    }
-</style>
-
-<div class="centerContainer">
+<CenterContainer>
     <div>
         <h2>IP 자동변경</h2>
         <Switch bind:checked={autoChange}/>
@@ -48,7 +36,14 @@
             developing.open()}, 100)
         }}/>
     </div>
-    <Button on:click={moveToPage(PAGE.main.main)}>
-        <Label>닫기</Label>
-    </Button>
-</div>
+    <Group>
+        <Button on:click={()=>{
+            window.electron.openIdChangeWindow()
+        }}>
+            <Label>학번 변경</Label>
+        </Button>
+        <Button on:click={moveToPage(PAGE.main.main)}>
+            <Label>닫기</Label>
+        </Button>
+    </Group>
+</CenterContainer>

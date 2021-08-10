@@ -18,9 +18,9 @@ contextBridge.exposeInMainWorld(
         },
         set: (key: string, value: any) => ipcRenderer.send('set', {key, value}),
         changeToPlace: (place: PLACE) => {
-            return new Promise<void>(resolve => {
-                ipcRenderer.once('changeToPlaceHandler', () => {
-                    resolve()
+            return new Promise(resolve => {
+                ipcRenderer.once('changeToPlaceHandler', (event, res: boolean) => {
+                    resolve(res)
                 })
                 ipcRenderer.send('changeToPlace', place)
             })
@@ -33,7 +33,7 @@ contextBridge.exposeInMainWorld(
                 })
                 ipcRenderer.send('isAutomaticPaused')
             })
-        }
+        },
+        openIdChangeWindow: () => ipcRenderer.send('openIdChangeWindow')
     }
 )
-
