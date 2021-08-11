@@ -12,7 +12,8 @@ declare global {
             changeToPlace: (place: PLACE) => Promise<boolean>,
             enableAutomaticChange: () => void,
             isAutomaticPaused: () => Promise<boolean>,
-            openIdChangeWindow: () => {}
+            openIdChangeWindow: () => {},
+            setUpdateChannel: (channel: string) => {}
         }
     }
 }

@@ -63,3 +63,7 @@ input {
 .mdc-floating-label {
     color: var(--mdc-theme-on-surface) !important;
 }
+
+.mdc-select__selected-text {
+    color: var(--mdc-theme-on-surface) !important;
+}

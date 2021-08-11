@@ -32,6 +32,10 @@ const store = new Store({
         lastIdChanged: {
             type: 'number',
             default: 0
+        },
+        updateChannel: {
+            type: 'string',
+            default: 'stable'
         }
     }
 })

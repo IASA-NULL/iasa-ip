@@ -4,6 +4,7 @@ import temp from 'temp'
 import fs from 'fs'
 import path from "path";
 import {changeIP} from "./ip"
+import fetch from "node-fetch";
 
 const app = express()
 app.use(express.json())
@@ -56,43 +57,62 @@ function getServiceConfig(name: string, command: string) {
 </Task>`
 }
 
-function registerService(silent = false) {
-    return new Promise<void>(((resolve, reject) => {
-        if (!silent) {
+function timeout(ms, promise) {
+    return new Promise((resolve, reject) => {
+        const timer = setTimeout(() => {
+            reject(new Error('TIMEOUT'))
+        }, ms)
+
+        promise
+            .then(value => {
+                clearTimeout(timer)
+                resolve(value)
+            })
+            .catch(reason => {
+                clearTimeout(timer)
+                reject(reason)
+            })
+    })
+}
+
+function registerService() {
+    return new Promise<void>((async (resolve) => {
+        timeout(500, fetch('http://localhost:5008')).then(() => {
             try {
                 execSync('schtasks /run /tn "MyTasks\\iasa-ip-stop"')
             } catch (e) {
 
             }
-        }
-        try {
-            execSync('schtasks /delete /tn "MyTasks\\iasa-ip" /f');
-        } catch (e) {
+        }).finally(() => {
+            try {
+                execSync('schtasks /delete /tn "MyTasks\\iasa-ip" /f');
+            } catch (e) {
 
-        }
-        try {
-            execSync('schtasks /delete /tn "MyTasks\\iasa-ip-stop" /f');
-        } catch (e) {
+            }
+            try {
+                execSync('schtasks /delete /tn "MyTasks\\iasa-ip-stop" /f');
+            } catch (e) {
 
-        }
-        temp.open({suffix: '.xml'}, function (err, info) {
-            let exePath = process.argv[0]
-            let exeName = process.argv[0].split('\\').slice(-1)[0]
-            fs.writeSync(info.fd, getServiceConfig('iasa-ip', `<Command>cscript</Command>
+            }
+            temp.open({suffix: '.xml'}, function (err, info) {
+                let exePath = process.argv[0]
+                let exeName = process.argv[0].split('\\').slice(-1)[0]
+                fs.writeSync(info.fd, getServiceConfig('iasa-ip', `<Command>cscript</Command>
       <Arguments>"${path.join(exePath, '..', 'runner.vbs')}" "${exePath} -s"</Arguments>`));
-            fs.close(info.fd, function (err) {
-                let res = execSync('schtasks /create /tn "MyTasks\\iasa-ip" /xml "' + info.path + '" /f');
+                fs.close(info.fd, function (err) {
+                    let res = execSync('schtasks /create /tn "MyTasks\\iasa-ip" /xml "' + info.path + '" /f');
 
-                temp.open({suffix: '.xml'}, function (err, info) {
-                    fs.writeSync(info.fd, getServiceConfig('iasa-ip-stop', `<Command>taskkill</Command>
+                    temp.open({suffix: '.xml'}, function (err, info) {
+                        fs.writeSync(info.fd, getServiceConfig('iasa-ip-stop', `<Command>taskkill</Command>
       <Arguments>-f -im "${exeName}"</Arguments>`));
-                    fs.close(info.fd, function (err) {
-                        let res = execSync('schtasks /create /tn "MyTasks\\iasa-ip-stop" /xml "' + info.path + '" /f');
-                        resolve()
+                        fs.close(info.fd, function (err) {
+                            let res = execSync('schtasks /create /tn "MyTasks\\iasa-ip-stop" /xml "' + info.path + '" /f');
+                            resolve()
+                        });
                     });
                 });
             });
-        });
+        })
     }))
 }
 
@@ -109,7 +129,7 @@ app.get('/', async (req, res) => {
 });
 
 (async () => {
-    await registerService(process.argv.slice(-1)[0] === '-s')
+    await registerService()
     if (process.argv.slice(-1)[0] !== '-s') {
         execSync('schtasks /run /tn "MyTasks\\iasa-ip"')
         process.exit(0)

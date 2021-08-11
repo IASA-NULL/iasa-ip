@@ -106,6 +106,7 @@ function init() {
     else if (lastIPChange !== new Date().getFullYear() && new Date().getMonth() > 2) createChangeIdWindow()
     else if (!validateUserId(Store.get('userId') as string)) createChangeIdWindow()
     startBackend().then()
+    autoUpdater.channel = Store.get('updateChannel') as string
     setTimeout(() => {
         autoUpdater.checkForUpdates().then().catch();
     }, 10000)
@@ -127,13 +128,18 @@ autoUpdater.on('update-downloaded', () => {
     } catch (e) {
 
     }
-    app.exit()
+    autoUpdater.quitAndInstall()
 });
 
 ipcMain.on("close", askStopService);
 
 ipcMain.on("openIdChangeWindow", () => {
     createChangeIdWindow()
+});
+
+ipcMain.on("setUpdateChannel", (e, channel: string) => {
+    autoUpdater.channel = channel
+    Store.set('updateChannel', channel)
 });
 
 ipcMain.on("openWebPage", (event, src: string) => {
