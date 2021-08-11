@@ -106,6 +106,9 @@ function init() {
     else if (lastIPChange !== new Date().getFullYear() && new Date().getMonth() > 2) createChangeIdWindow()
     else if (!validateUserId(Store.get('userId') as string)) createChangeIdWindow()
     startBackend().then()
+    setTimeout(() => {
+        autoUpdater.checkForUpdates().then().catch();
+    }, 10000)
 }
 
 app.on('ready', init);
