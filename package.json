@@ -42,7 +42,8 @@
           ]
         }
       ],
-      "icon": "./res/logo.ico"
+      "icon": "./res/logo.ico",
+      "publish": "never"
     }
   },
   "devDependencies": {
