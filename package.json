@@ -1,6 +1,6 @@
 {
   "name": "iasa-ip",
-  "version": "6.0.0-beta.1",
+  "version": "6.0.0-alpha.1",
   "description": "IP Changer for IASA",
   "main": "build/electron/main.js",
   "repository": "https://github.com/IASA-Null/iasa-ip.git",
@@ -8,9 +8,11 @@
   "license": "MIT",
   "scripts": {
     "build": "yarn run build:ts && yarn run build:backend && yarn run build:electron",
+    "deploy": "yarn run build:ts && yarn run build:backend && yarn run build:electron:publish",
     "build:ts": "rollup -c",
     "build:backend": "node build/backend/build.js",
     "build:electron": "electron-builder -c.extraMetadata.main=build/electron/main.js",
+    "build:electron:publish": "electron-builder -c.extraMetadata.main=build/electron/main.js -p",
     "dev": "rollup -c -w",
     "run": "electron build/electron/main.js",
     "check": "svelte-check --tsconfig ./tsconfig.json"
