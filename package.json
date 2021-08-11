@@ -1,6 +1,6 @@
 {
   "name": "iasa-ip",
-  "version": "6.0.0-alpha.5",
+  "version": "6.0.0-alpha.6",
   "description": "IP Changer for IASA",
   "main": "build/electron/main.js",
   "repository": "https://github.com/IASA-Null/iasa-ip.git",

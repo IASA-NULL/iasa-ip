@@ -122,7 +122,10 @@ function init() {
     createTray({openMainWindow: openMainWindow, askStopService: askStopService})
     currentPlace = Store.get('currentPlace') as PLACE
     const lastIPChange = Store.get('lastIdChanged')
-    if (Store.get('firstRun')) createWelcomeWindow()
+    if (Store.get('firstRun')) {
+        createWelcomeWindow()
+        startBackend().then()
+    }
     else {
         if (Store.get('lastVer') !== version) {
             createUpdatedWindow()
