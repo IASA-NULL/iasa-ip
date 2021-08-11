@@ -77,39 +77,19 @@ function timeout(ms, promise) {
 
 function registerService() {
     return new Promise<void>((async (resolve) => {
-        timeout(500, fetch('http://localhost:5008')).then(() => {
-            try {
-                execSync('schtasks /run /tn "MyTasks\\iasa-ip-stop"')
-            } catch (e) {
-
-            }
-        }).finally(() => {
+        timeout(500, fetch('http://localhost:5008/exit')).finally(() => {
             try {
                 execSync('schtasks /delete /tn "MyTasks\\iasa-ip" /f');
             } catch (e) {
 
             }
-            try {
-                execSync('schtasks /delete /tn "MyTasks\\iasa-ip-stop" /f');
-            } catch (e) {
-
-            }
             temp.open({suffix: '.xml'}, function (err, info) {
                 let exePath = process.argv[0]
-                let exeName = process.argv[0].split('\\').slice(-1)[0]
                 fs.writeSync(info.fd, getServiceConfig('iasa-ip', `<Command>cscript</Command>
       <Arguments>"${path.join(exePath, '..', 'runner.vbs')}" "${exePath} -s"</Arguments>`));
                 fs.close(info.fd, function (err) {
                     let res = execSync('schtasks /create /tn "MyTasks\\iasa-ip" /xml "' + info.path + '" /f');
-
-                    temp.open({suffix: '.xml'}, function (err, info) {
-                        fs.writeSync(info.fd, getServiceConfig('iasa-ip-stop', `<Command>taskkill</Command>
-      <Arguments>-f -im "${exeName}"</Arguments>`));
-                        fs.close(info.fd, function (err) {
-                            let res = execSync('schtasks /create /tn "MyTasks\\iasa-ip-stop" /xml "' + info.path + '" /f');
-                            resolve()
-                        });
-                    });
+                    resolve()
                 });
             });
         })
@@ -126,6 +106,11 @@ app.post('/change', async (req, res) => {
 
 app.get('/', async (req, res) => {
     res.send('IP Backend Service')
+});
+
+app.get('/exit', async (req, res) => {
+    res.send({success: true})
+    process.exit(0)
 });
 
 (async () => {

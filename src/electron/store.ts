@@ -33,9 +33,9 @@ const store = new Store({
             type: 'number',
             default: 0
         },
-        updateChannel: {
-            type: 'string',
-            default: 'stable'
+        useBeta: {
+            type: 'boolean',
+            default: false
         }
     }
 })

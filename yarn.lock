@@ -160,6 +160,26 @@
   dependencies:
     tslib "^2.1.0"
 
+"@material/dialog@^11.0.0":
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/@material/dialog/-/dialog-11.0.0.tgz#482061846e012345c515a05877a2a051f8f80920"
+  integrity sha512-d49zJJmUGTcdWVdBNbXSdDk55mbIIvYpg3ENY9fg6ZlesGsDTgdykGgUkXEaqQeT+Qe/8+4vdaPpz8WNd2Qzyw==
+  dependencies:
+    "@material/animation" "^11.0.0"
+    "@material/base" "^11.0.0"
+    "@material/button" "^11.0.0"
+    "@material/dom" "^11.0.0"
+    "@material/elevation" "^11.0.0"
+    "@material/feature-targeting" "^11.0.0"
+    "@material/icon-button" "^11.0.0"
+    "@material/ripple" "^11.0.0"
+    "@material/rtl" "^11.0.0"
+    "@material/shape" "^11.0.0"
+    "@material/theme" "^11.0.0"
+    "@material/touch-target" "^11.0.0"
+    "@material/typography" "^11.0.0"
+    tslib "^2.1.0"
+
 "@material/dom@^11.0.0":
   version "11.0.0"
   resolved "https://registry.yarnpkg.com/@material/dom/-/dom-11.0.0.tgz#ea74b0719b9b51515c085ddc30708b5aefdb31da"
@@ -195,6 +215,19 @@
     "@material/base" "^11.0.0"
     "@material/dom" "^11.0.0"
     "@material/feature-targeting" "^11.0.0"
+    "@material/rtl" "^11.0.0"
+    "@material/theme" "^11.0.0"
+    "@material/typography" "^11.0.0"
+    tslib "^2.1.0"
+
+"@material/form-field@^11.0.0":
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/@material/form-field/-/form-field-11.0.0.tgz#7839c78502b38503d631b0acd107623b8ccc00b5"
+  integrity sha512-w42PHsq8A+7cgrgBGT5j0h3FTgjs7qvLJFYlwp5QYayC2qTZQa3VsF3OTxuXcn3FVlFnBCwILp0+FfWfRmaH4w==
+  dependencies:
+    "@material/base" "^11.0.0"
+    "@material/feature-targeting" "^11.0.0"
+    "@material/ripple" "^11.0.0"
     "@material/rtl" "^11.0.0"
     "@material/theme" "^11.0.0"
     "@material/typography" "^11.0.0"
@@ -288,6 +321,21 @@
   resolved "https://registry.yarnpkg.com/@material/progress-indicator/-/progress-indicator-11.0.0.tgz#42b9b1ceb546966577f30132ab421744534b638e"
   integrity sha512-XvLfilg2Ew6gfb0BCWEVuTn6VqBQ7LhZngEakiwoEe2ImoOSFHSBQ8sg177cSvsbUf4c2MnYN0UepfivKGaagg==
   dependencies:
+    tslib "^2.1.0"
+
+"@material/radio@^11.0.0":
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/@material/radio/-/radio-11.0.0.tgz#0686e94d57ba3ebdb856d7d263c1e21b89fa2ba4"
+  integrity sha512-smbW+ccgoGr6CW0Jjk+DZgIwZjVmeNONAJX9lTxSvmxZVgJ/3BVizY8Mwl4r1j4Y9jZj2ZPoAg8D1G6wVxO6ig==
+  dependencies:
+    "@material/animation" "^11.0.0"
+    "@material/base" "^11.0.0"
+    "@material/density" "^11.0.0"
+    "@material/dom" "^11.0.0"
+    "@material/feature-targeting" "^11.0.0"
+    "@material/ripple" "^11.0.0"
+    "@material/theme" "^11.0.0"
+    "@material/touch-target" "^11.0.0"
     tslib "^2.1.0"
 
 "@material/ripple@^11.0.0":
@@ -569,12 +617,32 @@
     "@material/dom" "^11.0.0"
     svelte "^3.35.0"
 
+"@smui/dialog@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@smui/dialog/-/dialog-4.2.0.tgz#39c3e0ff1a297edb5e2f5960de026e41bd057e0b"
+  integrity sha512-pBzEoOzkHHzY58O1dDJ1ffRtD9A3IUJBe9tmLlf6LaiWMfkR1hE/V/bAgJIs5XRIZRjD5brlo83b7/4PpNFcYw==
+  dependencies:
+    "@material/button" "^11.0.0"
+    "@material/dialog" "^11.0.0"
+    "@material/dom" "^11.0.0"
+    "@smui/common" "^4.2.0"
+
 "@smui/floating-label@^4.2.0":
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@smui/floating-label/-/floating-label-4.2.0.tgz#08e18d19f61967a6613be68e90028622913ef97c"
   integrity sha512-EQhJkzt0AMqbBj/bxY9TmovsPVPxVcfQCZZrpfbJ0V2PqyZGOVXEjggGpa638PcRHPX44NjSSCnJNiKa6SCGEQ==
   dependencies:
     "@material/floating-label" "^11.0.0"
+    "@smui/common" "^4.2.0"
+
+"@smui/form-field@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@smui/form-field/-/form-field-4.2.0.tgz#f009df9f1263174ebfc1db2b2dfea745f99beac6"
+  integrity sha512-3sjKCmjr4Ox1L//t6zouHjtp6qD8QvLsXYGpCBtVhZR45PbVTFMMKkPb0vr7yFj+Oy8EPyGWfVsFEOaedL4xDA==
+  dependencies:
+    "@material/feature-targeting" "^11.0.0"
+    "@material/form-field" "^11.0.0"
+    "@material/rtl" "^11.0.0"
     "@smui/common" "^4.2.0"
 
 "@smui/icon-button@^4.2.0":
@@ -633,6 +701,15 @@
   dependencies:
     "@material/notched-outline" "^11.0.0"
     "@smui/common" "^4.2.0"
+
+"@smui/radio@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@smui/radio/-/radio-4.2.0.tgz#c91c6dec6d1a1ffebf26538d68ae1413dcbbe6c1"
+  integrity sha512-gQiVUNEexQ0H6N6GWY4r1rhHjWlBN+N4eNWTOa5OM2t8sCSVYpQiwI6WK/Ws63vLPY3VaUzbZrfssFl1+iHmpQ==
+  dependencies:
+    "@material/radio" "^11.0.0"
+    "@smui/common" "^4.2.0"
+    "@smui/ripple" "^4.2.0"
 
 "@smui/ripple@^4.2.0":
   version "4.2.0"

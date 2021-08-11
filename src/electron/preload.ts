@@ -35,6 +35,6 @@ contextBridge.exposeInMainWorld(
             })
         },
         openIdChangeWindow: () => ipcRenderer.send('openIdChangeWindow'),
-        setUpdateChannel: (channel: string) => ipcRenderer.send('setUpdateChannel', channel),
+        setUpdateChannel: (beta: boolean) => ipcRenderer.send('setUpdateChannel', beta),
     }
 )

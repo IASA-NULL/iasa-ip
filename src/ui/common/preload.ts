@@ -13,7 +13,7 @@ declare global {
             enableAutomaticChange: () => void,
             isAutomaticPaused: () => Promise<boolean>,
             openIdChangeWindow: () => {},
-            setUpdateChannel: (channel: string) => {}
+            setUpdateChannel: (beta: boolean) => {}
         }
     }
 }

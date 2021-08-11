@@ -1,6 +1,6 @@
 {
   "name": "iasa-ip",
-  "version": "6.0.0-alpha.3",
+  "version": "6.0.0-alpha.4",
   "description": "IP Changer for IASA",
   "main": "build/electron/main.js",
   "repository": "https://github.com/IASA-Null/iasa-ip.git",
@@ -21,7 +21,6 @@
     "productName": "IP",
     "appId": "com.null.ip",
     "artifactName": "IP.${ext}",
-    "generateUpdatesFilesForAllChannels": true,
     "directories": {
       "output": "dist"
     },
@@ -59,6 +58,9 @@
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-node-resolve": "^13.0.4",
     "@rollup/plugin-typescript": "^8.0.0",
+    "@smui/dialog": "^4.2.0",
+    "@smui/form-field": "^4.2.0",
+    "@smui/radio": "^4.2.0",
     "@smui/select": "^4.2.0",
     "@smui/textfield": "^4.2.0",
     "@tsconfig/svelte": "^2.0.0",

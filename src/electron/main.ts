@@ -7,11 +7,11 @@ import {PLACE} from "../const";
 import {changeToPlace, startBackend} from "./communicate";
 import wifiName from 'wifi-name'
 import {autoUpdater} from 'electron-updater'
-import {execSync} from "child_process";
 import AutoLaunch from 'auto-launch'
 import {createWelcomeWindow} from "./window/welcomeWindow";
 import {createChangeIdWindow} from "./window/changeIdWindow";
 import {validateUserId} from "../ui/common/validate";
+import fetch from "node-fetch";
 
 let mainWindow
 let updatingIP = false, currentPlace: PLACE
@@ -33,6 +33,24 @@ let autoLaunch = new AutoLaunch({
 autoLaunch.isEnabled().then((isEnabled) => {
     if (!isEnabled) autoLaunch.enable();
 });
+
+function timeout(ms, promise) {
+    return new Promise((resolve, reject) => {
+        const timer = setTimeout(() => {
+            reject(new Error('TIMEOUT'))
+        }, ms)
+
+        promise
+            .then(value => {
+                clearTimeout(timer)
+                resolve(value)
+            })
+            .catch(reason => {
+                clearTimeout(timer)
+                reject(reason)
+            })
+    })
+}
 
 function openMainWindow() {
     if (mainWindow) {
@@ -106,10 +124,10 @@ function init() {
     else if (lastIPChange !== new Date().getFullYear() && new Date().getMonth() > 2) createChangeIdWindow()
     else if (!validateUserId(Store.get('userId') as string)) createChangeIdWindow()
     startBackend().then()
-    autoUpdater.channel = Store.get('updateChannel') as string
-    setTimeout(() => {
+    autoUpdater.allowPrerelease = Store.get('useBeta') as boolean
+    setInterval(() => {
         autoUpdater.checkForUpdates().then().catch();
-    }, 10000)
+    }, 60000)
 }
 
 app.on('ready', init);
@@ -123,12 +141,9 @@ autoUpdater.on('update-available', () => {
 });
 
 autoUpdater.on('update-downloaded', () => {
-    try {
-        execSync('schtasks /run /tn "MyTasks\\iasa-ip-stop"')
-    } catch (e) {
-
-    }
-    autoUpdater.quitAndInstall()
+    timeout(500, fetch('http://localhost:5008/exit')).finally(()=>{
+        autoUpdater.quitAndInstall()
+    })
 });
 
 ipcMain.on("close", askStopService);
@@ -137,9 +152,9 @@ ipcMain.on("openIdChangeWindow", () => {
     createChangeIdWindow()
 });
 
-ipcMain.on("setUpdateChannel", (e, channel: string) => {
-    autoUpdater.channel = channel
-    Store.set('updateChannel', channel)
+ipcMain.on("setUpdateChannel", (e, beta: boolean) => {
+    autoUpdater.allowPrerelease = beta
+    Store.set('useBeta', beta)
 });
 
 ipcMain.on("openWebPage", (event, src: string) => {
