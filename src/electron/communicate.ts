@@ -24,11 +24,12 @@ function timeout(ms, promise) {
     })
 }
 
-function startService() {
+async function startService() {
     startingService()
     try {
         if ((execSync('schtasks /tn "MyTasks\\iasa-ip"') as any).stderr) throw new Error()
         execSync('schtasks /run /tn "MyTasks\\iasa-ip"')
+        await timeout(500, fetch('http://localhost:5008'))
     } catch (e) {
         execSync(path.join(__dirname, '..', '..', '..', '..', 'res', `IP_SERVICE_${version}.exe`))
     }
@@ -38,8 +39,8 @@ export function startBackend(run = true) {
     return new Promise((resolve) => {
         timeout(500, fetch('http://localhost:5008')).then(() => {
             resolve(true)
-        }).catch(() => {
-            if (run) startService()
+        }).catch(async () => {
+            if (run) await startService()
             setTimeout(() => {
                 startBackend(false).then(() => {
                     resolve(true)
