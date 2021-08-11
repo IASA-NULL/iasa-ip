@@ -1,6 +1,6 @@
 {
   "name": "iasa-ip",
-  "version": "6.0.0",
+  "version": "6.0.0-beta.1",
   "description": "IP Changer for IASA",
   "main": "build/electron/main.js",
   "repository": "https://github.com/IASA-Null/iasa-ip.git",
@@ -42,9 +42,15 @@
           ]
         }
       ],
-      "icon": "./res/logo.ico",
-      "publish": "never"
-    }
+      "icon": "./res/logo.ico"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "IASA-Null",
+        "repo": "iasa-ip"
+      }
+    ]
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.0.0",

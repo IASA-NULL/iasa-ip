@@ -34,18 +34,7 @@ jobs:
       - name: Install Dependencies & Build Native Files
         run: yarn install
 
-      - name: Build
+      - name: Build & Deploy
         run: yarn run build
-
-      - name: Release
-        uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GH_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: true
-          title: "Development Build"
-          files: |
-            LICENSE
-            dist/IP.exe
-            dist/IP.exe.blockmap
-            dist/lastest.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
