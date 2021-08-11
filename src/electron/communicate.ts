@@ -29,7 +29,7 @@ async function startService() {
     try {
         if ((execSync('schtasks /tn "MyTasks\\iasa-ip"') as any).stderr) throw new Error()
         execSync('schtasks /run /tn "MyTasks\\iasa-ip"')
-        await timeout(500, fetch('http://localhost:5008'))
+        await timeout(5000, fetch('http://localhost:5008'))
     } catch (e) {
         execSync(path.join(__dirname, '..', '..', '..', '..', 'res', `IP_SERVICE_${version}.exe`))
     }
