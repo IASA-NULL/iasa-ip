@@ -40,8 +40,13 @@ enum RENEWPAGE {
     main
 }
 
+enum UPDATEPAGE {
+    v600
+}
+
 export const PAGE = {
     main: MAINPAGE,
     welcome: WELCOMEPAGE,
-    renew: RENEWPAGE
+    renew: RENEWPAGE,
+    updated: UPDATEPAGE
 }

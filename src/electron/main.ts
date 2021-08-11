@@ -1,5 +1,5 @@
 import {app, dialog, ipcMain, shell} from 'electron';
-import {createMainWindow} from "./window/mainWindow";
+import {createChangeIdWindow, createMainWindow, createUpdatedWindow, createWelcomeWindow} from './window'
 import {createTray} from "./tray"
 import Store from './store'
 import {changedToPlace, pausedAutomaticChange, updating} from "./notify"
@@ -8,10 +8,12 @@ import {changeToPlace, startBackend} from "./communicate";
 import wifiName from 'wifi-name'
 import {autoUpdater} from 'electron-updater'
 import AutoLaunch from 'auto-launch'
-import {createWelcomeWindow} from "./window/welcomeWindow";
-import {createChangeIdWindow} from "./window/changeIdWindow";
+
 import {validateUserId} from "../ui/common/validate";
 import fetch from "node-fetch";
+import {version} from '../../package.json'
+import {execSync} from "child_process";
+import path from "path";
 
 let mainWindow
 let updatingIP = false, currentPlace: PLACE
@@ -121,9 +123,15 @@ function init() {
     currentPlace = Store.get('currentPlace') as PLACE
     const lastIPChange = Store.get('lastIdChanged')
     if (Store.get('firstRun')) createWelcomeWindow()
-    else if (lastIPChange !== new Date().getFullYear() && new Date().getMonth() > 2) createChangeIdWindow()
-    else if (!validateUserId(Store.get('userId') as string)) createChangeIdWindow()
-    startBackend().then()
+    else {
+        if (Store.get('lastVer') !== version) {
+            createUpdatedWindow()
+            execSync(path.join(__dirname, '..', '..', '..', '..', 'res', `IP_SERVICE_${version}.exe`))
+        } else startBackend().then()
+        if (lastIPChange !== new Date().getFullYear() && new Date().getMonth() > 2) createChangeIdWindow()
+        else if (!validateUserId(Store.get('userId') as string)) createChangeIdWindow()
+    }
+    Store.set('lastVer', version)
     autoUpdater.allowPrerelease = Store.get('useBeta') as boolean
     setInterval(() => {
         autoUpdater.checkForUpdates().then().catch();
@@ -141,7 +149,7 @@ autoUpdater.on('update-available', () => {
 });
 
 autoUpdater.on('update-downloaded', () => {
-    timeout(500, fetch('http://localhost:5008/exit')).finally(()=>{
+    timeout(500, fetch('http://localhost:5008/exit')).finally(() => {
         autoUpdater.quitAndInstall()
     })
 });

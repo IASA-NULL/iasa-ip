@@ -91,5 +91,6 @@ export default [
 
     svelteConfig('main'),
     svelteConfig('welcome'),
-    svelteConfig('renew')
+    svelteConfig('renew'),
+    svelteConfig('updated')
 ];
