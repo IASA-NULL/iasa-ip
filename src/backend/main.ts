@@ -57,27 +57,9 @@ function getServiceConfig(name: string, command: string) {
 </Task>`
 }
 
-function timeout(ms, promise) {
-    return new Promise((resolve, reject) => {
-        const timer = setTimeout(() => {
-            reject(new Error('TIMEOUT'))
-        }, ms)
-
-        promise
-            .then(value => {
-                clearTimeout(timer)
-                resolve(value)
-            })
-            .catch(reason => {
-                clearTimeout(timer)
-                reject(reason)
-            })
-    })
-}
-
 function registerService() {
     return new Promise<void>((async (resolve) => {
-        timeout(500, fetch('http://localhost:5008/exit')).finally(() => {
+        fetch('http://localhost:5008/exit').finally(() => {
             try {
                 execSync('schtasks /delete /tn "MyTasks\\iasa-ip" /f');
             } catch (e) {
