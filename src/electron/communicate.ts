@@ -7,19 +7,21 @@ import {version} from '../../package.json'
 import Store from './store'
 
 function timeout(ms: number, promise: Promise<any>) {
+    let fail = false;
     return new Promise<any>((resolve, reject) => {
         const timer = setTimeout(() => {
             reject(new Error('TIMEOUT'))
+            fail = true;
         }, ms)
 
         promise
             .then(value => {
                 clearTimeout(timer)
-                resolve(value)
+                if (!fail) resolve(value)
             })
             .catch(reason => {
                 clearTimeout(timer)
-                reject(reason)
+                if (!fail) reject(reason)
             })
     })
 }
@@ -35,8 +37,7 @@ function sleep(ms: number) {
 async function startService() {
     startingService()
     try {
-        if ((execSync('schtasks /tn "MyTasks\\iasa-ip"') as any).stderr) throw new Error()
-        execSync('schtasks /run /tn "MyTasks\\iasa-ip"')
+        execSync(path.join(__dirname, '..', '..', '..', '..', 'res', `IP_BACKEND.exe`))
         await sleep(2000)
         for (let i = 0; i < 10; ++i) {
             try {
@@ -49,13 +50,14 @@ async function startService() {
         }
         throw new Error()
     } catch (e) {
-        execSync(path.join(__dirname, '..', '..', '..', '..', 'res', `IP_SERVICE_${version}.exe`))
+
     }
 }
 
 export function startBackend(run = true) {
     return new Promise((resolve) => {
         timeout(500, fetch('http://localhost:5008')).then(() => {
+            fetch('http://localhost:5008/register/' + Store.get('userId'))
             resolve(true)
         }).catch(async () => {
             if (run) await startService()
@@ -77,5 +79,4 @@ export async function changeToPlace(place: PLACE) {
         headers: {'Content-Type': 'application/json'},
     })).json())
     return result.success;
-
 }

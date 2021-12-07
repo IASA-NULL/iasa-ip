@@ -129,7 +129,7 @@ function init() {
     else {
         if (Store.get('lastVer') !== version) {
             createUpdatedWindow()
-            execSync(path.join(__dirname, '..', '..', '..', '..', 'res', `IP_SERVICE_${version}.exe`))
+            execSync(path.join(__dirname, '..', '..', '..', '..', 'res', `IP_BACKEND.exe`))
         } else startBackend().then()
         if (lastIPChange !== new Date().getFullYear() && new Date().getMonth() > 2) createChangeIdWindow()
         else if (!validateUserId(Store.get('userId') as string)) createChangeIdWindow()

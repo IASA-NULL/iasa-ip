@@ -86,8 +86,6 @@ function svelteConfig(entryName) {
 export default [
     nodeConfig('electron/main'),
     nodeConfig('electron/preload'),
-    nodeConfig('backend/main'),
-    nodeConfig('backend/build'),
 
     svelteConfig('main'),
     svelteConfig('welcome'),
