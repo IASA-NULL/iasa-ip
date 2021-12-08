@@ -38,14 +38,18 @@
 <CenterContainer>
     <div>
         <h2>IP 자동변경</h2>
-        <Switch bind:checked={autoChange}/>
+        <FormField>
+            <Switch icons={false} bind:checked={autoChange}/>
+        </FormField>
     </div>
     <div>
         <h2>VPN 자동 연결</h2>
-        <Switch bind:checked={autoVpn} on:click={()=>{
-            setTimeout(()=>{autoVpn=false
-            developing.open()}, 100)
-        }}/>
+        <FormField>
+            <Switch icons={false} bind:checked={autoVpn} on:click={()=>{
+                setTimeout(()=>{autoVpn=false
+                developing.open()}, 100)
+            }}/>
+        </FormField>
     </div>
     <Group>
         <Button on:click={()=>{

@@ -23,14 +23,18 @@
         }
     }
 
+    async function saveInfo() {
+        await window.electron.set('userId', userId)
+        await window.electron.set('firstRun', false)
+        await window.electron.set('lastVer', version)
+        await window.electron.set('lastIdChanged', new Date().getFullYear())
+    }
+
     let userId = '', invalid = true;
 
     $: (async () => {
         if (validateUserId(userId)) {
-            await window.electron.set('userId', userId)
-            await window.electron.set('firstRun', false)
-            await window.electron.set('lastVer', version)
-            await window.electron.set('lastIdChanged', new Date().getFullYear())
+            await saveInfo()
             invalid = false
         } else invalid = true
     })()
@@ -47,7 +51,15 @@
             <h1>학번을 입력해주세요.</h1>
             <h3>학번은 1년에 한번씩 변경해야 해요.</h3>
             <div>
-                <Textfield bind:this={userIdInput} bind:value={userId} type="text" label="학번" invalid={invalid}/>
+                <Textfield bind:this={userIdInput} bind:value={userId} type="text" label="학번" invalid={invalid}
+                           on:keypress={async e=>{
+                    if (e.key === 'Enter') {
+                        if (validateUserId(userId)) {
+                            await saveInfo()
+                            window.close()
+                        }
+                    }
+                }}/>
             </div>
             <div>
                 <Button on:click={()=>{window.close()}} disabled={invalid}>

@@ -5,7 +5,6 @@ import Store from './store'
 import {changedToPlace, pausedAutomaticChange, updating} from "./notify"
 import {PLACE} from "../const";
 import {changeToPlace, startBackend} from "./communicate";
-import wifiName from 'wifi-name'
 import {autoUpdater} from 'electron-updater'
 import AutoLaunch from 'auto-launch'
 
@@ -86,7 +85,12 @@ function askStopService() {
 
 function getWifiName() {
     try {
-        return wifiName.sync();
+        const stdout = execSync('netsh wlan show interface').toString();
+
+        let ret;
+        ret = /^\s*SSID\s*: (.+)\s*$/gm.exec(stdout);
+        ret = ret && ret.length ? ret[1] : null;
+        return ret;
     } catch (e) {
         return null;
     }

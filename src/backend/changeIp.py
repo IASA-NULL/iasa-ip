@@ -22,6 +22,9 @@ def changeIp(place, adp, stuid):
             b = int(stuid[2])
             c = int(stuid[3:])
 
+        if a == 0 or b == 0 or c == 0:
+            return
+
         su = 9 + c + (b - 1) * 16
         if a == 1:
             ip = '10.140.82.' + str(su)

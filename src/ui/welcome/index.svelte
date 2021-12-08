@@ -30,14 +30,18 @@
         })()
     }
 
+    async function saveInfo() {
+        await window.electron.set('userId', userId)
+        await window.electron.set('firstRun', false)
+        await window.electron.set('lastVer', version)
+        await window.electron.set('lastIdChanged', new Date().getFullYear())
+    }
+
     let userId = '', invalid = true;
 
     $: (async () => {
         if (validateUserId(userId)) {
-            await window.electron.set('userId', userId)
-            await window.electron.set('firstRun', false)
-            await window.electron.set('lastVer', version)
-            await window.electron.set('lastIdChanged', new Date().getFullYear())
+            await saveInfo()
             invalid = false
         } else invalid = true
     })()
@@ -60,7 +64,14 @@
         <CenterContainer>
             <h1>학번을 입력해주세요.</h1>
             <div>
-                <Textfield bind:this={userIdInput} bind:value={userId} type="text" label="학번" invalid={invalid}/>
+                <Textfield on:keypress={async e=>{
+                    if (e.key === 'Enter') {
+                        if (validateUserId(userId)) {
+                            await saveInfo()
+                            moveToPage(PAGE.welcome.set)
+                        }
+                    }
+                }} bind:this={userIdInput} bind:value={userId} type="text" label="학번" invalid={invalid}/>
             </div>
             <div>
                 <Button on:click={moveToPage(PAGE.welcome.set)} disabled={invalid}>
