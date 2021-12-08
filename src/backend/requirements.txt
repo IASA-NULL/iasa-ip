@@ -1,0 +1,4 @@
+flask
+servicemanager
+pywin32
+pyinstaller
